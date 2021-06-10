@@ -7,7 +7,7 @@ from transformers import BertModel
 from torch.nn.modules.container import ModuleList
 
 
-class ArgModule(nn.Module):
+class ConceptProbingModule(nn.Module):
     def __init__(self, arg_layer, n_layers):
         """
         Module for extracting arguments based on given encoder output and predicates.
@@ -16,7 +16,7 @@ class ArgModule(nn.Module):
         :param arg_layer: an instance of the ArgExtractorLayer() class (required)
         :param n_layers: the number of sub-layers in the ArgModule (required).
         """
-        super(ArgModule, self).__init__()
+        super(ConceptProbingModule, self).__init__()
         self.layers = _get_clones(arg_layer, n_layers)
         self.n_layers = n_layers
 
@@ -36,7 +36,7 @@ class ArgModule(nn.Module):
         return output
 
 
-class ArgExtractorLayer(nn.Module):
+class ConceptProbingLayer(nn.Module):
     def __init__(self,
                  d_model=768,
                  n_heads=8,
@@ -53,7 +53,7 @@ class ArgExtractorLayer(nn.Module):
         :param dropout: drop rate of all layers
         :param activation: activation function after first feed-forward layer
         """
-        super(ArgExtractorLayer, self).__init__()
+        super(ConceptProbingLayer, self).__init__()
         self.multihead_attn = nn.MultiheadAttention(
             d_model, n_heads, dropout=dropout)
         self.linear1 = nn.Linear(d_model, d_feedforward)
@@ -107,18 +107,18 @@ class RelationProbingClassifier(nn.Module):
         self.bert = BertModel.from_pretrained(
             bert_config,
             output_hidden_states=True)
-        
+
         d_model = self.bert.config.hidden_size
         self.pred_dropout = nn.Dropout(pred_clf_dropout)
         self.pred_classifier = nn.Linear(d_model, self.pred_n_labels)
 
         self.position_emb = nn.Embedding(3, pos_emb_dim, padding_idx=0)
         d_model += (d_model + pos_emb_dim)
-        arg_layer = ArgExtractorLayer(
+        arg_layer = ConceptProbingLayer(
             d_model=d_model,
             n_heads=n_arg_heads,
             dropout=mh_dropout)
-        self.arg_module = ArgModule(arg_layer, n_arg_layers)
+        self.arg_module = ConceptProbingModule(arg_layer, n_arg_layers)
         self.arg_dropout = nn.Dropout(arg_clf_dropout)
         self.arg_classifier = nn.Linear(d_model, arg_n_labels)
 
@@ -172,17 +172,12 @@ class RelationProbingClassifier(nn.Module):
         outputs = (batch_loss, pred_loss, arg_loss)
         return outputs
 
-    def extract_predicate(self,
-                          input_ids,
-                          attention_mask):
+    def extract_predicate(self, input_ids, attention_mask):
         bert_hidden = self.bert(input_ids, attention_mask)[0]
         pred_logit = self.pred_classifier(bert_hidden)
         return pred_logit, bert_hidden
 
-    def extract_argument(self,
-                         input_ids,
-                         predicate_hidden,
-                         predicate_mask):
+    def extract_argument(self, input_ids, predicate_hidden, predicate_mask):
         pred_feature = _get_pred_feature(predicate_hidden, predicate_mask)
         position_vectors = self.position_emb(
             _get_position_idxs(predicate_mask, input_ids))
