@@ -111,6 +111,8 @@ class RelationProbingClassifier(nn.Module):
         d_model = self.bert.config.hidden_size
         self.pred_dropout = nn.Dropout(pred_clf_dropout)
         self.pred_classifier = nn.Linear(d_model, self.pred_n_labels)
+        self.concept_classifier = nn.Linear(d_model, self.pred_n_labels)
+        self.modifier_classifier = nn.Linear(d_model, self.pred_n_labels)
 
         self.position_emb = nn.Embedding(3, pos_emb_dim, padding_idx=0)
         d_model += (d_model + pos_emb_dim)
