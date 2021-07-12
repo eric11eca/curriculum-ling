@@ -1,0 +1,8 @@
+{
+  "task": "semeval",
+  "paths": {
+    "train": "/content/tasks/data/semeval/train.jsonl",
+    "val": "/content/tasks/data/semeval/val.jsonl"
+  },
+  "name": "semeval"
+}
