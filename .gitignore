@@ -1,5 +1,13 @@
 # Pre-trained models
-./model
+./models
+./ud_parser_model
+
+# Dynamic configurations
+./run_configs
+
+# Task running directory
+./tasks
+./cache
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
