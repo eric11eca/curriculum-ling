@@ -30,7 +30,8 @@ def _mat_from_blocks_dense(mb, n_chars_src, n_chars_tgt):
             e1 = b[1]  # right
             M[s0:e0, s1:e1] = 1
         # Fill matching region on diagonal
-        M[b[0] : b[0] + b[2], b[1] : b[1] + b[2]] = 2 * np.identity(b[2], dtype=_DTYPE)
+        M[b[0]: b[0] + b[2], b[1]: b[1] + b[2]] = 2 * \
+            np.identity(b[2], dtype=_DTYPE)
     return M
 
 
@@ -38,7 +39,7 @@ def _mat_from_spans_dense(spans: Sequence[Tuple[int, int]], n_chars: int) -> np.
     """Construct a token-to-char matrix from a list of char spans."""
     M = np.zeros((len(spans), n_chars), dtype=_DTYPE)
     for i, s in enumerate(spans):
-        M[i, s[0] : s[1]] = 1
+        M[i, s[0]: s[1]] = 1
     return M
 
 
@@ -150,12 +151,16 @@ class TokenAligner(object):
             source = " ".join(source)
         if not isinstance(target, str):
             target = " ".join(target)
-        self.U = token_to_char(source)  # (m X M) source token idx to source char idx
-        self.V = token_to_char(target)  # (n x N) target token idx to target char idx
-        self.C = char_to_char(source, target)  # (M x N) source char idx to target char idx
+        # (m X M) source token idx to source char idx
+        self.U = token_to_char(source)
+        # (n x N) target token idx to target char idx
+        self.V = token_to_char(target)
+        # (M x N) source char idx to target char idx
+        self.C = char_to_char(source, target)
         # Token transfer matrix from (m) tokens in source to (n) tokens in the target. Mat value at
         # index i, j measures the character overlap btwn the ith source token and jth target token.
-        self.source_token_idx_to_target_token_idx = self.U.dot(self.C).dot(self.V.T)
+        self.source_token_idx_to_target_token_idx = self.U.dot(
+            self.C).dot(self.V.T)
         self.source_token_idx_to_target_char_idx = self.U.dot(self.C)
         self.source_char_idx_to_target_token_idx = self.C.dot(self.V.T)
 
@@ -181,15 +186,19 @@ class TokenAligner(object):
         """
         if isinstance(idxs, int):
             idxs = [idxs]
-        return self.source_token_idx_to_target_token_idx[idxs].nonzero()[1]  # column indices
+        # column indices
+        return self.source_token_idx_to_target_token_idx[idxs].nonzero()[1]
 
     @staticmethod
     def _project_span(mat, start, end, inclusive):
         if inclusive:
             end = end + 1
+        print(mat)
+        print(mat[start:end])
         target_matches = mat[start:end].nonzero()[1].tolist()
         if len(target_matches) == 0:
-            raise ValueError(f"Project {(start, end)} into empty span in target sequence")
+            raise ValueError(
+                f"Project {(start, end)} into empty span in target sequence")
         output_start, output_end = min(target_matches), max(target_matches)
         if not inclusive:
             output_end = output_end + 1

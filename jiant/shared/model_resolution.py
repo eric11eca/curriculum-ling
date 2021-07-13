@@ -15,6 +15,7 @@ class ModelArchitectures(Enum):
     MBART = "mbart"
     ELECTRA = "electra"
     DEBERTAV2 = "deberta-v2"
+    VISUALBERT = "uclanlp/visualbert-vqa-coco-pre"
 
     @classmethod
     def from_model_type(cls, model_type: str):

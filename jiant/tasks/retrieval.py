@@ -87,6 +87,7 @@ from jiant.tasks.lib.mcscript import MCScriptTask
 from jiant.tasks.lib.arct import ArctTask
 from jiant.tasks.lib.winogrande import WinograndeTask
 from jiant.tasks.lib.piqa import PiqaTask
+from jiant.tasks.lib.edge_probing.semgraph2 import Semgraph2Task
 
 from jiant.tasks.core import Task
 from jiant.utils.python.io import read_json
@@ -179,6 +180,7 @@ TASK_DICT = {
     "arct": ArctTask,
     "winogrande": WinograndeTask,
     "piqa": PiqaTask,
+    "semgraph2": Semgraph2Task,
 }
 
 

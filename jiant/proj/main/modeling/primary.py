@@ -163,7 +163,8 @@ class JiantTransformersModelFactory:
         Returns:
             JiantTransformersModel: Jiant wrapper class for Hugging Face model
         """
-        encoder_class = cls.registry[ModelArchitectures(hf_model.config.model_type)]
+        encoder_class = cls.registry[ModelArchitectures(
+            hf_model.config.model_type)]
         encoder = encoder_class(hf_model)
         return encoder
 
@@ -171,7 +172,8 @@ class JiantTransformersModelFactory:
 class JiantTransformersModel(metaclass=abc.ABCMeta):
     def __init__(self, baseObject):
         self.__class__ = type(
-            baseObject.__class__.__name__, (self.__class__, baseObject.__class__), {}
+            baseObject.__class__.__name__, (self.__class__, baseObject.__class__), {
+            }
         )
         self.__dict__ = baseObject.__dict__
 
@@ -226,9 +228,11 @@ class JiantBertModel(JiantTransformersModel):
     def normalize_tokenizations(cls, tokenizer, space_tokenization, target_tokenization):
         """See tokenization_normalization.py for details"""
         if tokenizer.init_kwargs.get("do_lower_case", False):
-            space_tokenization = [token.lower() for token in space_tokenization]
+            space_tokenization = [token.lower()
+                                  for token in space_tokenization]
         modifed_space_tokenization = bow_tag_tokens(space_tokenization)
-        modifed_target_tokenization = process_wordpiece_tokens(target_tokenization)
+        modifed_target_tokenization = process_wordpiece_tokens(
+            target_tokenization)
 
         return modifed_space_tokenization, modifed_target_tokenization
 
@@ -256,7 +260,8 @@ class JiantBertModel(JiantTransformersModel):
             "decoder.weight": "cls.predictions.decoder.weight",
             "decoder.bias": "cls.predictions.bias",  # <-- linked directly to bias
         }
-        mlm_weights_dict = {new_k: weights_dict[old_k] for new_k, old_k in mlm_weights_map.items()}
+        mlm_weights_dict = {new_k: weights_dict[old_k]
+                            for new_k, old_k in mlm_weights_map.items()}
         return mlm_weights_dict
 
 
@@ -269,8 +274,10 @@ class JiantRobertaModel(JiantTransformersModel):
     def normalize_tokenizations(cls, tokenizer, space_tokenization, target_tokenization):
         """See tokenization_normalization.py for details"""
         modifed_space_tokenization = bow_tag_tokens(space_tokenization)
-        modifed_target_tokenization = ["Ġ" + target_tokenization[0]] + target_tokenization[1:]
-        modifed_target_tokenization = process_bytebpe_tokens(modifed_target_tokenization)
+        modifed_target_tokenization = [
+            "Ġ" + target_tokenization[0]] + target_tokenization[1:]
+        modifed_target_tokenization = process_bytebpe_tokens(
+            modifed_target_tokenization)
 
         return modifed_space_tokenization, modifed_target_tokenization
 
@@ -310,7 +317,8 @@ class JiantDebertaV2Model(JiantTransformersModel):
         """See tokenization_normalization.py for details"""
         space_tokenization = [token for token in space_tokenization]
         modifed_space_tokenization = bow_tag_tokens(space_tokenization)
-        modifed_target_tokenization = process_sentencepiece_tokens(target_tokenization)
+        modifed_target_tokenization = process_sentencepiece_tokens(
+            target_tokenization)
 
         return modifed_space_tokenization, modifed_target_tokenization
 
@@ -337,7 +345,8 @@ class JiantDebertaV2Model(JiantTransformersModel):
             "decoder.weight": "cls.predictions.decoder.weight",
             "decoder.bias": "cls.predictions.bias",  # <-- linked directly to bias
         }
-        mlm_weights_dict = {new_k: weights_dict[old_k] for new_k, old_k in mlm_weights_map.items()}
+        mlm_weights_dict = {new_k: weights_dict[old_k]
+                            for new_k, old_k in mlm_weights_map.items()}
         return mlm_weights_dict
 
     def get_feat_spec(self, max_seq_length):
@@ -365,7 +374,8 @@ class JiantXLMRobertaModel(JiantTransformersModel):
         """See tokenization_normalization.py for details"""
         space_tokenization = [token.lower() for token in space_tokenization]
         modifed_space_tokenization = bow_tag_tokens(space_tokenization)
-        modifed_target_tokenization = process_sentencepiece_tokens(target_tokenization)
+        modifed_target_tokenization = process_sentencepiece_tokens(
+            target_tokenization)
 
         return modifed_space_tokenization, modifed_target_tokenization
 
@@ -404,7 +414,8 @@ class JiantXLMModel(JiantTransformersModel):
     def normalize_tokenizations(cls, tokenizer, space_tokenization, target_tokenization):
         """See tokenization_normalization.py for details"""
         if tokenizer.init_kwargs.get("do_lowercase_and_remove_accent", False):
-            space_tokenization = [token.lower() for token in space_tokenization]
+            space_tokenization = [token.lower()
+                                  for token in space_tokenization]
         modifed_space_tokenization = eow_tag_tokens(space_tokenization)
         modifed_target_tokenization = target_tokenization
 
@@ -435,7 +446,8 @@ class JiantAlbertModel(JiantTransformersModel):
         """See tokenization_normalization.py for details"""
         space_tokenization = [token.lower() for token in space_tokenization]
         modifed_space_tokenization = bow_tag_tokens(space_tokenization)
-        modifed_target_tokenization = process_sentencepiece_tokens(target_tokenization)
+        modifed_target_tokenization = process_sentencepiece_tokens(
+            target_tokenization)
 
         return modifed_space_tokenization, modifed_target_tokenization
 
@@ -543,7 +555,8 @@ class JiantBartModel(JiantTransformersModel):
         bsize, slen = input_ids.shape
         batch_idx = torch.arange(bsize).to(input_ids.device)
         # Get last non-pad index
-        pooled = unpooled[batch_idx, slen - input_ids.eq(self.config.pad_token_id).sum(1) - 1]
+        pooled = unpooled[batch_idx, slen -
+                          input_ids.eq(self.config.pad_token_id).sum(1) - 1]
         return JiantModelOutput(pooled=pooled, unpooled=unpooled, other=other)
 
     def get_mlm_weights_dict(self, weights_dict):
@@ -579,3 +592,49 @@ class JiantMBartModel(JiantBartModel):
 
     def get_mlm_weights_dict(self, weights_dict):
         raise NotImplementedError()
+
+
+@JiantTransformersModelFactory.register(ModelArchitectures.VISUALBERT)
+class JiantVisualBERTModel(JiantTransformersModel):
+    def __init__(self, baseObject):
+        super().__init__(baseObject)
+
+    @classmethod
+    def normalize_tokenizations(cls, tokenizer, space_tokenization, target_tokenization):
+        """See tokenization_normalization.py for details"""
+        if tokenizer.init_kwargs.get("do_lower_case", False):
+            space_tokenization = [token.lower()
+                                  for token in space_tokenization]
+        modifed_space_tokenization = bow_tag_tokens(space_tokenization)
+        modifed_target_tokenization = process_wordpiece_tokens(
+            target_tokenization)
+
+        return modifed_space_tokenization, modifed_target_tokenization
+
+    def get_feat_spec(self, max_seq_length):
+        return FeaturizationSpec(
+            max_seq_length=max_seq_length,
+            cls_token_at_end=False,
+            pad_on_left=False,
+            cls_token_segment_id=0,
+            pad_token_segment_id=0,
+            pad_token_id=0,
+            pad_token_mask_id=0,
+            sequence_a_segment_id=0,
+            sequence_b_segment_id=1,
+            sep_token_extra=False,
+        )
+
+    def get_mlm_weights_dict(self, weights_dict):
+        mlm_weights_map = {
+            "bias": "cls.predictions.bias",
+            "dense.weight": "cls.predictions.transform.dense.weight",
+            "dense.bias": "cls.predictions.transform.dense.bias",
+            "LayerNorm.weight": "cls.predictions.transform.LayerNorm.weight",
+            "LayerNorm.bias": "cls.predictions.transform.LayerNorm.bias",
+            "decoder.weight": "cls.predictions.decoder.weight",
+            "decoder.bias": "cls.predictions.bias",  # <-- linked directly to bias
+        }
+        mlm_weights_dict = {new_k: weights_dict[old_k]
+                            for new_k, old_k in mlm_weights_map.items()}
+        return mlm_weights_dict

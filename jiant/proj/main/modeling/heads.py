@@ -126,11 +126,13 @@ class SpanComparisonHead(BaseHead):
         self.hidden_size = hidden_size
         self.dropout = nn.Dropout(hidden_dropout_prob)
         self.span_attention_extractor = SelfAttentiveSpanExtractor(hidden_size)
-        self.classifier = nn.Linear(hidden_size * self.num_spans, self.num_labels)
+        self.classifier = nn.Linear(
+            hidden_size * self.num_spans, self.num_labels)
 
     def forward(self, unpooled, spans):
         span_embeddings = self.span_attention_extractor(unpooled, spans)
-        span_embeddings = span_embeddings.view(-1, self.num_spans * self.hidden_size)
+        span_embeddings = span_embeddings.view(-1,
+                                               self.num_spans * self.hidden_size)
         span_embeddings = self.dropout(span_embeddings)
         logits = self.classifier(span_embeddings)
         return logits
