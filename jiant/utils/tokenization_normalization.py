@@ -57,8 +57,8 @@ def normalize_tokenizations(
             return space_tokenization, target_tokenization
 
     model_arch = resolve_model_arch_tokenizer(tokenizer)
-    print(model_arch)
-    jiant_transformer_model_class = JiantTransformersModelFactory.get_registry()[model_arch]
+    jiant_transformer_model_class = JiantTransformersModelFactory.get_registry()[
+        model_arch]
     (
         modifed_space_tokenization,
         modifed_target_tokenization,

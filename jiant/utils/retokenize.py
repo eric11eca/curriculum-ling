@@ -193,8 +193,6 @@ class TokenAligner(object):
     def _project_span(mat, start, end, inclusive):
         if inclusive:
             end = end + 1
-        print(mat)
-        print(mat[start:end])
         target_matches = mat[start:end].nonzero()[1].tolist()
         if len(target_matches) == 0:
             raise ValueError(
