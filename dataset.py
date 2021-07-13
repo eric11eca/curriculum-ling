@@ -1,163 +1,199 @@
 import torch
+import torch
 import numpy as np
-from torch.utils.data import DataLoader
+import pandas as pd
+
 from torch.utils.data import Dataset
-from utils import utils
-from transformers import BertTokenizer
-from utils.bio import pred_tag2idx, arg_tag2idx
+from sklearn.decomposition import PCA
+
+from h01_data.process import get_data_file_base as get_file_names
+from util import constants
+from util import util
 
 
-def load_data(data_path,
-              batch_size,
-              max_len=64,
-              train=True,
-              tokenizer_config='bert-base-cased'):
-    if train:
-        return DataLoader(
-            dataset=SemanticGraphDataset(
-                data_path,
-                max_len,
-                tokenizer_config),
-            batch_size=batch_size,
-            shuffle=True,
-            num_workers=4,
-            pin_memory=True,
-            drop_last=True)
-    else:
-        return DataLoader(
-            dataset=OieEvalDataset(
-                data_path,
-                max_len,
-                tokenizer_config),
-            batch_size=batch_size,
-            num_workers=4,
-            pin_memory=True)
+class SemgraphNodeDataset(Dataset):
+    # pylint: disable=too-many-instance-attributes
 
+    def __init__(self, data_path, language, representation, embedding_size, mode, pca=None, classes=None, words=None):
+        self.data_path = data_path
+        self.language = language
+        self.mode = mode
+        self.representation = representation
+        self.embedding_size = embedding_size
 
-class SemanticGraphDataset(Dataset):
-    def __init__(self, data_path, max_len=64, tokenizer_config='bert-base-cased'):
-        data = utils.load_pkl(data_path)
-        self.tokens = data['tokens']
-        self.single_pred_labels = data['single_pred_labels']
-        self.single_arg_labels = data['single_arg_labels']
-        self.all_pred_labels = data['all_pred_labels']
+        self.input_name_base = get_file_names(data_path, language)
+        self.process(pca, classes, words)
 
-        self.max_len = max_len
-        self.tokenizer = BertTokenizer.from_pretrained(tokenizer_config)
-        self.vocab = self.tokenizer.vocab
+        assert self.x.shape[0] == self.y.shape[0]
+        self.n_instances = self.x.shape[0]
 
-        self.pad_idx = self.vocab['[PAD]']
-        self.cls_idx = self.vocab['[CLS]']
-        self.sep_idx = self.vocab['[SEP]']
-        self.mask_idx = self.vocab['[MASK]']
-
-    def add_pad(self, token_ids):
-        diff = self.max_len - len(token_ids)
-        if diff > 0:
-            token_ids += [self.pad_idx] * diff
+    def process(self, pca, classes, words):
+        if self.representation in ['fast']:
+            self._process(pca, classes)
+            self.words = words
+            self.n_words = None
         else:
-            token_ids = token_ids[:self.max_len-1] + [self.sep_idx]
-        return token_ids
+            self._process_index(classes, words)
+            self.pca = pca
 
-    def add_special_token(self, token_ids):
-        return [self.cls_idx] + token_ids + [self.sep_idx]
+    def _process_index(self, classes, words):
+        x_raw, y_raw = self.load_data_index()
 
-    def idx2mask(self, token_ids):
-        return [token_id != self.pad_idx for token_id in token_ids]
+        self.load_index(x_raw, words=words)
+        self.load_classes(y_raw, classes=classes)
 
-    def add_pad_to_labels(self, pred_label, arg_label, all_pred_label):
-        pred_outside = np.array([pred_tag2idx['O']])
-        arg_outside = np.array([arg_tag2idx['O']])
+    def load_data_index(self):
+        data_ud = util.read_data(self.input_name_base % (self.mode, 'ud'))
 
-        pred_label = np.concatenate([pred_outside, pred_label, pred_outside])
-        arg_label = np.concatenate([arg_outside, arg_label, arg_outside])
-        all_pred_label = np.concatenate(
-            [pred_outside, all_pred_label, pred_outside])
+        x_raw, y_raw = [], []
+        for sentence_ud, words in data_ud:
+            for i, token in enumerate(sentence_ud):
+                node_tag = token['tag']
 
-        diff = self.max_len - pred_label.shape[0]
-        if diff > 0:
-            pred_pad = np.array([pred_tag2idx['O']] * diff)
-            arg_pad = np.array([arg_tag2idx['O']] * diff)
-            pred_label = np.concatenate([pred_label, pred_pad])
-            arg_label = np.concatenate([arg_label, arg_pad])
-            all_pred_label = np.concatenate([all_pred_label, pred_pad])
-        elif diff == 0:
-            pass
+                x_raw += [words[i]]
+                y_raw += [node_tag]
+
+        x_raw = np.array(x_raw)
+        y_raw = np.array(y_raw)
+
+        return x_raw, y_raw
+
+    def load_index(self, x_raw, words=None):
+        if words is None:
+            # import ipdb; ipdb.set_trace()
+            x, words = pd.factorize(x_raw, sort=True)
         else:
-            pred_label = np.concatenate([pred_label[:-1], pred_outside])
-            arg_label = np.concatenate([arg_label[:-1], arg_outside])
-            all_pred_label = np.concatenate(
-                [all_pred_label[:-1], pred_outside])
-        return [pred_label, arg_label, all_pred_label]
+            new_words = set(x_raw) - set(words)
+            if new_words:
+                words = np.concatenate([words, list(new_words)])
+
+            words_dict = {word: i for i, word in enumerate(words)}
+            x = np.array([words_dict[token] for token in x_raw])
+
+        self.x = torch.from_numpy(x)
+        self.words = words
+
+        self.n_words = len(words)
+
+    def _process(self, pca, classes):
+        x_raw, y_raw = self.load_data()
+
+        self.load_embeddings(x_raw, pca=pca)
+        self.load_classes(y_raw, classes=classes)
+
+    def load_data(self):
+        data_ud = util.read_data(self.input_name_base % (self.mode, 'ud'))
+        data_embeddings = util.read_data(
+            self.input_name_base % (self.mode, self.representation))
+
+        x_raw, y_raw = [], []
+        for (sentence_ud, words), (sentence_emb, _) in zip(data_ud, data_embeddings):
+            for i, token in enumerate(sentence_ud):
+                node_tag = token['tag']
+
+                x_raw += [sentence_emb[i]]
+                y_raw += [node_tag]
+
+        x_raw = np.array(x_raw)
+        y_raw = np.array(y_raw)
+
+        return x_raw, y_raw
+
+    def load_embeddings(self, x_raw, pca=None):
+        pca_x = x_raw
+        self.assert_size(pca_x)
+
+        self.x = torch.from_numpy(pca_x)
+        self.pca = pca
+
+    def assert_size(self, x):
+        assert len(x[0]) == self.embedding_size
+
+    def load_classes(self, y_raw, classes=None):
+        if self.mode != 'train':
+            assert classes is not None
+
+        if classes is None:
+            y, classes = pd.factorize(y_raw, sort=True)
+        else:
+            new_classes = set(y_raw) - set(classes)
+            if new_classes:
+                classes = np.concatenate([classes, list(new_classes)])
+
+            classes_dict = {pos_class: i for i,
+                            pos_class in enumerate(classes)}
+            y = np.array([classes_dict[token] for token in y_raw])
+
+        self.y = torch.from_numpy(y)
+        self.classes = classes
+
+        self.n_classes = classes.shape[0]
 
     def __len__(self):
-        return len(self.tokens)
+        return self.n_instances
 
-    def __getitem__(self, idx):
-        token_ids = self.tokenizer.convert_tokens_to_ids(self.tokens[idx])
-        token_ids_padded = self.add_pad(self.add_special_token(token_ids))
-        att_mask = self.idx2mask(token_ids_padded)
-        labels = self.add_pad_to_labels(
-            self.single_pred_labels[idx],
-            self.single_arg_labels[idx],
-            self.all_pred_labels[idx])
-        single_pred_label, single_arg_label, all_pred_label = labels
-
-        assert len(token_ids_padded) == self.max_len
-        assert len(att_mask) == self.max_len
-        assert single_pred_label.shape[0] == self.max_len
-        assert single_arg_label.shape[0] == self.max_len
-        assert all_pred_label.shape[0] == self.max_len
-
-        batch = [
-            torch.tensor(token_ids_padded),
-            torch.tensor(att_mask),
-            torch.tensor(single_pred_label),
-            torch.tensor(single_arg_label),
-            torch.tensor(all_pred_label)
-        ]
-        return batch
+    def __getitem__(self, index):
+        return (self.x[index], self.y[index])
 
 
-class OieEvalDataset(Dataset):
-    def __init__(self, data_path, max_len, tokenizer_config='bert-base-cased'):
-        self.sentences = utils.load_pkl(data_path)
-        self.tokenizer = BertTokenizer.from_pretrained(tokenizer_config)
-        self.vocab = self.tokenizer.vocab
-        self.max_len = max_len
+class SemgraphEdgeDataset(SemgraphNodeDataset):
+    # pylint: disable=too-many-instance-attributes
 
-        self.pad_idx = self.vocab['[PAD]']
-        self.cls_idx = self.vocab['[CLS]']
-        self.sep_idx = self.vocab['[SEP]']
-        self.mask_idx = self.vocab['[MASK]']
+    def load_data_index(self):
+        data_ud = util.read_data(self.input_name_base % (self.mode, 'ud'))
 
-    def add_pad(self, token_ids):
-        diff = self.max_len - len(token_ids)
-        if diff > 0:
-            token_ids += [self.pad_idx] * diff
-        else:
-            token_ids = token_ids[:self.max_len-1] + [self.sep_idx]
-        return token_ids
+        x_raw, y_raw = [], []
+        for sentence_ud, words in data_ud:
+            for i, token in enumerate(sentence_ud):
+                head = token['head']
+                rel = token['rel']
 
-    def idx2mask(self, token_ids):
-        return [token_id != self.pad_idx for token_id in token_ids]
+                x_raw_tail = words[i]
+                x_raw_head = words[head - 1]
 
-    def __len__(self):
-        return len(self.sentences)
+                x_raw += [[x_raw_tail, x_raw_head]]
+                y_raw += [rel]
 
-    def __getitem__(self, idx):
-        token_ids = self.add_pad(self.tokenizer.encode(self.sentences[idx]))
-        att_mask = self.idx2mask(token_ids)
-        token_strs = self.tokenizer.convert_ids_to_tokens(token_ids)
-        sentence = self.sentences[idx]
+        x_raw = np.array(x_raw)
+        y_raw = np.array(y_raw)
 
-        assert len(token_ids) == self.max_len
-        assert len(att_mask) == self.max_len
-        assert len(token_strs) == self.max_len
-        batch = [
-            torch.tensor(token_ids),
-            torch.tensor(att_mask),
-            token_strs,
-            sentence
-        ]
-        return batch
+        return x_raw, y_raw
+
+    def load_index(self, x_raw, words=None):
+        if words is None:
+            words = []
+
+        new_words = sorted(list(set(np.unique(x_raw)) - set(words)))
+        if new_words:
+            words = np.concatenate([words, new_words])
+
+        words_dict = {word: i for i, word in enumerate(words)}
+        x = np.array([[words_dict[token] for token in tokens]
+                      for tokens in x_raw])
+
+        self.x = torch.from_numpy(x)
+        self.words = words
+
+        self.n_words = len(words)
+
+    def load_data(self):
+        data_ud = util.read_data(self.input_name_base % (self.mode, 'ud'))
+        data_embeddings = util.read_data(
+            self.input_name_base % (self.mode, self.representation))
+
+        x_raw, y_raw = [], []
+        for (sentence_ud, words), (sentence_emb, _) in zip(data_ud, data_embeddings):
+            for i, token in enumerate(sentence_ud):
+                head = token['head']
+                rel = token['rel']
+
+                x_raw_tail = sentence_emb[i]
+                x_raw_head = sentence_emb[head - 1]
+
+                x_raw += [np.concatenate([x_raw_tail, x_raw_head])]
+                y_raw += [rel]
+
+        x_raw = np.array(x_raw)
+        y_raw = np.array(y_raw)
+
+        return x_raw, y_raw
