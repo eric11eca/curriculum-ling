@@ -31,12 +31,14 @@ def quick_init(args, verbose=True) -> QuickInitContainer:
     """
     if verbose:
         print_args(args)
-    init_server_logging(server_ip=args.server_ip, server_port=args.server_port, verbose=verbose)
+    init_server_logging(server_ip=args.server_ip,
+                        server_port=args.server_port, verbose=verbose)
     device, n_gpu = init_cuda_from_args(
         no_cuda=args.no_cuda, local_rank=args.local_rank, fp16=args.fp16, verbose=verbose,
     )
     args.seed = init_seed(given_seed=args.seed, n_gpu=n_gpu, verbose=verbose)
-    init_output_dir(output_dir=args.output_dir, force_overwrite=args.force_overwrite)
+    init_output_dir(output_dir=args.output_dir,
+                    force_overwrite=args.force_overwrite)
     log_writer = init_log_writer(output_dir=args.output_dir)
     save_args(args=args, verbose=verbose)
     return QuickInitContainer(device=device, n_gpu=n_gpu, log_writer=log_writer)
@@ -57,7 +59,8 @@ def init_server_logging(server_ip, server_port, verbose=True):
 
         if verbose:
             print("Waiting for debugger attach")
-        ptvsd.enable_attach(address=(server_ip, server_port), redirect_output=True)
+        ptvsd.enable_attach(
+            address=(server_ip, server_port), redirect_output=True)
         ptvsd.wait_for_attach()
 
 
@@ -86,7 +89,8 @@ def init_cuda_from_args(no_cuda, local_rank, fp16, verbose=True):
     """
     # TODO break local_rank == -1 and no_cuda into separate cases to make the logic easier to read.
     if local_rank == -1 or no_cuda:
-        device = torch.device("cuda" if torch.cuda.is_available() and not no_cuda else "cpu")
+        device = torch.device(
+            "cuda" if torch.cuda.is_available() and not no_cuda else "cpu")
         n_gpu = torch.cuda.device_count()
     else:
         torch.cuda.set_device(local_rank)
@@ -148,7 +152,8 @@ def init_output_dir(output_dir, force_overwrite):
 
     """
     if not force_overwrite and is_done(output_dir):
-        raise RuntimeError(f"'{output_dir}' run is already done, and not forcing overwrite")
+        raise RuntimeError(
+            f"'{output_dir}' run is already done, and not forcing overwrite")
     os.makedirs(output_dir, exist_ok=True)
 
 
@@ -187,7 +192,7 @@ def get_seed(seed):
 
     """
     if seed == -1:
-        return int(np.random.randint(0, 2 ** 32 - 1))
+        return int(np.random.randint(0, 2 ** 16 - 1))
     else:
         return seed
 

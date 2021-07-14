@@ -51,7 +51,8 @@ def setup_jiant_model(
         JiantModel nn.Module.
 
     """
-    hf_model = transformers.AutoModel.from_pretrained(hf_pretrained_model_name_or_path)
+    hf_model = transformers.AutoModel.from_pretrained(
+        hf_pretrained_model_name_or_path)
     tokenizer = transformers.AutoTokenizer.from_pretrained(
         hf_pretrained_model_name_or_path, use_fast=False
     )
@@ -60,7 +61,8 @@ def setup_jiant_model(
         taskmodel_name: create_taskmodel(
             task=task_dict[task_name_list[0]],  # Take the first task
             encoder=encoder,
-            taskmodel_kwargs=taskmodels_config.get_taskmodel_kwargs(taskmodel_name),
+            taskmodel_kwargs=taskmodels_config.get_taskmodel_kwargs(
+                taskmodel_name),
         )
         for taskmodel_name, task_name_list in get_taskmodel_and_task_names(
             taskmodels_config.task_to_taskmodel_map
@@ -156,7 +158,8 @@ def load_encoder_from_transformers_weights(
     """
     remainder_weights_dict = {}
     load_weights_dict = {}
-    model_arch = ModelArchitectures.from_model_type(model_type=encoder.config.model_type)
+    model_arch = ModelArchitectures.from_model_type(
+        model_type=encoder.config.model_type)
     encoder_prefix = model_arch.value + "."
     # Encoder
     for k, v in weights_dict.items():
@@ -165,13 +168,15 @@ def load_encoder_from_transformers_weights(
         elif k.startswith(encoder_prefix.split("-")[0]):
             # workaround for deberta-v2
             # remove "-v2" suffix. weight names are prefixed with "deberta" and not "deberta-v2"
-            load_weights_dict[strings.remove_prefix(k, encoder_prefix.split("-")[0] + ".")] = v
+            load_weights_dict[strings.remove_prefix(
+                k, encoder_prefix.split("-")[0] + ".")] = v
         else:
             remainder_weights_dict[k] = v
     encoder.load_state_dict(load_weights_dict, strict=False)
     if remainder_weights_dict:
         warnings.warn(
-            "The following weights were not loaded: {}".format(remainder_weights_dict.keys())
+            "The following weights were not loaded: {}".format(
+                remainder_weights_dict.keys())
         )
     if return_remainder:
         return remainder_weights_dict
@@ -281,8 +286,10 @@ def create_taskmodel(task, encoder, **taskmodel_kwargs) -> Taskmodel:
     if hasattr(encoder, "layer_norm_eps"):
         head_kwargs["layer_norm_eps"] = encoder.config.layer_norm_eps
 
-    head = JiantHeadFactory()(task, **head_kwargs)
+    print(task)
+    print(head_kwargs)
 
+    head = JiantHeadFactory()(task, **head_kwargs)
     taskmodel = JiantTaskModelFactory()(task, encoder, head, **taskmodel_kwargs)
     return taskmodel
 
@@ -326,6 +333,7 @@ def get_ancestor_model(transformers_class_spec, model_config_path):
         Configured model.
 
     """
-    config = transformers_class_spec.config_class.from_json_file(model_config_path)
+    config = transformers_class_spec.config_class.from_json_file(
+        model_config_path)
     model = transformers_class_spec.model_class(config)
     return model
