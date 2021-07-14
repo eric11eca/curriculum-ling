@@ -118,10 +118,11 @@ class ConcatenateStringListAccumulator(BaseAccumulator):
         pred_char_start = batch.token_idx_to_char_idx_start.cpu().numpy()[
             range(bs), pred_token_start
         ]
-        pred_char_end = batch.token_idx_to_char_idx_end.cpu().numpy()[range(bs), pred_token_end]
+        pred_char_end = batch.token_idx_to_char_idx_end.cpu().numpy()[
+            range(bs), pred_token_end]
         self.str_list.extend(
             [
-                s[i1 : i2 + 1]
+                s[i1: i2 + 1]
                 for i1, i2, s in zip(pred_char_start, pred_char_end, batch.selection_str)
             ]
         )
@@ -142,15 +143,18 @@ class SpanPredictionF1andEMScheme(BaseEvaluationScheme):
 
     @classmethod
     def compute_metrics_from_preds_and_labels(cls, preds, labels):
-        em = sum([exact_match_score(s1, s2) for s1, s2 in zip(preds, labels)]) / len(labels)
-        f1 = sum([string_f1_score(s1, s2) for s1, s2 in zip(preds, labels)]) / len(labels)
+        em = sum([exact_match_score(s1, s2)
+                  for s1, s2 in zip(preds, labels)]) / len(labels)
+        f1 = sum([string_f1_score(s1, s2)
+                  for s1, s2 in zip(preds, labels)]) / len(labels)
         scores = {"f1": f1, "em": em, "avg": (f1 + em) / 2}
         return Metrics(major=scores["avg"], minor=scores)
 
     def compute_metrics_from_accumulator(
         self, task, accumulator: ConcatenateStringListAccumulator, tokenizer, labels: list
     ) -> Metrics:
-        preds = self.get_preds_from_accumulator(task=task, accumulator=accumulator)
+        preds = self.get_preds_from_accumulator(
+            task=task, accumulator=accumulator)
         return self.compute_metrics_from_preds_and_labels(preds=preds, labels=labels)
 
 
@@ -250,7 +254,8 @@ class BaseLogitsEvaluationScheme(BaseEvaluationScheme):
     def compute_metrics_from_accumulator(
         self, task, accumulator: ConcatenateLogitsAccumulator, tokenizer, labels: list
     ) -> Metrics:
-        preds = self.get_preds_from_accumulator(task=task, accumulator=accumulator)
+        preds = self.get_preds_from_accumulator(
+            task=task, accumulator=accumulator)
         return self.compute_metrics_from_preds_and_labels(preds=preds, labels=labels)
 
     def compute_metrics_from_preds_and_labels(self, preds, labels):
@@ -280,7 +285,8 @@ class MCTACOEvaluationScheme(BaseLogitsEvaluationScheme):
 
     @classmethod
     def compute_metrics_from_accumulator(self, task, accumulator, tokenizer, labels) -> Metrics:
-        guid, pred = self.get_preds_from_accumulator(task=task, accumulator=accumulator)
+        guid, pred = self.get_preds_from_accumulator(
+            task=task, accumulator=accumulator)
         em_ls = []
         f1_ls = []
         label_pred_by_question = {}
@@ -421,7 +427,8 @@ class CommitmentBankEvaluationScheme(BaseLogitsEvaluationScheme):
         avg_f1 = mean(f11, f12, f13)
         return Metrics(
             major=mean(acc, avg_f1),
-            minor={"acc": acc, "avg_f1": avg_f1, "f11": f11, "f12": f12, "f13": f13},
+            minor={"acc": acc, "avg_f1": avg_f1,
+                   "f11": f11, "f12": f12, "f13": f13},
         )
 
 
@@ -464,7 +471,8 @@ class MultiRCEvaluationScheme(BaseEvaluationScheme):
     def compute_metrics_from_accumulator(
         self, task, accumulator: ConcatenateLogitsAccumulator, tokenizer, labels: list
     ) -> Metrics:
-        preds = self.get_preds_from_accumulator(task=task, accumulator=accumulator)
+        preds = self.get_preds_from_accumulator(
+            task=task, accumulator=accumulator)
         return self.compute_metrics_from_preds_and_labels(preds=preds, labels=labels,)
 
     @classmethod
@@ -527,19 +535,22 @@ class ReCordEvaluationScheme(BaseEvaluationScheme):
         max_logits = {}
         for logit, entity_str, question_id in zip(logits, entity_strs, question_ids):
             if (question_id not in max_logits) or (max_logits[question_id]["logit"][1] < logit[1]):
-                max_logits[question_id] = {"logit": logit, "entity_str": entity_str}
+                max_logits[question_id] = {
+                    "logit": logit, "entity_str": entity_str}
 
         # Convert labels of max_logits to prediction format
         preds = []
         for question_idx, logit_entity in max_logits.items():
-            preds.append({"idx": question_idx, "label": logit_entity["entity_str"]})
+            preds.append(
+                {"idx": question_idx, "label": logit_entity["entity_str"]})
 
         return preds
 
     def compute_metrics_from_accumulator(
         self, task, accumulator: RecordAccumulator, tokenizer, labels: List
     ) -> Metrics:
-        predictions_dict, metrics = self.compute_preds_and_metrics(task, accumulator)
+        predictions_dict, metrics = self.compute_preds_and_metrics(
+            task, accumulator)
         return metrics
 
     @classmethod
@@ -568,11 +579,13 @@ class ReCordEvaluationScheme(BaseEvaluationScheme):
             pred_ans = pred["label"]
 
             # F1
-            f1 = cls.metric_max_over_ground_truths(string_f1_score, pred_ans, gold_label_set)
+            f1 = cls.metric_max_over_ground_truths(
+                string_f1_score, pred_ans, gold_label_set)
             f1_ls.append(f1)
 
             # EM
-            em = cls.metric_max_over_ground_truths(exact_match_score, pred_ans, gold_label_set)
+            em = cls.metric_max_over_ground_truths(
+                exact_match_score, pred_ans, gold_label_set)
             em_ls.append(em)
 
         em = sum(em_ls) / len(em_ls)
@@ -604,7 +617,8 @@ class CCGEvaluationScheme(BaseEvaluationScheme):
     @classmethod
     def get_label_ids_from_cache(cls, cache):
         return [
-            {"label_ids": datum["data_row"].label_ids, "label_mask": datum["data_row"].label_mask}
+            {"label_ids": datum["data_row"].label_ids,
+                "label_mask": datum["data_row"].label_mask}
             for datum in cache.iter_all()
         ]
 
@@ -619,7 +633,8 @@ class CCGEvaluationScheme(BaseEvaluationScheme):
     def compute_metrics_from_accumulator(
         self, task, accumulator: ConcatenateLogitsAccumulator, tokenizer, labels: list
     ) -> Metrics:
-        preds = self.get_preds_from_accumulator(task=task, accumulator=accumulator)
+        preds = self.get_preds_from_accumulator(
+            task=task, accumulator=accumulator)
         return self.compute_metrics_from_preds_and_labels(preds=preds, labels=labels,)
 
     @classmethod
@@ -628,7 +643,7 @@ class CCGEvaluationScheme(BaseEvaluationScheme):
         label_mask = np.stack([row["label_mask"] for row in labels])
 
         # Account for smart-truncate
-        assert (label_mask[:, preds.shape[-1] :] == 0).all()
+        assert (label_mask[:, preds.shape[-1]:] == 0).all()
         label_ids = label_ids[:, : preds.shape[-1]]
         label_mask = label_mask[:, : preds.shape[-1]]
 
@@ -673,7 +688,8 @@ class F1TaggingEvaluationScheme(BaseEvaluationScheme):
     def compute_metrics_from_accumulator(
         self, task, accumulator: ConcatenateLogitsAccumulator, tokenizer, labels: list
     ) -> Metrics:
-        preds = self.get_preds_from_accumulator(task=task, accumulator=accumulator)
+        preds = self.get_preds_from_accumulator(
+            task=task, accumulator=accumulator)
         return self.compute_metrics_from_preds_and_labels(task=task, preds=preds, labels=labels,)
 
     @classmethod
@@ -681,7 +697,7 @@ class F1TaggingEvaluationScheme(BaseEvaluationScheme):
         label_mask = np.stack([row["label_mask"] for row in labels])
 
         # Account for smart-truncate
-        assert (label_mask[:, preds.shape[-1] :] == 0).all()
+        assert (label_mask[:, preds.shape[-1]:] == 0).all()
         label_mask = label_mask[:, : preds.shape[-1]]
 
         labels_for_eval = [label["pos_list"] for label in labels]
@@ -689,7 +705,8 @@ class F1TaggingEvaluationScheme(BaseEvaluationScheme):
         assert len(labels) == preds.shape[0]
         for i in range(len(labels)):
             relevant_preds = preds[i][label_mask[i]]
-            relevant_preds_pos = [task.ID_TO_LABEL[pos_id] for pos_id in relevant_preds]
+            relevant_preds_pos = [task.ID_TO_LABEL[pos_id]
+                                  for pos_id in relevant_preds]
             preds_for_eval.append(relevant_preds_pos)
 
         minor = {
@@ -714,7 +731,8 @@ class SQuADEvaluationScheme(BaseEvaluationScheme):
         return cls.get_labels_from_cache(cache=cache)
 
     def get_preds_from_accumulator(self, task, accumulator):
-        raise NotImplementedError("Currently can't be done without access to dataset")
+        raise NotImplementedError(
+            "Currently can't be done without access to dataset")
 
     def compute_metrics_from_accumulator(
         self, task, accumulator: BaseAccumulator, tokenizer, labels
@@ -755,13 +773,15 @@ class XlingQAEvaluationScheme(BaseEvaluationScheme):
         return cls.get_labels_from_cache(cache=cache)
 
     def get_preds_from_accumulator(self, task, accumulator):
-        raise NotImplementedError("Currently can't be done without access to dataset")
+        raise NotImplementedError(
+            "Currently can't be done without access to dataset")
 
     def compute_metrics_from_accumulator(
         self, task, accumulator: BaseAccumulator, tokenizer, labels
     ) -> Metrics:
         logits = accumulator.get_accumulated()
-        assert isinstance(task, (tasks_retrieval.TyDiQATask, tasks_retrieval.XquadTask))
+        assert isinstance(task, (tasks_retrieval.TyDiQATask,
+                                 tasks_retrieval.XquadTask))
         lang = task.language
         results, predictions = squad_style.compute_predictions_logits_v3(
             data_rows=labels,
@@ -783,7 +803,8 @@ class XlingQAEvaluationScheme(BaseEvaluationScheme):
 
 class MLQAEvaluationScheme(SQuADEvaluationScheme):
     def get_preds_from_accumulator(self, task, accumulator):
-        raise NotImplementedError("Too hard for now, too much handled in one giant lib")
+        raise NotImplementedError(
+            "Too hard for now, too much handled in one giant lib")
 
     def compute_metrics_from_accumulator(
         self, task, accumulator: BaseAccumulator, tokenizer, labels
@@ -792,7 +813,8 @@ class MLQAEvaluationScheme(SQuADEvaluationScheme):
         # Todo: Fix val labels cache
         # This is a quick hack
         logits = accumulator.get_accumulated()
-        partial_examples = squad_style.data_rows_to_partial_examples(data_rows=labels)
+        partial_examples = squad_style.data_rows_to_partial_examples(
+            data_rows=labels)
         all_pred_results = squad_style.logits_to_pred_results_list(logits)
         assert task.context_language == task.question_language
         lang = task.context_language
@@ -809,7 +831,8 @@ class MLQAEvaluationScheme(SQuADEvaluationScheme):
             verbose=True,
         )
         dataset = read_json(task.val_path)["data"]
-        results = mlqa_lib.evaluate(dataset=dataset, predictions=predictions, lang=lang,)
+        results = mlqa_lib.evaluate(
+            dataset=dataset, predictions=predictions, lang=lang,)
         return Metrics(major=(results["f1"] + results["exact_match"]) / 2, minor=results,)
 
 
@@ -849,7 +872,8 @@ class MLMPremaskedEvaluationScheme(MLMEvaluationScheme):
         for datum in cache.iter_all():
             masked_lm_labels = datum["data_row"].masked_lm_labels
             labels.append(
-                masked_lm_labels[masked_lm_labels != mlm_template.NON_MASKED_TOKEN_LABEL_ID]
+                masked_lm_labels[masked_lm_labels !=
+                                 mlm_template.NON_MASKED_TOKEN_LABEL_ID]
             )
         return labels
 
@@ -892,7 +916,8 @@ class TatoebaEvaluationScheme(BaseEvaluationScheme):
     def compute_metrics_from_accumulator(
         self, task, accumulator: ConcatenateLogitsAccumulator, tokenizer, labels: list
     ) -> Metrics:
-        preds = self.get_preds_from_accumulator(task=task, accumulator=accumulator)
+        preds = self.get_preds_from_accumulator(
+            task=task, accumulator=accumulator)
         return self.compute_metrics_from_preds_and_labels(preds=preds, labels=labels,)
 
     @classmethod
@@ -917,8 +942,10 @@ class Bucc2018EvaluationScheme(BaseEvaluationScheme):
         text_hash_list = accumulated["text_hash_list"]
         other_lang_embeddings = all_embeddings[~is_english_arr]
         eng_embeddings = all_embeddings[is_english_arr]
-        english_guids = [x.split("-", 1)[1] for x in np.array(guids)[is_english_arr]]
-        other_guids = [x.split("-", 1)[1] for x in np.array(guids)[~is_english_arr]]
+        english_guids = [x.split("-", 1)[1]
+                         for x in np.array(guids)[is_english_arr]]
+        other_guids = [x.split("-", 1)[1]
+                       for x in np.array(guids)[~is_english_arr]]
 
         n = len(is_english_arr)
         src_inds, _ = bucc2018_lib.get_unique_lines(
@@ -948,7 +975,8 @@ class Bucc2018EvaluationScheme(BaseEvaluationScheme):
     def compute_metrics_from_accumulator(
         self, task, accumulator: ConcatenateLogitsAccumulator, tokenizer, labels: list
     ) -> Metrics:
-        preds = self.get_preds_from_accumulator(task=task, accumulator=accumulator)
+        preds = self.get_preds_from_accumulator(
+            task=task, accumulator=accumulator)
         return self.compute_metrics_from_preds_and_labels(preds=preds, labels=labels,)
 
     @classmethod
@@ -1031,6 +1059,7 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
     elif isinstance(
         task,
         (
+            tasks_retrieval.Semgraph2Task,
             tasks_retrieval.Spr1Task,
             tasks_retrieval.Spr2Task,
             tasks_retrieval.SemevalTask,
@@ -1091,7 +1120,8 @@ def get_label_ids_from_data_row(data_row):
 
 def get_multi_label_ids_from_cache(cache):
     return np.array(
-        [get_label_ids_from_data_row(data_row=datum["data_row"]) for datum in cache.iter_all()]
+        [get_label_ids_from_data_row(data_row=datum["data_row"])
+         for datum in cache.iter_all()]
     )
 
 
@@ -1101,13 +1131,15 @@ def get_label_id_from_data_row(data_row):
 
 def get_label_ids_from_cache(cache):
     return np.array(
-        [get_label_id_from_data_row(data_row=datum["data_row"]) for datum in cache.iter_all()]
+        [get_label_id_from_data_row(data_row=datum["data_row"])
+         for datum in cache.iter_all()]
     )
 
 
 def get_label_vals_from_cache(cache):
     return np.array(
-        [get_label_val_from_data_row(data_row=datum["data_row"]) for datum in cache.iter_all()]
+        [get_label_val_from_data_row(data_row=datum["data_row"])
+         for datum in cache.iter_all()]
     )
 
 
@@ -1126,7 +1158,8 @@ def get_multiple_choice_label_id_from_data_row(data_row):
 def get_multiple_choice_labels_from_cache(cache):
     return np.array(
         [
-            get_multiple_choice_label_id_from_data_row(data_row=datum["data_row"])
+            get_multiple_choice_label_id_from_data_row(
+                data_row=datum["data_row"])
             for datum in cache.iter_all()
         ]
     )
