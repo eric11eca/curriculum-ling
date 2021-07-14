@@ -1,69 +1,77 @@
+import jiant.shared.caching as caching
+import jiant.proj.main.tokenize_and_cache as tokenize_and_cache
+import jiant.proj.main.runscript as main_runscript
+import jiant.proj.main.scripts.configurator as configurator
+import jiant.proj.main.export_model as export_model
+import jiant.utils.display as display
+import jiant.utils.python.io as py_io
 import os
-import utils
-import torch
-import torch.nn as nn
-from tqdm import tqdm
-from extract import extract
-from test import do_eval
+import sys
+sys.path.insert(0, "/content/jiant")
 
 
-def train(args, epoch, model,
-          train_loader, dev_loaders,
-          summarizer, optimizer, scheduler):
+def train_configuration(task_name):
+    jiant_run_config = configurator.SimpleAPIMultiTaskConfigurator(
+        task_config_base_path="./tasks/configs",
+        task_cache_base_path="./cache",
+        train_task_name_list=[task_name],
+        val_task_name_list=[task_name],
+        train_batch_size=8,
+        eval_batch_size=16,
+        epochs=3,
+        num_gpus=1,
+    ).create_config()
 
-    total_pred_loss, train_result = 0, None
-    epoch_steps = int(args.total_steps / args.epochs)
+    os.makedirs("./run_configs/", exist_ok=True)
+    py_io.write_json(jiant_run_config,
+                     f"./run_configs/{task_name}_run_config.json")
+    display.show_json(jiant_run_config)
 
-    iterator = tqdm(enumerate(train_loader), desc='steps', total=epoch_steps)
-    for step, batch in iterator:
-        batch = map(lambda x: x.to(args.device), batch)
-        token_ids, att_mask, single_pred_label, all_pred_label = batch
-        pred_mask = utils.get_pred_mask(single_pred_label)
 
-        model.train()
-        model.zero_grad()
+def train(task_name, model_name):
+    run_args = main_runscript.RunConfiguration(
+        jiant_task_container_config_path=f"./run_configs/{task_name}_run_config.json",
+        output_dir=f"./runs/{task_name}",
+        hf_pretrained_model_name_or_path=model_name,
+        model_path=f"./models/{model_name}/model/model.p",
+        model_config_path=f"./models/{model_name}/model/config.json",
+        learning_rate=1e-5,
+        eval_every_steps=500,
+        do_train=True,
+        do_val=True,
+        do_save=True,
+        force_overwrite=True,
+        no_cuda=False
+    )
+    main_runscript.run_loop(run_args)
 
-        pred_loss = model(input_ids=token_ids,
-                          attention_mask=att_mask,
-                          predicate_mask=pred_mask,
-                          total_pred_labels=all_pred_label)
-        total_pred_loss += pred_loss
-        pred_loss.backward()
-        nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        optimizer.step()
-        scheduler.step()
 
-        train_result = total_pred_loss / (step + 1)
-        if step > epoch_steps:
-            break
+def tokenization(task_name, model_name):
+    tokenize_and_cache.main(tokenize_and_cache.RunConfiguration(
+        task_config_path=f"./tasks/configs/{task_name}_config.json",
+        hf_pretrained_model_name_or_path=model_name,
+        output_dir=f"./cache/{task_name}",
+        phases=["train", "val"],
+    ))
 
-        if step % 1000 == 0 and step != 0:
-            dev_iter = zip(args.dev_data_path, args.dev_gold_path, dev_loaders)
-            dev_results = list()
-            total_sum = 0
 
-            for dev_input, dev_gold, dev_loader in dev_iter:
-                output_path = os.path.join(
-                    args.save_path, f'epoch{epoch}_dev/step{step}')
-                extract(args, model, dev_loader, output_path)
-                dev_result = do_eval(output_path, dev_gold)
+def setup_model(model_name, exist=True):
+    if not exist:
+        export_model.export_model(
+            hf_pretrained_model_name_or_path=model_name,
+            output_base_path=f"./models/{model_name}",
+        )
 
-                utils.print_results(f"EPOCH{epoch} STEP{step} EVAL",
-                                    dev_result, ["F1  ", "PREC", "REC ", "AUC "])
-                total_sum += dev_result[0] + dev_result[-1]
-                dev_result.append(dev_result[0] + dev_result[-1])
-                dev_results += dev_result
 
-            summarizer.save_results(
-                [step] + train_result + dev_results + [total_sum])
-            model_name = utils.set_model_name(total_sum, epoch, step)
-            torch.save(model.state_dict(), os.path.join(
-                args.save_path, model_name))
+if __name__ == "__main__":
+    task_name = "semgraph2"
+    bert = "bert-base-uncased"
+    roberta = "roberta-base"
 
-        if step % args.summary_step == 0 and step != 0:
-            utils.print_results(f"EPOCH{epoch} STEP{step} TRAIN",
-                                train_result, ["PRED LOSS", "ARG LOSS "])
+    setup_model(roberta, True)
 
-    utils.print_results(f"EPOCH{epoch} TRAIN",
-                        train_result, ["PRED LOSS", "ARG LOSS "])
-    return train_result
+    print("Setup Jiant Run_Configurations: ")
+    train_configuration(task_name)
+
+    print("Jiant Training Session Starts: ")
+    train(task_name=task_name, model_name=roberta)
