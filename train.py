@@ -68,10 +68,10 @@ if __name__ == "__main__":
     bert = "bert-base-uncased"
     roberta = "roberta-base"
 
-    setup_model(roberta, True)
+    setup_model(bert, True)
 
     print("Setup Jiant Run_Configurations: ")
     train_configuration(task_name)
 
     print("Jiant Training Session Starts: ")
-    train(task_name=task_name, model_name=roberta)
+    train(task_name=task_name, model_name=bert)
