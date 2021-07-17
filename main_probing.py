@@ -49,7 +49,7 @@ def write_data_to_task_dir(train_data, val_data):
     }, "/content/tasks/configs/semgraph2_config.json")
 
 
-def prepare_train_and_val_data(train_pth, val_pth, task_name, model_name):
+def prepare_train_and_val_data(train_pth, val_pth):
     train, val = load_data_from_json(train_pth, val_pth)
     write_data_to_task_dir(train, val)
 
