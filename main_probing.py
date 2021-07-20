@@ -17,8 +17,12 @@ def load_data_from_json(train_pth, val_pth):
     val_data = []
     if len(train_pth) > 0:
         relation_data = py_io.read_json(train_pth, mode="r")
+        accum = 0
         for key in relation_data.keys():
             train_data.append(relation_data[key])
+            accum += 1
+            if accum > 10000:
+                break
     if len(val_pth) > 0:
         relation_data_val = py_io.read_json(val_pth, mode="r")
         for key in relation_data_val.keys():
@@ -109,6 +113,7 @@ def setup_model(model_name):
 MODEL_NAMES = {
     "bert1": "bert-base-uncased",
     "bert2": "bert-large-uncased",
+    "bert3": "bert-finetune",
     "roberta": "roberta-base",
 }
 
