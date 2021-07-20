@@ -1,31 +1,39 @@
+import json
+import string
 import torch
-import torch
+import util
 import numpy as np
 import pandas as pd
 
 from torch.utils.data import Dataset
 from sklearn.decomposition import PCA
 
-from h01_data.process import get_data_file_base as get_file_names
-from util import constants
-from util import util
-
 
 class SemgraphNodeDataset(Dataset):
     # pylint: disable=too-many-instance-attributes
 
-    def __init__(self, data_path, language, representation, embedding_size, mode, pca=None, classes=None, words=None):
-        self.data_path = data_path
-        self.language = language
+    def __init__(self, representation, embedding_size, mode, pca=None, classes=None, words=None):
         self.mode = mode
         self.representation = representation
         self.embedding_size = embedding_size
 
-        self.input_name_base = get_file_names(data_path, language)
+        train_pth = '/content/tasks/data/semgraph2/train.jsonl'
+        val_pth = '/content/tasks/data/semgraph2/val.jsonl'
+
+        self.input_file_name = train_pth if mode == "train" else val_pth
         self.process(pca, classes, words)
 
         assert self.x.shape[0] == self.y.shape[0]
         self.n_instances = self.x.shape[0]
+
+    def load_jsonline_data(self):
+        data = []
+        with open(self.input_file_name, 'r') as json_file:
+            json_list = list(json_file)
+            for json_str in json_list:
+                result = json.loads(json_str)
+                data.append(result)
+        return data
 
     def process(self, pca, classes, words):
         if self.representation in ['fast']:
@@ -129,6 +137,10 @@ class SemgraphNodeDataset(Dataset):
 
         self.n_classes = classes.shape[0]
 
+    def tokenize(self, text):
+        text.translate(str.maketrans('', '', string.punctuation))
+        return text.split()
+
     def __len__(self):
         return self.n_instances
 
@@ -140,23 +152,25 @@ class SemgraphEdgeDataset(SemgraphNodeDataset):
     # pylint: disable=too-many-instance-attributes
 
     def load_data_index(self):
-        data_ud = util.read_data(self.input_name_base % (self.mode, 'ud'))
+        data_ud = self.load_jsonline_data()
 
         x_raw, y_raw = [], []
-        for sentence_ud, words in data_ud:
-            for i, token in enumerate(sentence_ud):
-                head = token['head']
-                rel = token['rel']
+        self.sentences = []
+        for example in data_ud:
+            for (target_num, target) in enumerate(example["targets"]):
+                tokens = self.tokenize(example['text'])
+                self.sentences.append(tokens)
+                span1 = int(target["span1"][0])
+                span2 = int(target["span2"][0])
 
-                x_raw_tail = words[i]
-                x_raw_head = words[head - 1]
+                x_raw_tail = tokens[span1]
+                x_raw_head = tokens[span2]
 
                 x_raw += [[x_raw_tail, x_raw_head]]
-                y_raw += [rel]
+                y_raw += [target["label"]]
 
         x_raw = np.array(x_raw)
         y_raw = np.array(y_raw)
-
         return x_raw, y_raw
 
     def load_index(self, x_raw, words=None):
@@ -177,23 +191,25 @@ class SemgraphEdgeDataset(SemgraphNodeDataset):
         self.n_words = len(words)
 
     def load_data(self):
-        data_ud = util.read_data(self.input_name_base % (self.mode, 'ud'))
-        data_embeddings = util.read_data(
-            self.input_name_base % (self.mode, self.representation))
+        data_ud = self.load_jsonline_data()
+        if self.mode == "train":
+            data_embeddings = util.read_data("./dataset/output_fast_train")
+        else:
+            data_embeddings = util.read_data("./dataset/output_fast_val")
 
         x_raw, y_raw = [], []
-        for (sentence_ud, words), (sentence_emb, _) in zip(data_ud, data_embeddings):
-            for i, token in enumerate(sentence_ud):
-                head = token['head']
-                rel = token['rel']
+        self.sentences = []
+        for example, (sentence_emb, _) in zip(data_ud, data_embeddings):
+            for (i, target) in enumerate(example["targets"]):
+                span1 = int(target["span1"][0])
+                span2 = int(target["span2"][0])
 
-                x_raw_tail = sentence_emb[i]
-                x_raw_head = sentence_emb[head - 1]
+                x_raw_tail = sentence_emb[span1]
+                x_raw_head = sentence_emb[span2]
 
                 x_raw += [np.concatenate([x_raw_tail, x_raw_head])]
-                y_raw += [rel]
+                y_raw += [target["label"]]
 
         x_raw = np.array(x_raw)
         y_raw = np.array(y_raw)
-
         return x_raw, y_raw
