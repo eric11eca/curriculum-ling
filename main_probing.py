@@ -97,6 +97,7 @@ def train(task_name, model_name):
         do_train=True,
         do_val=True,
         do_save=True,
+        write_val_preds=True,
         force_overwrite=True,
         no_cuda=False
     )
@@ -115,6 +116,7 @@ MODEL_NAMES = {
     "bert2": "bert-large-uncased",
     "bert3": "bert-finetune",
     "roberta": "roberta-base",
+    "deberta": "microsoft/deberta-v2-xlarge"
 }
 
 
