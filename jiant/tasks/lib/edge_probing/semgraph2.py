@@ -71,6 +71,8 @@ class Semgraph2Task(edge_probing_two_span.AbstractProbingTask):
             for (target_num, target) in enumerate(line["targets"]):
                 span1 = [int(target["span1"][0]), int(target["span1"][1])]
                 span2 = [int(target["span2"][0]), int(target["span2"][1])]
+                if target['label'] == 'no_relation':
+                    continue
                 examples.append(
                     Example(
                         guid="%s-%s-%s" % (set_type, line_num, target_num),
