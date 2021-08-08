@@ -24,6 +24,7 @@ def setup_jiant_model(
     model_config_path: str,
     task_dict: Dict[str, Task],
     taskmodels_config: container_setup.TaskmodelsConfig,
+    freeze_encoder: bool
 ):
     """Sets up tokenizer, encoder, and task models, and instantiates and returns a JiantModel.
 
@@ -57,6 +58,13 @@ def setup_jiant_model(
         hf_pretrained_model_name_or_path, use_fast=False
     )
     encoder = primary.JiantTransformersModelFactory()(hf_model)
+
+    # Freeze encoder for probing
+    if freeze_encoder:
+        print("===== Probing: all encoder layers are freezed =====")
+        for param in encoder.parameters():
+            param.requires_grad = False
+
     taskmodels_dict = {
         taskmodel_name: create_taskmodel(
             task=task_dict[task_name_list[0]],  # Take the first task
