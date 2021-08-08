@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 import abc
-
 import torch
 import torch.nn as nn
-
 import transformers
 
 from jiant.ext.allennlp import SelfAttentiveSpanExtractor
