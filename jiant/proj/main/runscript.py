@@ -40,6 +40,7 @@ class RunConfiguration(zconf.RunConfig):
     no_improvements_for_n_evals = zconf.attr(type=int, default=0)
     keep_checkpoint_when_done = zconf.attr(action="store_true")
     force_overwrite = zconf.attr(action="store_true")
+    freeze_encoder = zconf.attr(action="store_true")
     seed = zconf.attr(type=int, default=-1)
 
     # === Training Learning Parameters === #
@@ -88,6 +89,7 @@ def setup_runner(
             model_config_path=args.model_config_path,
             task_dict=jiant_task_container.task_dict,
             taskmodels_config=jiant_task_container.taskmodels_config,
+            freeze_encoder=args.freeze_encoder
         )
         jiant_model_setup.delegate_load_from_path(
             jiant_model=jiant_model, weights_path=args.model_path, load_mode=args.model_load_mode
