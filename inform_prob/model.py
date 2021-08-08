@@ -97,7 +97,7 @@ class MLP(BaseModel):
         self.criterion = nn.CrossEntropyLoss()
 
     def build_embeddings(self, n_words, embedding_size):
-        if self.task == 'dep_label':
+        if self.task == 'semgraph_edge':
             self.embedding_size = int(embedding_size / 2) * 2
             self.embedding = nn.Embedding(n_words, int(embedding_size / 2))
         else:
