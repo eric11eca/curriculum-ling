@@ -4,6 +4,7 @@ import torch
 import util
 import numpy as np
 import pandas as pd
+from copy import deepcopy
 
 from torch.utils.data import Dataset
 from sklearn.decomposition import PCA
@@ -12,13 +13,14 @@ from sklearn.decomposition import PCA
 class SemgraphNodeDataset(Dataset):
     # pylint: disable=too-many-instance-attributes
 
-    def __init__(self, representation, embedding_size, mode, pca=None, classes=None, words=None):
+    def __init__(self, task_name, representation, embedding_size, mode, pca=None, classes=None, words=None):
         self.mode = mode
+        self.task_name = task_name
         self.representation = representation
         self.embedding_size = embedding_size
 
-        train_pth = '/content/tasks/data/semgraph2/train.jsonl'
-        val_pth = '/content/tasks/data/semgraph2/val.jsonl'
+        train_pth = f'/content/tasks/data/{task_name}/train.jsonl'
+        val_pth = f'/content/tasks/data/{task_name}/val.jsonl'
 
         self.input_file_name = train_pth if mode == "train" else val_pth
         self.process(pca, classes, words)
@@ -120,7 +122,6 @@ class SemgraphNodeDataset(Dataset):
     def load_classes(self, y_raw, classes=None):
         if self.mode != 'train':
             assert classes is not None
-
         if classes is None:
             y, classes = pd.factorize(y_raw, sort=True)
         else:
@@ -158,6 +159,8 @@ class SemgraphEdgeDataset(SemgraphNodeDataset):
         self.sentences = []
         for example in data_ud:
             for (target_num, target) in enumerate(example["targets"]):
+                if target["label"] == "no_relation":
+                    continue
                 tokens = self.tokenize(example['text'])
                 self.sentences.append(tokens)
                 span1 = int(target["span1"][0])
@@ -182,8 +185,8 @@ class SemgraphEdgeDataset(SemgraphNodeDataset):
             words = np.concatenate([words, new_words])
 
         words_dict = {word: i for i, word in enumerate(words)}
-        x = np.array([[words_dict[token] for token in tokens]
-                      for tokens in x_raw])
+        x = np.array(
+            [[words_dict[token] for token in tokens] for tokens in x_raw])
 
         self.x = torch.from_numpy(x)
         self.words = words
@@ -193,19 +196,45 @@ class SemgraphEdgeDataset(SemgraphNodeDataset):
     def load_data(self):
         data_ud = self.load_jsonline_data()
         if self.mode == "train":
-            data_embeddings = util.read_data("./dataset/output_fast_train")
+            data_embeddings = util.read_data(
+                f"./dataset/{self.task_name}/output_fast_train")
         else:
-            data_embeddings = util.read_data("./dataset/output_fast_val")
+            data_embeddings = util.read_data(
+                f"./dataset/{self.task_name}/output_fast_val")
 
         x_raw, y_raw = [], []
         self.sentences = []
         for example, (sentence_emb, _) in zip(data_ud, data_embeddings):
             for (i, target) in enumerate(example["targets"]):
+                if target["label"] == "no_relation":
+                    continue
                 span1 = int(target["span1"][0])
                 span2 = int(target["span2"][0])
 
                 x_raw_tail = sentence_emb[span1]
                 x_raw_head = sentence_emb[span2]
+
+                """span1_len = 0
+                for idx1 in range(int(target["span1"][0])+1, int(target["span1"][1])):
+                    x_raw_tail += np.concatenate(
+                        [x_raw_tail, sentence_emb[idx1]])
+                    span1_len += 1
+
+                span2_len = 0
+                for idx2 in range(int(target["span2"][0])+1, int(target["span2"][1])):
+                    x_raw_head += np.concatenate(
+                        [x_raw_head, sentence_emb[idx2]])
+                    span2_len += 1
+
+                pad_dist = abs(span2_len - span1_len)
+                if span2_len > span1_len:
+                    origin_tail = deepcopy(x_raw_tail)
+                    for i in range(pad_dist):
+                        x_raw_tail += np.concatenate([x_raw_tail, origin_tail])
+                elif span1_len > span2_len:
+                    origin_head = deepcopy(x_raw_head)
+                    for i in range(pad_dist):
+                        x_raw_head += np.concatenate([x_raw_head, origin_head])"""
 
                 x_raw += [np.concatenate([x_raw_tail, x_raw_head])]
                 y_raw += [target["label"]]
