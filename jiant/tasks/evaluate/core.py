@@ -1,4 +1,6 @@
 import itertools
+from jiant.tasks.lib.edge_probing.contradiction import ContradictionTask
+from jiant.tasks.lib.edge_probing.monotonicity import MonotonicityTask
 import json
 
 from dataclasses import dataclass
@@ -1059,6 +1061,11 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
     elif isinstance(
         task,
         (
+            tasks_retrieval.ContradictionTask,
+            tasks_retrieval.MonotonicityTask,
+            tasks_retrieval.TransitiveAssociationTask,
+            tasks_retrieval.FactualityTask,
+            tasks_retrieval.Semgraph1Task,
             tasks_retrieval.Semgraph2Task,
             tasks_retrieval.Spr1Task,
             tasks_retrieval.Spr2Task,

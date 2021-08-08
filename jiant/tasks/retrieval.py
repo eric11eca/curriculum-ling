@@ -87,7 +87,12 @@ from jiant.tasks.lib.mcscript import MCScriptTask
 from jiant.tasks.lib.arct import ArctTask
 from jiant.tasks.lib.winogrande import WinograndeTask
 from jiant.tasks.lib.piqa import PiqaTask
+from jiant.tasks.lib.edge_probing.semgraph1 import Semgraph1Task
 from jiant.tasks.lib.edge_probing.semgraph2 import Semgraph2Task
+from jiant.tasks.lib.edge_probing.factuality import FactualityTask
+from jiant.tasks.lib.edge_probing.transitive import TransitiveAssociationTask
+from jiant.tasks.lib.edge_probing.monotonicity import MonotonicityTask
+from jiant.tasks.lib.edge_probing.contradiction import ContradictionTask
 
 from jiant.tasks.core import Task
 from jiant.utils.python.io import read_json
@@ -180,7 +185,12 @@ TASK_DICT = {
     "arct": ArctTask,
     "winogrande": WinograndeTask,
     "piqa": PiqaTask,
+    "semgraph1": Semgraph1Task,
     "semgraph2": Semgraph2Task,
+    "factuality": FactualityTask,
+    "transitive": TransitiveAssociationTask,
+    "monotonicity": MonotonicityTask,
+    "contradiction": ContradictionTask,
 }
 
 
