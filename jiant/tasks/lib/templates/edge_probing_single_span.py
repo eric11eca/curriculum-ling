@@ -46,13 +46,23 @@ class Example(BaseExample):
         normed_space_tokenization, normed_target_tokenization = normalize_tokenizations(
             space_tokenization, target_tokenization, tokenizer
         )
-        aligner = retokenize.TokenAligner(normed_space_tokenization, normed_target_tokenization)
-        target_span = aligner.project_token_span(self.span[0], self.span[1])
+        aligner = retokenize.TokenAligner(
+            normed_space_tokenization, normed_target_tokenization)
+        try:
+            target_span = aligner.project_token_span(
+                self.span[0], self.span[1])
+        except ValueError:
+            print(self.text)
+            print(space_tokenization)
+            print(target_tokenization)
+            print(normed_space_tokenization)
+            print(normed_target_tokenization)
         return TokenizedExample(
             guid=self.guid,
             tokens=target_tokenization,
             span=target_span,
-            span_text=" ".join(target_tokenization[target_span[0] : target_span[1]]),
+            span_text=" ".join(
+                target_tokenization[target_span[0]: target_span[1]]),
             label_ids=[self.task.LABEL_TO_ID[label] for label in self.labels],
             label_num=len(self.task.LABELS),
         )
@@ -71,11 +81,13 @@ class TokenizedExample(BaseTokenizedExample):
         special_tokens_count = 2  # CLS, SEP
 
         (tokens,) = truncate_sequences(
-            tokens_ls=[self.tokens], max_length=feat_spec.max_seq_length - special_tokens_count,
+            tokens_ls=[
+                self.tokens], max_length=feat_spec.max_seq_length - special_tokens_count,
         )
 
         unpadded_tokens = tokens + [tokenizer.sep_token]
-        unpadded_segment_ids = [feat_spec.sequence_a_segment_id] * (len(tokens) + 1)
+        unpadded_segment_ids = [
+            feat_spec.sequence_a_segment_id] * (len(tokens) + 1)
 
         unpadded_inputs = add_cls_token(
             unpadded_tokens=unpadded_tokens,

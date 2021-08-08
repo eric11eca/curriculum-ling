@@ -68,7 +68,8 @@ class MLMSimpleTask(mlm_template.MLMTask):
 
     @classmethod
     def _create_examples(cls, path, set_type, return_generator):
-        generator = ReusableGenerator(cls._get_examples_generator, path=path, set_type=set_type)
+        generator = ReusableGenerator(
+            cls._get_examples_generator, path=path, set_type=set_type)
         if return_generator:
             return generator
         else:

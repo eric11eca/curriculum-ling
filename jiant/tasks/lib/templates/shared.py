@@ -105,7 +105,8 @@ def construct_single_input_tokens_and_segment_ids(
     special_tokens_count = 2  # CLS, SEP
 
     (input_tokens,) = truncate_sequences(
-        tokens_ls=[input_tokens], max_length=feat_spec.max_seq_length - special_tokens_count,
+        tokens_ls=[input_tokens], max_length=feat_spec.max_seq_length -
+        special_tokens_count,
     )
 
     return add_cls_token(
@@ -193,13 +194,15 @@ def add_cls_token(
     if feat_spec.cls_token_at_end:
         return UnpaddedInputs(
             unpadded_tokens=unpadded_tokens + [tokenizer.cls_token],
-            unpadded_segment_ids=unpadded_segment_ids + [feat_spec.cls_token_segment_id],
+            unpadded_segment_ids=unpadded_segment_ids +
+            [feat_spec.cls_token_segment_id],
             cls_offset=0,
         )
     else:
         return UnpaddedInputs(
             unpadded_tokens=[tokenizer.cls_token] + unpadded_tokens,
-            unpadded_segment_ids=[feat_spec.cls_token_segment_id] + unpadded_segment_ids,
+            unpadded_segment_ids=[
+                feat_spec.cls_token_segment_id] + unpadded_segment_ids,
             cls_offset=1,
         )
 

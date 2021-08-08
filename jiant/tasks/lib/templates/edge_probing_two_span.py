@@ -54,12 +54,18 @@ class Example(BaseExample):
                 self.span1[0], self.span1[1])
             target_span2 = aligner.project_token_span(
                 self.span2[0], self.span2[1])
+
         except ValueError:
             print(self.text)
             print(space_tokenization)
             print(target_tokenization)
             print(normed_space_tokenization)
             print(normed_target_tokenization)
+
+        try:
+            label_ids = [self.task.LABEL_TO_ID[label] for label in self.labels]
+        except KeyError:
+            print(self.text)
 
         return TokenizedExample(
             guid=self.guid,
@@ -128,7 +134,7 @@ class TokenizedExample(BaseTokenizedExample):
         ), "Span 1 spans beyond max_seq_len, consider raising max_seq_len"
         assert span2_span.end <= len(
             tokens
-        ), "Span 2 spans beyond max_seq_len, consider raising max_seq_len"
+        ), "Span 2 spans beyond max_seq_len, consider raising max_seq_len" + "\n" + ' '.join(tokens)
 
         binary_label_ids = np.zeros((self.label_num,), dtype=int)
         for label_id in self.label_ids:
