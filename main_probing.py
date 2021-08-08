@@ -67,15 +67,15 @@ def tokenization(task_name, model_name, phase="val"):
     ))
 
 
-def train_configuration(task_name):
+def train_configuration(task_name, model_name):
     jiant_run_config = configurator.SimpleAPIMultiTaskConfigurator(
-        task_config_base_path="./tasks/configs",
-        task_cache_base_path="./cache",
+        task_config_base_path="/content/tasks/configs/",
+        task_cache_base_path=f"./cache/{model_name}/",
         train_task_name_list=[task_name],
         val_task_name_list=[task_name],
         train_batch_size=8,
         eval_batch_size=16,
-        epochs=3,
+        epochs=5,
         num_gpus=1,
     ).create_config()
 
@@ -98,6 +98,7 @@ def train(task_name, model_name):
         do_val=True,
         do_save=True,
         write_val_preds=True,
+        freeze_encoder=True,
         force_overwrite=True,
         no_cuda=False
     )
@@ -114,9 +115,11 @@ def setup_model(model_name):
 MODEL_NAMES = {
     "bert1": "bert-base-uncased",
     "bert2": "bert-large-uncased",
-    "bert3": "bert-finetune",
-    "roberta": "roberta-base",
-    "deberta": "microsoft/deberta-v2-xlarge"
+    "bert3": "howey/bert-base-uncased-mnli",
+    "roberta1": "roberta-base",
+    "roberta2": "roberta-large",
+    "deberta": "microsoft/deberta-base",
+    "bert_ner": "andi611/bert-large-uncased-ner"
 }
 
 
@@ -156,7 +159,7 @@ if __name__ == "__main__":
 
     if args.do_train_val:
         print("Setup Jiant Run_Configurations: ")
-        train_configuration(task_name)
+        train_configuration(task_name, model_name)
 
         print("Jiant Training Session Starts: ")
         train(task_name=task_name, model_name=model_name)
