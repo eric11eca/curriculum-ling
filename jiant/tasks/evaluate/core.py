@@ -1,4 +1,5 @@
 import itertools
+from jiant.tasks.lib.edge_probing.align_sentiment import AlignSentimentTask
 from jiant.tasks.lib.edge_probing.contradiction import ContradictionTask
 from jiant.tasks.lib.edge_probing.monotonicity import MonotonicityTask
 import json
@@ -1061,6 +1062,7 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
     elif isinstance(
         task,
         (
+            tasks_retrieval.AlignSentimentTask,
             tasks_retrieval.ContradictionTask,
             tasks_retrieval.MonotonicityTask,
             tasks_retrieval.TransitiveAssociationTask,
