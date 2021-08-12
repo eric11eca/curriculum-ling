@@ -1,3 +1,6 @@
+import os
+import sys
+import argparse
 from types import prepare_class
 import jiant.shared.caching as caching
 import jiant.proj.main.tokenize_and_cache as tokenize_and_cache
@@ -6,9 +9,6 @@ import jiant.proj.main.scripts.configurator as configurator
 import jiant.proj.main.export_model as export_model
 import jiant.utils.display as display
 import jiant.utils.python.io as py_io
-import os
-import sys
-import argparse
 sys.path.insert(0, "/content/jiant")
 
 
@@ -70,12 +70,12 @@ def tokenization(task_name, model_name, phase="val"):
 def train_configuration(task_name, model_name):
     jiant_run_config = configurator.SimpleAPIMultiTaskConfigurator(
         task_config_base_path="/content/tasks/configs/",
-        task_cache_base_path=f"./cache/{model_name}/",
+        task_cache_base_path=f"./cache/control/{model_name}/",
         train_task_name_list=[task_name],
         val_task_name_list=[task_name],
-        train_batch_size=8,
+        train_batch_size=4,
         eval_batch_size=16,
-        epochs=5,
+        epochs=20,
         num_gpus=1,
     ).create_config()
 
@@ -85,16 +85,16 @@ def train_configuration(task_name, model_name):
     display.show_json(jiant_run_config)
 
 
-def train(task_name, model_name):
+def train(task_name, model_name, model_path):
     run_args = main_runscript.RunConfiguration(
         jiant_task_container_config_path=f"./run_configs/{task_name}_run_config.json",
         output_dir=f"./runs/{task_name}",
         hf_pretrained_model_name_or_path=model_name,
-        model_path=f"./models/{model_name}/model/model.p",
+        model_path=model_path,
         model_config_path=f"./models/{model_name}/model/config.json",
-        learning_rate=1e-5,
+        learning_rate=1e-3,
         eval_every_steps=500,
-        do_train=True,
+        do_train=False,
         do_val=True,
         do_save=True,
         write_val_preds=True,
@@ -122,6 +122,14 @@ MODEL_NAMES = {
     "bert_ner": "andi611/bert-large-uncased-ner"
 }
 
+MODEL_VAL_NAMES = {
+    "bert1": "bert-base",
+    "bert2": "bert-large",
+    "roberta1": "roberta-base",
+    "roberta2": "roberta-large",
+    "deberta": "deberta",
+}
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -141,6 +149,8 @@ if __name__ == "__main__":
                         help="probing task name")
     parser.add_argument("--model_name", type=str, default="bert1",
                         help="pre-trained transformer model name")
+    parser.add_argument("--test", action="store_true",
+                        help="enable testing on best model"),
 
     args = parser.parse_args()
     task_name = args.task_name
@@ -158,8 +168,11 @@ if __name__ == "__main__":
         setup_model(model_name)
 
     if args.do_train_val:
+        model_path = f"./models/{model_name}/model/model.p"
+        if args.test:
+            model_path = f'./runs/{task_name}/{MODEL_VAL_NAMES[args.model_name]}/best_model.p'
         print("Setup Jiant Run_Configurations: ")
         train_configuration(task_name, model_name)
 
         print("Jiant Training Session Starts: ")
-        train(task_name=task_name, model_name=model_name)
+        train(task_name=task_name, model_name=model_name, model_path=model_path)

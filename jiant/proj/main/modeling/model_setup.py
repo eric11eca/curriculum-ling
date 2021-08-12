@@ -98,6 +98,7 @@ def delegate_load_from_path(jiant_model: primary.JiantModel, weights_path: str, 
 
     """
     weights_dict = torch.load(weights_path)
+    # print(weights_dict['taskmodels_dict.semgraph2.head.classifier.weight'])
     return delegate_load(jiant_model=jiant_model, weights_dict=weights_dict, load_mode=load_mode)
 
 

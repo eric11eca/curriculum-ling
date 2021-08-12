@@ -81,7 +81,8 @@ class JiantRunner:
         train_dataloader_dict = self.get_train_dataloader_dict()
         start_position = train_state.global_steps
         for _ in maybe_tqdm(
-            range(start_position, self.jiant_task_container.global_train_config.max_steps),
+            range(start_position,
+                  self.jiant_task_container.global_train_config.max_steps),
             desc="Training",
             initial=start_position,
             total=self.jiant_task_container.global_train_config.max_steps,
@@ -233,8 +234,10 @@ class JiantRunner:
         return state
 
     def load_state(self, runner_state):
-        torch_utils.get_model_for_saving(self.jiant_model).load_state_dict(runner_state["model"])
-        self.optimizer_scheduler.optimizer.load_state_dict(runner_state["optimizer"])
+        torch_utils.get_model_for_saving(
+            self.jiant_model).load_state_dict(runner_state["model"])
+        self.optimizer_scheduler.optimizer.load_state_dict(
+            runner_state["optimizer"])
 
 
 class CheckpointSaver:
@@ -273,7 +276,8 @@ def run_val(
     eval_accumulator = evaluation_scheme.get_accumulator()
 
     for step, (batch, batch_metadata) in enumerate(
-        maybe_tqdm(val_dataloader, desc=f"Eval ({task.name}, Val)", verbose=verbose)
+        maybe_tqdm(val_dataloader,
+                   desc=f"Eval ({task.name}, Val)", verbose=verbose)
     ):
         batch = batch.to(device)
 
@@ -329,7 +333,8 @@ def run_test(
     eval_accumulator = evaluation_scheme.get_accumulator()
 
     for step, (batch, batch_metadata) in enumerate(
-        maybe_tqdm(test_dataloader, desc=f"Eval ({task.name}, Test)", verbose=verbose)
+        maybe_tqdm(test_dataloader,
+                   desc=f"Eval ({task.name}, Test)", verbose=verbose)
     ):
         batch = batch.to(device)
 
