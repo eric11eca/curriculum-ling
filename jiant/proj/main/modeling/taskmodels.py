@@ -214,7 +214,7 @@ class SpanPredictionModel(Taskmodel):
 
 @JiantTaskModelFactory.register(TaskTypes.MULTI_LABEL_SPAN_CLASSIFICATION)
 class MultiLabelSpanComparisonModel(Taskmodel):
-    def __init__(self, task, encoder, head: heads.SpanComparisonHead, **kwargs):
+    def __init__(self, task, encoder, head: heads.MultiLabelSpanComparisonHead, **kwargs):
         super().__init__(task=task, encoder=encoder, head=head)
 
     def forward(self, batch, tokenizer, compute_loss: bool = False):

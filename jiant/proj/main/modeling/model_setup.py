@@ -289,6 +289,7 @@ def create_taskmodel(task, encoder, **taskmodel_kwargs) -> Taskmodel:
     head_kwargs["hidden_dropout_prob"] = encoder.get_hidden_dropout_prob()
     head_kwargs["vocab_size"] = encoder.config.vocab_size
     head_kwargs["model_arch"] = ModelArchitectures(encoder.config.model_type)
+    head_kwargs["classifier_type"] = taskmodel_kwargs["taskmodel_kwargs"]["classifier_type"]
 
     if hasattr(encoder, "hidden_act"):
         head_kwargs["hidden_act"] = encoder.config.hidden_act
