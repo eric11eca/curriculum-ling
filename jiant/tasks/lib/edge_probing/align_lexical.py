@@ -1,4 +1,4 @@
-"""Sentiment Semantic Relation Alignment Edge Probing task.
+"""Lexical Alignment Edge Probing task.
 Task source paper: https://arxiv.org/pdf/1905.06316.pdf.
 Task data prep directions: https://github.com/nyu-mll/jiant/blob/master/probing/data/README.md.
 """
@@ -13,7 +13,7 @@ from jiant.utils.python.io import read_json_lines
 class Example(edge_probing_two_span.Example):
     @property
     def task(self):
-        return AlignSentimentTask
+        return LexicalAlignTask
 
 
 @dataclass
@@ -31,7 +31,7 @@ class Batch(edge_probing_two_span.Batch):
     pass
 
 
-class AlignSentimentTask(edge_probing_two_span.AbstractProbingTask):
+class LexicalAlignTask(edge_probing_two_span.AbstractProbingTask):
     Example = Example
     TokenizedExample = TokenizedExample
     DataRow = DataRow
@@ -39,8 +39,7 @@ class AlignSentimentTask(edge_probing_two_span.AbstractProbingTask):
 
     LABELS = [
         "aligned",
-        "unaligned",
-        "contradict"
+        "unaligned"
     ]
     LABEL_TO_ID, ID_TO_LABEL = labels_to_bimap(LABELS)
 

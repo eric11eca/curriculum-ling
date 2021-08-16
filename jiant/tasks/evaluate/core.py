@@ -1,6 +1,5 @@
 import itertools
-
-from torch.utils import data
+from jiant.tasks.lib.edge_probing.align_anaphora import AnaphoraTask
 from jiant.tasks.lib.edge_probing.align_sentiment import AlignSentimentTask
 from jiant.tasks.lib.edge_probing.contradiction import ContradictionTask
 from jiant.tasks.lib.edge_probing.monotonicity import MonotonicityTask
@@ -1064,6 +1063,8 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
     elif isinstance(
         task,
         (
+            tasks_retrieval.LexicalAlignTask,
+            tasks_retrieval.AnaphoraTask,
             tasks_retrieval.AlignSentimentTask,
             tasks_retrieval.ContradictionTask,
             tasks_retrieval.MonotonicityTask,
@@ -1126,8 +1127,6 @@ def get_label_ids(task, examples):
 
 
 def get_label_ids_from_data_row(data_row):
-    # print(data_row.label_ids)
-    # return np.random.randint(2, size=data_row.label_ids.shape)
     return data_row.label_ids
 
 
