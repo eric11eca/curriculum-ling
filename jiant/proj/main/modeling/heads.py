@@ -135,6 +135,52 @@ class SpanComparisonHead(BaseHead):
         return logits
 
 
+class Classifier(nn.Module):
+    """ Logistic regression or MLP classifier """
+
+    def __init__(self, d_inp, n_classes, cls_type="mlp", dropout=0.2, d_hid=512):
+        super(Classifier, self).__init__()
+        if cls_type == "log_reg":
+            classifier = nn.Linear(d_inp, n_classes)
+        elif cls_type == "mlp":
+            classifier = nn.Sequential(
+                nn.Linear(d_inp, d_hid),
+                nn.Tanh(),
+                nn.LayerNorm(d_hid),
+                nn.Dropout(dropout),
+                nn.Linear(d_hid, n_classes),
+            )
+        elif cls_type == "fancy_mlp":  # What they did in Infersent.
+            classifier = nn.Sequential(
+                nn.Linear(d_inp, d_hid),
+                nn.Tanh(),
+                nn.LayerNorm(d_hid),
+                nn.Dropout(dropout),
+                nn.Linear(d_hid, d_hid),
+                nn.Tanh(),
+                nn.LayerNorm(d_hid),
+                nn.Dropout(p=dropout),
+                nn.Linear(d_hid, n_classes),
+            )
+        else:
+            raise ValueError("Classifier type %s not found" % type)
+        self.classifier = classifier
+
+    def forward(self, seq_emb):
+        logits = self.classifier(seq_emb)
+        return logits
+
+    @classmethod
+    def from_params(cls, d_inp, n_classes, params):
+        return cls(
+            d_inp,
+            n_classes,
+            cls_type=params["cls_type"],
+            dropout=params["dropout"],
+            d_hid=params["d_hid"],
+        )
+
+
 @JiantHeadFactory.register([TaskTypes.MULTI_LABEL_SPAN_CLASSIFICATION])
 class MultiLabelSpanComparisonHead(BaseHead):
     def __init__(self, task, hidden_size, hidden_dropout_prob, **kwargs):
@@ -143,17 +189,32 @@ class MultiLabelSpanComparisonHead(BaseHead):
         self.num_spans = task.num_spans
         self.num_labels = len(task.LABELS)
         self.hidden_size = hidden_size
+        self.classifier_type = kwargs["classifier_type"]
         self.dropout = nn.Dropout(hidden_dropout_prob)
         self.span_attention_extractor = SelfAttentiveSpanExtractor(hidden_size)
+        input_dim = self.span_attention_extractor.get_output_dim()
+        self.mlp = nn.Sequential(
+            nn.Linear(input_dim * self.num_spans,
+                      hidden_size * self.num_spans),
+            nn.ReLU(),
+            nn.LayerNorm(hidden_size * self.num_spans),
+            nn.Dropout(hidden_dropout_prob),
+        )
         self.classifier = nn.Linear(
             hidden_size * self.num_spans, self.num_labels)
 
     def forward(self, unpooled, spans):
         span_embeddings = self.span_attention_extractor(unpooled, spans)
-        span_embeddings = span_embeddings.view(-1,
-                                               self.num_spans * self.hidden_size)
+        span_embeddings = span_embeddings.view(
+            -1, self.num_spans * self.hidden_size)
         span_embeddings = self.dropout(span_embeddings)
-        logits = self.classifier(span_embeddings)
+        if self.classifier_type == "linear":
+            # print("linear classifier")
+            logits = self.classifier(span_embeddings)
+        elif self.classifier_type == "mlp":
+            # print("MLP classifier")
+            logits = self.mlp(span_embeddings)
+            logits = self.classifier(logits)
         return logits
 
 
