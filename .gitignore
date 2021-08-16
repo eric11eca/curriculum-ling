@@ -8,6 +8,11 @@
 # Task running directory
 ./tasks
 ./cache
+./runs
+./semgraph
+
+# Datasets
+./data
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
