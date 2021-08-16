@@ -1,8 +1,0 @@
-{
-  "task": "semgraph2",
-  "paths": {
-    "train": "/content/tasks/data/semgraph2/train.jsonl",
-    "val": "/content/tasks/data/semgraph2/val.jsonl"
-  },
-  "name": "semgraph2"
-}
