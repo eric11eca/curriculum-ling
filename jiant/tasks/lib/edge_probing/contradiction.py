@@ -2,6 +2,8 @@
 Task source paper: https://arxiv.org/pdf/1905.06316.pdf.
 Task data prep directions: https://github.com/nyu-mll/jiant/blob/master/probing/data/README.md.
 """
+
+import random
 from dataclasses import dataclass
 
 from jiant.tasks.lib.templates.shared import labels_to_bimap
@@ -42,8 +44,8 @@ class ContradictionTask(edge_probing_two_span.AbstractProbingTask):
         "contradict",
         "antonym"
     ]
+    #LABELS = ['0', '1', '2']
     LABEL_TO_ID, ID_TO_LABEL = labels_to_bimap(LABELS)
-
     @property
     def num_spans(self):
         return 2
@@ -77,6 +79,7 @@ class ContradictionTask(edge_probing_two_span.AbstractProbingTask):
                         span2=span2,
                         labels=[target["label"]] if set_type != "test" else [
                             cls.LABELS[-1]],
+                        #labels=[str(random.randint(0, 2))],
                     )
                 )
         return examples

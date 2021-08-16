@@ -83,25 +83,30 @@ class SelfAttentiveSpanExtractor(nn.Module):
         # which happens because some spans near the beginning of the sequence
         # have an end index < max_batch_span_width, so we add this to the mask here.
         span_mask = span_mask * (raw_span_indices >= 0).float()
-        span_indices = torch.nn.functional.relu(raw_span_indices.float()).long()
+        span_indices = torch.nn.functional.relu(
+            raw_span_indices.float()).long()
 
         # Shape: (batch_size * num_spans * max_batch_span_width)
-        flat_span_indices = flatten_and_batch_shift_indices(span_indices, sequence_tensor.size(1))
+        flat_span_indices = flatten_and_batch_shift_indices(
+            span_indices, sequence_tensor.size(1))
 
         # Shape: (batch_size, num_spans, max_batch_span_width, embedding_dim)
-        span_embeddings = batched_index_select(sequence_tensor, span_indices, flat_span_indices)
+        span_embeddings = batched_index_select(
+            sequence_tensor, span_indices, flat_span_indices)
 
         # Shape: (batch_size, num_spans, max_batch_span_width)
         span_attention_logits = batched_index_select(
             global_attention_logits, span_indices, flat_span_indices
         ).squeeze(-1)
         # Shape: (batch_size, num_spans, max_batch_span_width)
-        span_attention_weights = masked_softmax(span_attention_logits, span_mask)
+        span_attention_weights = masked_softmax(
+            span_attention_logits, span_mask)
 
         # Do a weighted sum of the embedded spans with
         # respect to the normalised attention distributions.
         # Shape: (batch_size, num_spans, embedding_dim)
-        attended_text_embeddings = weighted_sum(span_embeddings, span_attention_weights)
+        attended_text_embeddings = weighted_sum(
+            span_embeddings, span_attention_weights)
 
         if span_indices_mask is not None:
             # Above we were masking the widths of spans with respect to the max
@@ -131,19 +136,22 @@ class TimeDistributed(torch.nn.Module):
         for input_tensor in inputs:
             input_size = input_tensor.size()
             if len(input_size) <= 2:
-                raise RuntimeError("No dimension to distribute: " + str(input_size))
+                raise RuntimeError(
+                    "No dimension to distribute: " + str(input_size))
 
             # Squash batch_size and time_steps into a single axis; result has shape
             # (batch_size * time_steps, input_size).
             squashed_shape = [-1] + [x for x in input_size[2:]]
-            reshaped_inputs.append(input_tensor.contiguous().view(*squashed_shape))
+            reshaped_inputs.append(
+                input_tensor.contiguous().view(*squashed_shape))
 
         reshaped_outputs = self._module(*reshaped_inputs)
 
         # Now get the output back into the right shape.
         # (batch_size, time_steps, [hidden_size])
         # noinspection PyUnboundLocalVariable
-        new_shape = [input_size[0], input_size[1]] + [x for x in reshaped_outputs.size()[1:]]
+        new_shape = [input_size[0], input_size[1]] + \
+            [x for x in reshaped_outputs.size()[1:]]
         outputs = reshaped_outputs.contiguous().view(*new_shape)
 
         return outputs
@@ -259,7 +267,8 @@ def batched_index_select(
     """
     if flattened_indices is None:
         # Shape: (batch_size * d_1 * ... * d_n)
-        flattened_indices = flatten_and_batch_shift_indices(indices, target.size(1))
+        flattened_indices = flatten_and_batch_shift_indices(
+            indices, target.size(1))
 
     # Shape: (batch_size * sequence_length, embedding_size)
     flattened_target = target.view(-1, target.size(-1))
@@ -303,7 +312,8 @@ def flatten_and_batch_shift_indices(indices: torch.Tensor, sequence_length: int)
     offset_indices : ``torch.LongTensor``
     """
     # Shape: (batch_size)
-    offsets = get_range_vector(indices.size(0), get_device_of(indices)) * sequence_length
+    offsets = get_range_vector(indices.size(
+        0), get_device_of(indices)) * sequence_length
     for _ in range(len(indices.size()) - 1):
         offsets = offsets.unsqueeze(1)
 

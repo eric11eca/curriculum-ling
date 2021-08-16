@@ -2,6 +2,7 @@
 Task source paper: https://arxiv.org/pdf/1905.06316.pdf.
 Task data prep directions: https://github.com/nyu-mll/jiant/blob/master/probing/data/README.md.
 """
+import random
 from dataclasses import dataclass
 
 from jiant.tasks.lib.templates.shared import labels_to_bimap
@@ -42,6 +43,7 @@ class MonotonicityTask(edge_probing_single_span.AbstractProbingTask):
         "-",
         "=",
     ]
+    #LABELS = ['0', '1', '2']
     LABEL_TO_ID, ID_TO_LABEL = labels_to_bimap(LABELS)
 
     @property
@@ -71,6 +73,7 @@ class MonotonicityTask(edge_probing_single_span.AbstractProbingTask):
                         guid="%s-%s-%s" % (set_type, line_num, target_num),
                         text=line["text"],
                         span=span,
+                        #labels=[str(random.randint(0, 2))],
                         labels=[target["label"]] if set_type != "test" else [
                             cls.LABELS[-1]],
                     )

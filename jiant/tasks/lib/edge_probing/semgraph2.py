@@ -2,6 +2,8 @@
 Task source paper: https://arxiv.org/pdf/1905.06316.pdf.
 Task data prep directions: https://github.com/nyu-mll/jiant/blob/master/probing/data/README.md.
 """
+import random
+from copy import deepcopy
 from dataclasses import dataclass
 
 from jiant.tasks.lib.templates.shared import labels_to_bimap
@@ -47,6 +49,7 @@ class Semgraph2Task(edge_probing_two_span.AbstractProbingTask):
         "relation_2_relation",
         "no_relation"
     ]
+    #LABELS = ['0', '1', '2', '3', '4', '5', '6', '7']
     LABEL_TO_ID, ID_TO_LABEL = labels_to_bimap(LABELS)
 
     @property
@@ -64,6 +67,14 @@ class Semgraph2Task(edge_probing_two_span.AbstractProbingTask):
 
     @classmethod
     def _create_examples(cls, lines, set_type):
+        def random_label(label, classses):
+            tamp_classes = deepcopy(classses)
+            tamp_classes.remove(label)
+            index = random.randint(0, len(tamp_classes) - 1)
+            new_label = tamp_classes[index]
+            del tamp_classes
+            return new_label
+
         examples = []
         for (line_num, line) in enumerate(lines):
             # A line in the task's data file can contain multiple targets (span-pair + labels).
@@ -79,8 +90,9 @@ class Semgraph2Task(edge_probing_two_span.AbstractProbingTask):
                         text=line["text"],
                         span1=span1,
                         span2=span2,
-                        labels=[target["label"]] if set_type != "test" else [
-                            cls.LABELS[-1]],
+                        # labels=[target["label"]] if set_type != "test" else [
+                        #    cls.LABELS[-1]],
+                        labels=[random_label(target["label"], cls.LABELS)],
                     )
                 )
         return examples

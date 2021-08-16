@@ -1127,8 +1127,8 @@ def get_label_ids(task, examples):
 
 def get_label_ids_from_data_row(data_row):
     # print(data_row.label_ids)
-    return np.random.randint(2, size=data_row.label_ids.shape)
-    # return data_row.label_ids
+    # return np.random.randint(2, size=data_row.label_ids.shape)
+    return data_row.label_ids
 
 
 def get_multi_label_ids_from_cache(cache):
