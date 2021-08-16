@@ -1,0 +1,50 @@
+{
+  "task_config_path_dict": {
+    "transitive": "./tasks/configs\\transitive_config.json"
+  },
+  "task_cache_config_dict": {
+    "transitive": {
+      "train": "./cache\\transitive\\train",
+      "val": "./cache\\transitive\\val",
+      "val_labels": "./cache\\transitive\\val_labels"
+    }
+  },
+  "sampler_config": {
+    "sampler_type": "ProportionalMultiTaskSampler"
+  },
+  "global_train_config": {
+    "max_steps": 3516,
+    "warmup_steps": 351
+  },
+  "task_specific_configs_dict": {
+    "transitive": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    }
+  },
+  "taskmodels_config": {
+    "task_to_taskmodel_map": {
+      "transitive": "transitive"
+    },
+    "taskmodel_config_map": {
+      "transitive": null
+    }
+  },
+  "task_run_config": {
+    "train_task_list": [
+      "transitive"
+    ],
+    "train_val_task_list": [
+      "transitive"
+    ],
+    "val_task_list": [
+      "transitive"
+    ],
+    "test_task_list": []
+  },
+  "metric_aggregator_config": {
+    "metric_aggregator_type": "EqualMetricAggregator"
+  }
+}

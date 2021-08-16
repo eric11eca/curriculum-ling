@@ -1,0 +1,50 @@
+{
+  "task_config_path_dict": {
+    "factuality": "/content/tasks/configs/factuality_config.json"
+  },
+  "task_cache_config_dict": {
+    "factuality": {
+      "train": "./cache/microsoft/deberta-base/factuality\\train",
+      "val": "./cache/microsoft/deberta-base/factuality\\val",
+      "val_labels": "./cache/microsoft/deberta-base/factuality\\val_labels"
+    }
+  },
+  "sampler_config": {
+    "sampler_type": "ProportionalMultiTaskSampler"
+  },
+  "global_train_config": {
+    "max_steps": 1535,
+    "warmup_steps": 153
+  },
+  "task_specific_configs_dict": {
+    "factuality": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    }
+  },
+  "taskmodels_config": {
+    "task_to_taskmodel_map": {
+      "factuality": "factuality"
+    },
+    "taskmodel_config_map": {
+      "factuality": null
+    }
+  },
+  "task_run_config": {
+    "train_task_list": [
+      "factuality"
+    ],
+    "train_val_task_list": [
+      "factuality"
+    ],
+    "val_task_list": [
+      "factuality"
+    ],
+    "test_task_list": []
+  },
+  "metric_aggregator_config": {
+    "metric_aggregator_type": "EqualMetricAggregator"
+  }
+}

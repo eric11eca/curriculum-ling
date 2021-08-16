@@ -1,0 +1,50 @@
+{
+  "task_config_path_dict": {
+    "contradiction": "/content/tasks/configs/contradiction_config.json"
+  },
+  "task_cache_config_dict": {
+    "contradiction": {
+      "train": "./cache/control/microsoft/deberta-base/contradiction\\train",
+      "val": "./cache/control/microsoft/deberta-base/contradiction\\val",
+      "val_labels": "./cache/control/microsoft/deberta-base/contradiction\\val_labels"
+    }
+  },
+  "sampler_config": {
+    "sampler_type": "ProportionalMultiTaskSampler"
+  },
+  "global_train_config": {
+    "max_steps": 2520,
+    "warmup_steps": 252
+  },
+  "task_specific_configs_dict": {
+    "contradiction": {
+      "train_batch_size": 4,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    }
+  },
+  "taskmodels_config": {
+    "task_to_taskmodel_map": {
+      "contradiction": "contradiction"
+    },
+    "taskmodel_config_map": {
+      "contradiction": null
+    }
+  },
+  "task_run_config": {
+    "train_task_list": [
+      "contradiction"
+    ],
+    "train_val_task_list": [
+      "contradiction"
+    ],
+    "val_task_list": [
+      "contradiction"
+    ],
+    "test_task_list": []
+  },
+  "metric_aggregator_config": {
+    "metric_aggregator_type": "EqualMetricAggregator"
+  }
+}

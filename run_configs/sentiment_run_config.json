@@ -1,0 +1,52 @@
+{
+  "task_config_path_dict": {
+    "sentiment": "/content/tasks/configs/sentiment_config.json"
+  },
+  "task_cache_config_dict": {
+    "sentiment": {
+      "train": "./cache/bert-base-uncased/sentiment\\train",
+      "val": "./cache/bert-base-uncased/sentiment\\val",
+      "val_labels": "./cache/bert-base-uncased/sentiment\\val_labels"
+    }
+  },
+  "sampler_config": {
+    "sampler_type": "ProportionalMultiTaskSampler"
+  },
+  "global_train_config": {
+    "max_steps": 7500,
+    "warmup_steps": 750
+  },
+  "task_specific_configs_dict": {
+    "sentiment": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    }
+  },
+  "taskmodels_config": {
+    "task_to_taskmodel_map": {
+      "sentiment": "sentiment"
+    },
+    "taskmodel_config_map": {
+      "sentiment": {
+        "classifier_type": "linear"
+      }
+    }
+  },
+  "task_run_config": {
+    "train_task_list": [
+      "sentiment"
+    ],
+    "train_val_task_list": [
+      "sentiment"
+    ],
+    "val_task_list": [
+      "sentiment"
+    ],
+    "test_task_list": []
+  },
+  "metric_aggregator_config": {
+    "metric_aggregator_type": "EqualMetricAggregator"
+  }
+}

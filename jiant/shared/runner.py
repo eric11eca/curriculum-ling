@@ -22,7 +22,8 @@ def complex_backpropagate(
 
         with amp.scale_loss(loss, optimizer) as scaled_loss:
             scaled_loss.backward()
-        torch.nn.utils.clip_grad_norm_(amp.master_params(optimizer), max_grad_norm)
+        torch.nn.utils.clip_grad_norm_(
+            amp.master_params(optimizer), max_grad_norm)
     else:
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
@@ -65,11 +66,13 @@ def save_model_with_metadata(
     if isinstance(model_or_state_dict, dict):
         state_dict = model_or_state_dict
     else:
-        state_dict = torch_utils.get_model_for_saving(model_or_state_dict).state_dict()
+        state_dict = torch_utils.get_model_for_saving(
+            model_or_state_dict).state_dict()
 
     torch.save(state_dict, os.path.join(output_dir, f"{file_name}.p"))
     if metadata is not None:
-        py_io.write_json(metadata, os.path.join(output_dir, f"{file_name}.metadata.json"))
+        py_io.write_json(metadata, os.path.join(
+            output_dir, f"{file_name}.metadata.json"))
 
 
 def compare_steps_max_steps(step, max_steps):

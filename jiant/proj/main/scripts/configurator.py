@@ -106,7 +106,8 @@ class SingleTaskConfigurator(zconf.RunConfig):
                 self.task_config_base_path, f"{self.task_name}_config.json",
             )
         else:
-            raise RuntimeError("Require either `task_config_path` or `task_config_base_path`")
+            raise RuntimeError(
+                "Require either `task_config_path` or `task_config_base_path`")
 
         # === Get cache === #
         if self.task_cache_path is not None:
@@ -114,15 +115,18 @@ class SingleTaskConfigurator(zconf.RunConfig):
             task_cache_path = self.task_cache_path
         elif self.task_cache_base_path is not None:
             assert self.task_cache_path is None
-            task_cache_path = os.path.join(self.task_cache_base_path, self.task_name)
+            task_cache_path = os.path.join(
+                self.task_cache_base_path, self.task_name)
         else:
-            raise RuntimeError("Need `task_cache_path` or `task_cache_base_path`")
+            raise RuntimeError(
+                "Need `task_cache_path` or `task_cache_base_path`")
         task_cache_config = {}
         if self.do_train:
             task_cache_config["train"] = os.path.join(task_cache_path, "train")
         if self.do_val:
             task_cache_config["val"] = os.path.join(task_cache_path, "val")
-            task_cache_config["val_labels"] = os.path.join(task_cache_path, "val_labels")
+            task_cache_config["val_labels"] = os.path.join(
+                task_cache_path, "val_labels")
         if self.do_test:
             task_cache_config["test"] = os.path.join(task_cache_path, "test")
         for v in task_cache_config.values():
@@ -147,7 +151,8 @@ class SingleTaskConfigurator(zconf.RunConfig):
             num_examples = get_num_examples_from_cache(
                 cache_path=os.path.expandvars(task_cache_config["train"]),
             )
-            max_steps = self.epochs * math.ceil(num_examples / effective_batch_size)
+            max_steps = self.epochs * \
+                math.ceil(num_examples / effective_batch_size)
         else:
             raise RuntimeError("Require either `epochs` or `max_steps`")
 
@@ -159,7 +164,8 @@ class SingleTaskConfigurator(zconf.RunConfig):
             assert self.eval_batch_size is None
             eval_batch_size = self.train_batch_size * self.eval_batch_multiplier
         else:
-            raise RuntimeError("Require either `eval_batch_size` or `eval_batch_multiplier`")
+            raise RuntimeError(
+                "Require either `eval_batch_size` or `eval_batch_multiplier`")
 
         # === Build configuration === #
         # Finally, we build our big config dictionary. Congrats!
@@ -255,6 +261,7 @@ class SimpleAPIMultiTaskConfigurator(zconf.RunConfig):
     num_gpus = zconf.attr(type=int, default=None)
     train_examples_cap = zconf.attr(type=int, default=None)
     warmup_steps_proportion = zconf.attr(type=float, default=0.1)
+    classifier_type = zconf.attr(type=str, default="linear")
 
     @classmethod
     def parse_task_name_list(cls, task_name_list_arg):
@@ -293,7 +300,8 @@ class SimpleAPIMultiTaskConfigurator(zconf.RunConfig):
         if self.task_config_base_path is not None:
             assert self.task_config_path_dict is None
             task_config_path_dict = {
-                task_name: os.path.join(self.task_config_base_path, f"{task_name}_config.json")
+                task_name: os.path.join(
+                    self.task_config_base_path, f"{task_name}_config.json")
                 for task_name in full_task_name_list
             }
         else:
@@ -334,11 +342,13 @@ class SimpleAPIMultiTaskConfigurator(zconf.RunConfig):
                     )
         elif isinstance(self.task_cache_config_dict, str):
             assert self.task_cache_base_path is None
-            task_cache_config_dict = py_io.read_json(self.task_cache_config_dict)
+            task_cache_config_dict = py_io.read_json(
+                self.task_cache_config_dict)
         elif isinstance(task_config_path_dict, dict):
             task_cache_config_dict = self.task_cache_config_dict
         else:
-            raise RuntimeError("Need 'task_cache_base_path' or 'task_cache_dict'")
+            raise RuntimeError(
+                "Need 'task_cache_base_path' or 'task_cache_dict'")
 
         # === Compute training steps === #
         # Computing the number of training steps across multiple tasks is slightly
@@ -366,7 +376,8 @@ class SimpleAPIMultiTaskConfigurator(zconf.RunConfig):
             else:
                 effective_batch_size = self.train_batch_size * self.gradient_accumulation_steps
             num_examples = get_num_examples_from_cache(
-                cache_path=os.path.expandvars(task_cache_config_dict[task_name]["train"]),
+                cache_path=os.path.expandvars(
+                    task_cache_config_dict[task_name]["train"]),
             )
             capped_num_examples = cap_examples(
                 num_examples=num_examples, cap=self.train_examples_cap
@@ -374,7 +385,8 @@ class SimpleAPIMultiTaskConfigurator(zconf.RunConfig):
             num_examples_dict[task_name] = num_examples
             capped_num_examples_dict[task_name] = capped_num_examples
             if max_steps_not_given:
-                max_steps += self.epochs * math.ceil(capped_num_examples / effective_batch_size)
+                max_steps += self.epochs * \
+                    math.ceil(capped_num_examples / effective_batch_size)
 
         # === Compute eval_batch_size === #
         # Eval batch size is often a multiple of train batch size,
@@ -422,7 +434,8 @@ class SimpleAPIMultiTaskConfigurator(zconf.RunConfig):
                 "task_to_taskmodel_map": {
                     task_name: task_name for task_name in full_task_name_list
                 },
-                "taskmodel_config_map": {task_name: None for task_name in full_task_name_list},
+                "taskmodel_config_map": {
+                    task_name: {"classifier_type": self.classifier_type} for task_name in full_task_name_list},
             },
             "task_run_config": {
                 "train_task_list": task_name_list_dict["train"],
@@ -437,9 +450,11 @@ class SimpleAPIMultiTaskConfigurator(zconf.RunConfig):
 
 def main():
     full_cl_args = zconf.core.get_sys_args()
-    assert len(full_cl_args) >= 1, "Require two arguments to start: configurator and out_path"
+    assert len(
+        full_cl_args) >= 1, "Require two arguments to start: configurator and out_path"
     configurator_name, config_path, *cl_args = full_cl_args
-    configurator = Registry.get_configurator(configurator_name=configurator_name)
+    configurator = Registry.get_configurator(
+        configurator_name=configurator_name)
     config_dict = configurator.default_run_cli(cl_args=cl_args).create_config()
     os.makedirs(os.path.split(config_path)[0], exist_ok=True)
     py_io.write_json(config_dict, path=config_path)

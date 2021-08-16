@@ -72,7 +72,8 @@ def create_task_dict(task_config_dict: dict, verbose: bool = True) -> Dict[str, 
     """
     task_dict = {}
     for task_name, task_config_path in task_config_dict.items():
-        task = create_task_from_config_path(config_path=task_config_path, verbose=False)
+        task = create_task_from_config_path(
+            config_path=task_config_path, verbose=False)
         if not task.name == task_name:
             warnings.warn(
                 "task {} from {} has conflicting names: {}/{}. Using {}".format(
@@ -136,7 +137,8 @@ def get_num_train_examples(task_cache_dict: Dict, train_task_list=None) -> Dict[
     for task_name in train_task_list:
         single_task_cache_dict = task_cache_dict[task_name]
         if "train" in single_task_cache_dict:
-            num_train_examples_dict[task_name] = len(single_task_cache_dict["train"])
+            num_train_examples_dict[task_name] = len(
+                single_task_cache_dict["train"])
         else:
             num_train_examples_dict[task_name] = 0
     return num_train_examples_dict
@@ -195,8 +197,10 @@ def create_jiant_task_container(
         JiantTaskContainer carrying components configured and set up pre-runner.
 
     """
-    task_dict = create_task_dict(task_config_dict=task_config_path_dict, verbose=verbose)
-    task_cache_dict = create_task_cache_dict(task_cache_config_dict=task_cache_config_dict)
+    task_dict = create_task_dict(
+        task_config_dict=task_config_path_dict, verbose=verbose)
+    task_cache_dict = create_task_cache_dict(
+        task_cache_config_dict=task_cache_config_dict)
     global_train_config = GlobalTrainConfig.from_dict(global_train_config)
     task_specific_config = create_task_specific_configs(
         task_specific_configs_dict=task_specific_configs_dict,
@@ -250,6 +254,7 @@ def create_jiant_task_container_from_json(
     jiant_task_container_config_path: str, verbose: bool = True
 ) -> JiantTaskContainer:
     return create_jiant_task_container_from_dict(
-        jiant_task_container_config_dict=py_io.read_json(jiant_task_container_config_path),
+        jiant_task_container_config_dict=py_io.read_json(
+            jiant_task_container_config_path),
         verbose=verbose,
     )

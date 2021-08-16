@@ -1,0 +1,50 @@
+{
+  "task_config_path_dict": {
+    "monotonicity": "/content/tasks/configs/monotonicity_config.json"
+  },
+  "task_cache_config_dict": {
+    "monotonicity": {
+      "train": "./cache/control/bert-base-uncased/monotonicity\\train",
+      "val": "./cache/control/bert-base-uncased/monotonicity\\val",
+      "val_labels": "./cache/control/bert-base-uncased/monotonicity\\val_labels"
+    }
+  },
+  "sampler_config": {
+    "sampler_type": "ProportionalMultiTaskSampler"
+  },
+  "global_train_config": {
+    "max_steps": 124300,
+    "warmup_steps": 12430
+  },
+  "task_specific_configs_dict": {
+    "monotonicity": {
+      "train_batch_size": 4,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    }
+  },
+  "taskmodels_config": {
+    "task_to_taskmodel_map": {
+      "monotonicity": "monotonicity"
+    },
+    "taskmodel_config_map": {
+      "monotonicity": null
+    }
+  },
+  "task_run_config": {
+    "train_task_list": [
+      "monotonicity"
+    ],
+    "train_val_task_list": [
+      "monotonicity"
+    ],
+    "val_task_list": [
+      "monotonicity"
+    ],
+    "test_task_list": []
+  },
+  "metric_aggregator_config": {
+    "metric_aggregator_type": "EqualMetricAggregator"
+  }
+}

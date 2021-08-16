@@ -1,0 +1,50 @@
+{
+  "task_config_path_dict": {
+    "semgraph1": "/content/tasks/configs/semgraph1_config.json"
+  },
+  "task_cache_config_dict": {
+    "semgraph1": {
+      "train": "./cache/bert-base-uncased/semgraph1\\train",
+      "val": "./cache/bert-base-uncased/semgraph1\\val",
+      "val_labels": "./cache/bert-base-uncased/semgraph1\\val_labels"
+    }
+  },
+  "sampler_config": {
+    "sampler_type": "ProportionalMultiTaskSampler"
+  },
+  "global_train_config": {
+    "max_steps": 113750,
+    "warmup_steps": 11375
+  },
+  "task_specific_configs_dict": {
+    "semgraph1": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    }
+  },
+  "taskmodels_config": {
+    "task_to_taskmodel_map": {
+      "semgraph1": "semgraph1"
+    },
+    "taskmodel_config_map": {
+      "semgraph1": null
+    }
+  },
+  "task_run_config": {
+    "train_task_list": [
+      "semgraph1"
+    ],
+    "train_val_task_list": [
+      "semgraph1"
+    ],
+    "val_task_list": [
+      "semgraph1"
+    ],
+    "test_task_list": []
+  },
+  "metric_aggregator_config": {
+    "metric_aggregator_type": "EqualMetricAggregator"
+  }
+}

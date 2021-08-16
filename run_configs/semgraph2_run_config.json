@@ -1,0 +1,50 @@
+{
+  "task_config_path_dict": {
+    "semgraph2": "/content/tasks/configs/semgraph2_config.json"
+  },
+  "task_cache_config_dict": {
+    "semgraph2": {
+      "train": "./cache/control/microsoft/deberta-base/semgraph2\\train",
+      "val": "./cache/control/microsoft/deberta-base/semgraph2\\val",
+      "val_labels": "./cache/control/microsoft/deberta-base/semgraph2\\val_labels"
+    }
+  },
+  "sampler_config": {
+    "sampler_type": "ProportionalMultiTaskSampler"
+  },
+  "global_train_config": {
+    "max_steps": 8330,
+    "warmup_steps": 833
+  },
+  "task_specific_configs_dict": {
+    "semgraph2": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    }
+  },
+  "taskmodels_config": {
+    "task_to_taskmodel_map": {
+      "semgraph2": "semgraph2"
+    },
+    "taskmodel_config_map": {
+      "semgraph2": null
+    }
+  },
+  "task_run_config": {
+    "train_task_list": [
+      "semgraph2"
+    ],
+    "train_val_task_list": [
+      "semgraph2"
+    ],
+    "val_task_list": [
+      "semgraph2"
+    ],
+    "test_task_list": []
+  },
+  "metric_aggregator_config": {
+    "metric_aggregator_type": "EqualMetricAggregator"
+  }
+}
