@@ -10,7 +10,7 @@ from torch.utils.data import Dataset
 from sklearn.decomposition import PCA
 
 
-class SemgraphNodeDataset(Dataset):
+class BaseDataset(Dataset):
     # pylint: disable=too-many-instance-attributes
 
     def __init__(self, task_name, representation, embedding_size, mode, pca=None, classes=None, words=None):
@@ -18,6 +18,7 @@ class SemgraphNodeDataset(Dataset):
         self.task_name = task_name
         self.representation = representation
         self.embedding_size = embedding_size
+        self.count = 0
 
         train_pth = f'/content/tasks/data/{task_name}/train.jsonl'
         val_pth = f'/content/tasks/data/{task_name}/val.jsonl'
@@ -52,62 +53,11 @@ class SemgraphNodeDataset(Dataset):
         self.load_index(x_raw, words=words)
         self.load_classes(y_raw, classes=classes)
 
-    def load_data_index(self):
-        data_ud = util.read_data(self.input_name_base % (self.mode, 'ud'))
-
-        x_raw, y_raw = [], []
-        for sentence_ud, words in data_ud:
-            for i, token in enumerate(sentence_ud):
-                node_tag = token['tag']
-
-                x_raw += [words[i]]
-                y_raw += [node_tag]
-
-        x_raw = np.array(x_raw)
-        y_raw = np.array(y_raw)
-
-        return x_raw, y_raw
-
-    def load_index(self, x_raw, words=None):
-        if words is None:
-            # import ipdb; ipdb.set_trace()
-            x, words = pd.factorize(x_raw, sort=True)
-        else:
-            new_words = set(x_raw) - set(words)
-            if new_words:
-                words = np.concatenate([words, list(new_words)])
-
-            words_dict = {word: i for i, word in enumerate(words)}
-            x = np.array([words_dict[token] for token in x_raw])
-
-        self.x = torch.from_numpy(x)
-        self.words = words
-
-        self.n_words = len(words)
-
     def _process(self, pca, classes):
         x_raw, y_raw = self.load_data()
 
         self.load_embeddings(x_raw, pca=pca)
         self.load_classes(y_raw, classes=classes)
-
-    def load_data(self):
-        data_ud = util.read_data(self.input_name_base % (self.mode, 'ud'))
-        data_embeddings = util.read_data(
-            self.input_name_base % (self.mode, self.representation))
-
-        x_raw, y_raw = [], []
-        for (sentence_ud, words), (sentence_emb, _) in zip(data_ud, data_embeddings):
-            for i, token in enumerate(sentence_ud):
-                node_tag = token['tag']
-
-                x_raw += [sentence_emb[i]]
-                y_raw += [node_tag]
-
-        x_raw = np.array(x_raw)
-        y_raw = np.array(y_raw)
-
-        return x_raw, y_raw
 
     def load_embeddings(self, x_raw, pca=None):
         pca_x = x_raw
@@ -149,7 +99,7 @@ class SemgraphNodeDataset(Dataset):
         return (self.x[index], self.y[index])
 
 
-class SemgraphEdgeDataset(SemgraphNodeDataset):
+class ContradictionDataset(BaseDataset):
     # pylint: disable=too-many-instance-attributes
 
     def load_data_index(self):
@@ -158,11 +108,108 @@ class SemgraphEdgeDataset(SemgraphNodeDataset):
         x_raw, y_raw = [], []
         self.sentences = []
         for example in data_ud:
+            tokens = self.tokenize(example['text'])
+            self.sentences.append(tokens)
+            for (target_num, target) in enumerate(example["targets"]):
+                span1 = int(target["span1"][0])
+                span2 = int(target["span2"][0])
+
+                x_raw_tail = tokens[span1]
+                x_raw_head = tokens[span2]
+
+                ''' for idx1 in range(int(target["span1"][0])+1, int(target["span1"][1])):
+                    x_raw_tail += tokens[idx1]
+
+                for idx2 in range(int(target["span2"][0])+1, int(target["span2"][1])):
+                    x_raw_head += tokens[idx2]'''
+
+                x_raw += [[x_raw_tail, x_raw_head]]
+                y_raw += [target["label"]]
+
+        x_raw = np.array(x_raw)
+        y_raw = np.array(y_raw)
+        return x_raw, y_raw
+
+    def load_index(self, x_raw, words=None):
+        if words is None:
+            words = []
+
+        new_words = sorted(list(set(np.unique(x_raw)) - set(words)))
+        if new_words:
+            words = np.concatenate([words, new_words])
+
+        words_dict = {word: i for i, word in enumerate(words)}
+        x = np.array(
+            [[words_dict[token] for token in tokens] for tokens in x_raw])
+
+        self.x = torch.from_numpy(x)
+        self.words = words
+
+        self.n_words = len(words)
+
+    def load_data(self):
+        data_ud = self.load_jsonline_data()
+        if self.mode == "train":
+            data_embeddings = util.read_data(
+                f"./dataset/{self.task_name}/output_fast_train")
+        else:
+            data_embeddings = util.read_data(
+                f"./dataset/{self.task_name}/output_fast_val")
+
+        x_raw, y_raw = [], []
+        self.sentences = []
+        for example, (sentence_emb, _) in zip(data_ud, data_embeddings):
+            for (i, target) in enumerate(example["targets"]):
+                span1 = int(target["span1"][0])
+                span2 = int(target["span2"][0])
+
+                x_raw_tail = sentence_emb[span1]
+                x_raw_head = sentence_emb[span2]
+
+                span1_len = 0
+                for idx1 in range(int(target["span1"][0])+1, int(target["span1"][1])):
+                    x_raw_tail += np.concatenate(
+                        [x_raw_tail, sentence_emb[idx1]])
+                    span1_len += 1
+
+                span2_len = 0
+                for idx2 in range(int(target["span2"][0])+1, int(target["span2"][1])):
+                    x_raw_head += np.concatenate(
+                        [x_raw_head, sentence_emb[idx2]])
+                    span2_len += 1
+
+                pad_dist = abs(span2_len - span1_len)
+                if span2_len > span1_len:
+                    origin_tail = np.zeros(sentence_emb[span1].shape)
+                    for i in range(pad_dist):
+                        x_raw_tail += np.concatenate([x_raw_tail, origin_tail])
+                elif span1_len > span2_len:
+                    origin_head = np.zeros(sentence_emb[span2].shape)
+                    for i in range(pad_dist):
+                        x_raw_head += np.concatenate([x_raw_head, origin_head])
+
+                x_raw += [np.concatenate([x_raw_tail, x_raw_head])]
+                y_raw += [target["label"]]
+
+        x_raw = np.array(x_raw)
+        y_raw = np.array(y_raw)
+        return x_raw, y_raw
+
+
+class SemgraphEdgeDataset(BaseDataset):
+    # pylint: disable=too-many-instance-attributes
+
+    def load_data_index(self):
+        data_ud = self.load_jsonline_data()
+
+        x_raw, y_raw = [], []
+        self.sentences = []
+        for example in data_ud:
+            tokens = self.tokenize(example['text'])
+            self.sentences.append(tokens)
             for (target_num, target) in enumerate(example["targets"]):
                 if target["label"] == "no_relation":
                     continue
-                tokens = self.tokenize(example['text'])
-                self.sentences.append(tokens)
                 span1 = int(target["span1"][0])
                 span2 = int(target["span2"][0])
 
@@ -214,31 +261,71 @@ class SemgraphEdgeDataset(SemgraphNodeDataset):
                 x_raw_tail = sentence_emb[span1]
                 x_raw_head = sentence_emb[span2]
 
-                """span1_len = 0
-                for idx1 in range(int(target["span1"][0])+1, int(target["span1"][1])):
-                    x_raw_tail += np.concatenate(
-                        [x_raw_tail, sentence_emb[idx1]])
-                    span1_len += 1
-
-                span2_len = 0
-                for idx2 in range(int(target["span2"][0])+1, int(target["span2"][1])):
-                    x_raw_head += np.concatenate(
-                        [x_raw_head, sentence_emb[idx2]])
-                    span2_len += 1
-
-                pad_dist = abs(span2_len - span1_len)
-                if span2_len > span1_len:
-                    origin_tail = deepcopy(x_raw_tail)
-                    for i in range(pad_dist):
-                        x_raw_tail += np.concatenate([x_raw_tail, origin_tail])
-                elif span1_len > span2_len:
-                    origin_head = deepcopy(x_raw_head)
-                    for i in range(pad_dist):
-                        x_raw_head += np.concatenate([x_raw_head, origin_head])"""
-
                 x_raw += [np.concatenate([x_raw_tail, x_raw_head])]
                 y_raw += [target["label"]]
 
         x_raw = np.array(x_raw)
         y_raw = np.array(y_raw)
+        return x_raw, y_raw
+
+
+class MonotonicityDataset(BaseDataset):
+    # pylint: disable=too-many-instance-attributes
+
+    def load_data_index(self):
+        data_ud = self.load_jsonline_data()
+        x_raw, y_raw = [], []
+        self.sentences = []
+
+        for example in data_ud:
+            tokens = self.tokenize(example['text'])
+            self.sentences.append(tokens)
+            for (target_num, target) in enumerate(example["targets"]):
+                span = int(target["span"][0])
+                node_tag = target['label']
+                x_raw += [tokens[span]]
+                y_raw += [node_tag]
+
+        x_raw = np.array(x_raw)
+        y_raw = np.array(y_raw)
+
+        return x_raw, y_raw
+
+    def load_index(self, x_raw, words=None):
+        if words is None:
+            # import ipdb; ipdb.set_trace()
+            x, words = pd.factorize(x_raw, sort=True)
+        else:
+            new_words = set(x_raw) - set(words)
+            if new_words:
+                words = np.concatenate([words, list(new_words)])
+
+            words_dict = {word: i for i, word in enumerate(words)}
+            x = np.array([words_dict[token] for token in x_raw])
+
+        self.x = torch.from_numpy(x)
+        self.words = words
+
+        self.n_words = len(words)
+
+    def load_data(self):
+        data_ud = self.load_jsonline_data()
+        if self.mode == "train":
+            data_embeddings = util.read_data(
+                f"./dataset/{self.task_name}/output_fast_train")
+        else:
+            data_embeddings = util.read_data(
+                f"./dataset/{self.task_name}/output_fast_val")
+
+        x_raw, y_raw = [], []
+        for example, (sentence_emb, _) in zip(data_ud, data_embeddings):
+            for (target_num, target) in enumerate(example["targets"]):
+                span = int(target["span"][0])
+                node_tag = target['label']
+                x_raw += [sentence_emb[span]]
+                y_raw += [node_tag]
+
+        x_raw = np.array(x_raw)
+        y_raw = np.array(y_raw)
+
         return x_raw, y_raw

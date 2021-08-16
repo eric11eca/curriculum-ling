@@ -70,11 +70,15 @@ class TransparentDataParallel(nn.DataParallel):
         return self.module.eval_batch(*args, **kwargs)
 
 
-class MLP(BaseModel):
-    name = 'mlp'
+class Classifier(BaseModel):
+    name = 'classifier'
 
-    def __init__(self, task, embedding_size=768, n_classes=3, hidden_size=5,
-                 nlayers=1, dropout=0.1, representation=None, n_words=None):
+    def __init__(self, task, embedding_size=768,
+                 n_classes=3, hidden_size=5,
+                 nlayers=1, dropout=0.1,
+                 representation=None,
+                 n_words=None):
+
         super().__init__()
 
         # Save things to the model here
@@ -90,7 +94,7 @@ class MLP(BaseModel):
         if self.representation in ['onehot', 'random']:
             self.build_embeddings(n_words, embedding_size)
 
-        self.mlp = self.build_mlp()
+        self.classifier = self.build_classifier()
         self.out = nn.Linear(self.final_hidden_size, n_classes)
         self.dropout = nn.Dropout(dropout)
 
@@ -106,13 +110,13 @@ class MLP(BaseModel):
         if self.representation == 'random':
             self.embedding.weight.requires_grad = False
 
-    def build_mlp(self):
+    def build_classifier(self):
         src_size = self.embedding_size
         tgt_size = self.hidden_size
         mlp = []
         for layer in range(self.nlayers):
-            mlp += [nn.Linear(src_size, tgt_size)]
-            mlp += [nn.ReLU()]
+            mlp += [nn.Linear(int(src_size), tgt_size)]
+            #mlp += [nn.ReLU()]
             mlp += [nn.Dropout(self.dropout_p)]
             src_size, tgt_size = tgt_size, int(tgt_size / 2)
         self.final_hidden_size = src_size
@@ -123,7 +127,8 @@ class MLP(BaseModel):
             x = self.get_embeddings(x)
 
         x_emb = self.dropout(x)
-        x = self.mlp(x_emb)
+        # print(x_emb.shape)
+        x = self.classifier(x_emb)
         logits = self.out(x)
         return logits
 
