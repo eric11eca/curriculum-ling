@@ -94,6 +94,12 @@ from jiant.tasks.lib.edge_probing.transitive import TransitiveAssociationTask
 from jiant.tasks.lib.edge_probing.monotonicity import MonotonicityTask
 from jiant.tasks.lib.edge_probing.contradiction import ContradictionTask
 from jiant.tasks.lib.edge_probing.align_sentiment import AlignSentimentTask
+from jiant.tasks.lib.edge_probing.align_relational import AlignRelationalTask
+from jiant.tasks.lib.edge_probing.align_anaphora import AlignAnaphoraTask
+from jiant.tasks.lib.edge_probing.align_lexical import AlignLexicalTask
+from jiant.tasks.lib.edge_probing.align_relational_vertex import AlignRelationalVertexTask
+from jiant.tasks.lib.edge_probing.align_sentiment_vertex import AlignSentimentVertexTask
+from jiant.tasks.lib.edge_probing.contradict_vertex import ContradictVertexTask
 
 from jiant.tasks.core import Task
 from jiant.utils.python.io import read_json
@@ -193,6 +199,12 @@ TASK_DICT = {
     "monotonicity": MonotonicityTask,
     "contradiction": ContradictionTask,
     "sentiment": AlignSentimentTask,
+    "relational": AlignRelationalTask,
+    "anaphora": AlignAnaphoraTask,
+    "lexical": AlignLexicalTask,
+    "relational_vertex": AlignRelationalVertexTask,
+    "sentiment_vertex": AlignSentimentVertexTask,
+    "contradict_vertex": ContradictVertexTask,
 }
 
 

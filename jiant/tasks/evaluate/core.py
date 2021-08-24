@@ -1,4 +1,9 @@
 import itertools
+from jiant.tasks.lib.edge_probing.contradict_vertex import ContradictVertexTask
+from jiant.tasks.lib.edge_probing.align_relational_vertex import AlignRelationalVertexTask
+from jiant.tasks.lib.edge_probing.align_sentiment_vertex import AlignSentimentVertexTask
+from jiant.tasks.lib.edge_probing.align_anaphora import AlignAnaphoraTask
+from jiant.tasks.lib.edge_probing.align_lexical import AlignLexicalTask
 
 from torch.utils import data
 from jiant.tasks.lib.edge_probing.align_sentiment import AlignSentimentTask
@@ -1064,8 +1069,14 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
     elif isinstance(
         task,
         (
+            tasks_retrieval.AlignRelationalVertexTask,
+            tasks_retrieval.AlignSentimentVertexTask,
+            tasks_retrieval.AlignAnaphoraTask,
+            tasks_retrieval.AlignLexicalTask,
+            tasks_retrieval.AlignRelationalTask,
             tasks_retrieval.AlignSentimentTask,
             tasks_retrieval.ContradictionTask,
+            tasks_retrieval.ContradictVertexTask,
             tasks_retrieval.MonotonicityTask,
             tasks_retrieval.TransitiveAssociationTask,
             tasks_retrieval.FactualityTask,
