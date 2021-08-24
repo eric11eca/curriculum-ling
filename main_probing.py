@@ -1,8 +1,6 @@
 import os
 import sys
 import argparse
-from types import prepare_class
-import jiant.shared.caching as caching
 import jiant.proj.main.tokenize_and_cache as tokenize_and_cache
 import jiant.proj.main.runscript as main_runscript
 import jiant.proj.main.scripts.configurator as configurator
@@ -63,7 +61,7 @@ def tokenization(task_name, model_name, control=False, phase=["val"]):
     if control:
         output_dir = f"./cache/control/{model_name}/{task_name}"
     tokenize_and_cache.main(tokenize_and_cache.RunConfiguration(
-        task_config_path=f"./tasks/configs/{task_name}_config.json",
+        task_config_path=f"/content/tasks/configs/{task_name}_config.json",
         hf_pretrained_model_name_or_path=model_name,
         output_dir=output_dir,
         phases=phase,
@@ -82,19 +80,19 @@ def train_configuration(task_name, model_name, classifier_type, do_control=False
         val_task_name_list=[task_name],
         train_batch_size=8,
         eval_batch_size=16,
-        epochs=30,
+        epochs=5,
         num_gpus=1,
         classifier_type=classifier_type
     ).create_config()
 
     os.makedirs("./run_configs/", exist_ok=True)
-    py_io.write_json(jiant_run_config,
-                     f"./run_configs/{task_name}_run_config.json")
+    py_io.write_json(
+        jiant_run_config,
+        f"./run_configs/{task_name}_run_config.json")
     display.show_json(jiant_run_config)
 
 
-def train(task_name, model_name, model_path,
-          do_train, freeze_encoder, model_dir_name):
+def train(task_name, model_name, model_path, do_train, freeze_encoder, model_dir_name):
     output_dir = f"./runs/{task_name}/{model_dir_name}/main"
     os.makedirs(output_dir, exist_ok=True)
     run_args = main_runscript.RunConfiguration(
@@ -103,7 +101,7 @@ def train(task_name, model_name, model_path,
         hf_pretrained_model_name_or_path=model_name,
         model_path=model_path,
         model_config_path=f"./models/{model_name}/model/config.json",
-        learning_rate=1e-3,
+        learning_rate=1e-4,
         eval_every_steps=500,
         do_train=do_train,
         do_val=True,
@@ -151,6 +149,8 @@ if __name__ == "__main__":
                         help="enable train-eval runner"),
     parser.add_argument("--task_name", type=str, default="semgraph2",
                         help="probing task name")
+    parser.add_argument("--exp_list", action='append',
+                        help="probing experiments name")
     parser.add_argument("--model_name", type=str, default="bert1",
                         help="pre-trained transformer model name")
 
@@ -176,26 +176,27 @@ if __name__ == "__main__":
         setup_model(model_name)
 
     if args.main_loop:
-        meta_config = py_io.read_json(
-            f"./run_meta_configs/{task_name}_run_meta_configs.json")[exp_name]
+        for exp_name in args.exp_list:
+            meta_config = py_io.read_json(
+                f"./run_meta_configs/{task_name}_run_meta_configs.json")[exp_name]
 
-        model_path = meta_config["model_pth"]
-        model_name = meta_config["model_name"]
-        model_val_name = meta_config["model_val_name"]
+            model_path = meta_config["model_pth"]
+            model_name = meta_config["model_name"]
+            model_val_name = meta_config["model_val_name"]
 
-        do_train = meta_config["do_train"]
-        do_control = meta_config["do_control"]
-        freeze_encoder = meta_config["freeze_encoder"]
-        classifier_type = meta_config["classifier_type"]
+            do_train = meta_config["do_train"]
+            do_control = meta_config["do_control"]
+            freeze_encoder = meta_config["freeze_encoder"]
+            classifier_type = meta_config["classifier_type"]
 
-        train_configuration(task_name,
-                            model_name,
-                            classifier_type=classifier_type,
-                            do_control=do_control)
+            train_configuration(task_name,
+                                model_name,
+                                classifier_type=classifier_type,
+                                do_control=do_control)
 
-        train(task_name=task_name,
-              model_name=model_name,
-              model_path=model_path,
-              do_train=do_train,
-              freeze_encoder=freeze_encoder,
-              model_dir_name=model_val_name)
+            train(task_name=task_name,
+                  model_name=model_name,
+                  model_path=model_path,
+                  do_train=do_train,
+                  freeze_encoder=freeze_encoder,
+                  model_dir_name=model_val_name)
