@@ -1,4 +1,4 @@
-"""Sentiment Semantic Relation Alignment Edge Probing task.
+"""Lexical Alignment Edge Probing task.
 Task source paper: https://arxiv.org/pdf/1905.06316.pdf.
 Task data prep directions: https://github.com/nyu-mll/jiant/blob/master/probing/data/README.md.
 """
@@ -15,7 +15,6 @@ class Example(edge_probing_two_span.Example):
     def task(self):
         return AlignLexicalTask
 
-
 @dataclass
 class TokenizedExample(edge_probing_two_span.TokenizedExample):
     pass
@@ -29,7 +28,6 @@ class DataRow(edge_probing_two_span.DataRow):
 @dataclass
 class Batch(edge_probing_two_span.Batch):
     pass
-
 
 class AlignLexicalTask(edge_probing_two_span.AbstractProbingTask):
     Example = Example

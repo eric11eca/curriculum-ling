@@ -39,8 +39,8 @@ class AlignSentimentTask(edge_probing_two_span.AbstractProbingTask):
 
     LABELS = [
         "aligned",
-        "contradict",
-        "unaligned"
+        "unaligned",
+        "contradict"
     ]
     LABEL_TO_ID, ID_TO_LABEL = labels_to_bimap(LABELS)
 

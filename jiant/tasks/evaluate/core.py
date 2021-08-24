@@ -1,11 +1,10 @@
 import itertools
+
 from jiant.tasks.lib.edge_probing.contradict_vertex import ContradictVertexTask
 from jiant.tasks.lib.edge_probing.align_relational_vertex import AlignRelationalVertexTask
 from jiant.tasks.lib.edge_probing.align_sentiment_vertex import AlignSentimentVertexTask
 from jiant.tasks.lib.edge_probing.align_anaphora import AlignAnaphoraTask
 from jiant.tasks.lib.edge_probing.align_lexical import AlignLexicalTask
-
-from torch.utils import data
 from jiant.tasks.lib.edge_probing.align_sentiment import AlignSentimentTask
 from jiant.tasks.lib.edge_probing.contradiction import ContradictionTask
 from jiant.tasks.lib.edge_probing.monotonicity import MonotonicityTask
@@ -1137,8 +1136,6 @@ def get_label_ids(task, examples):
 
 
 def get_label_ids_from_data_row(data_row):
-    # print(data_row.label_ids)
-    # return np.random.randint(2, size=data_row.label_ids.shape)
     return data_row.label_ids
 
 
