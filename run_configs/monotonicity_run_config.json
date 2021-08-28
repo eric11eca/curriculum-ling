@@ -4,21 +4,21 @@
   },
   "task_cache_config_dict": {
     "monotonicity": {
-      "train": "./cache/control/bert-base-uncased/monotonicity\\train",
-      "val": "./cache/control/bert-base-uncased/monotonicity\\val",
-      "val_labels": "./cache/control/bert-base-uncased/monotonicity\\val_labels"
+      "train": "./cache/control/microsoft/deberta-base/monotonicity\\train",
+      "val": "./cache/control/microsoft/deberta-base/monotonicity\\val",
+      "val_labels": "./cache/control/microsoft/deberta-base/monotonicity\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 124300,
-    "warmup_steps": 12430
+    "max_steps": 62150,
+    "warmup_steps": 6215
   },
   "task_specific_configs_dict": {
     "monotonicity": {
-      "train_batch_size": 4,
+      "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
       "eval_subset_num": 500
@@ -29,7 +29,9 @@
       "monotonicity": "monotonicity"
     },
     "taskmodel_config_map": {
-      "monotonicity": null
+      "monotonicity": {
+        "classifier_type": "mlp"
+      }
     }
   },
   "task_run_config": {

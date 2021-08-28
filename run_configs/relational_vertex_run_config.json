@@ -1,24 +1,24 @@
 {
   "task_config_path_dict": {
-    "semgraph2": "/content/tasks/configs/semgraph2_config.json"
+    "relational_vertex": "/content/tasks/configs/relational_vertex_config.json"
   },
   "task_cache_config_dict": {
-    "semgraph2": {
-      "train": "./cache/control/roberta-large/semgraph2\\train",
-      "val": "./cache/control/roberta-large/semgraph2\\val",
-      "val_labels": "./cache/control/roberta-large/semgraph2\\val_labels"
+    "relational_vertex": {
+      "train": "./cache/microsoft/deberta-base/relational_vertex\\train",
+      "val": "./cache/microsoft/deberta-base/relational_vertex\\val",
+      "val_labels": "./cache/microsoft/deberta-base/relational_vertex\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 9996,
-    "warmup_steps": 999
+    "max_steps": 41190,
+    "warmup_steps": 4119
   },
   "task_specific_configs_dict": {
-    "semgraph2": {
-      "train_batch_size": 4,
+    "relational_vertex": {
+      "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
       "eval_subset_num": 500
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "semgraph2": "semgraph2"
+      "relational_vertex": "relational_vertex"
     },
     "taskmodel_config_map": {
-      "semgraph2": {
+      "relational_vertex": {
         "classifier_type": "mlp"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "semgraph2"
+      "relational_vertex"
     ],
     "train_val_task_list": [
-      "semgraph2"
+      "relational_vertex"
     ],
     "val_task_list": [
-      "semgraph2"
+      "relational_vertex"
     ],
     "test_task_list": []
   },

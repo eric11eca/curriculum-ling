@@ -1,24 +1,24 @@
 {
   "task_config_path_dict": {
-    "semgraph2": "/content/tasks/configs/semgraph2_config.json"
+    "contradict_vertex": "/content/tasks/configs/contradict_vertex_config.json"
   },
   "task_cache_config_dict": {
-    "semgraph2": {
-      "train": "./cache/control/roberta-large/semgraph2\\train",
-      "val": "./cache/control/roberta-large/semgraph2\\val",
-      "val_labels": "./cache/control/roberta-large/semgraph2\\val_labels"
+    "contradict_vertex": {
+      "train": "./cache/control/bert-large-uncased/contradict_vertex\\train",
+      "val": "./cache/control/bert-large-uncased/contradict_vertex\\val",
+      "val_labels": "./cache/control/bert-large-uncased/contradict_vertex\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 9996,
-    "warmup_steps": 999
+    "max_steps": 9850,
+    "warmup_steps": 985
   },
   "task_specific_configs_dict": {
-    "semgraph2": {
-      "train_batch_size": 4,
+    "contradict_vertex": {
+      "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
       "eval_subset_num": 500
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "semgraph2": "semgraph2"
+      "contradict_vertex": "contradict_vertex"
     },
     "taskmodel_config_map": {
-      "semgraph2": {
+      "contradict_vertex": {
         "classifier_type": "mlp"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "semgraph2"
+      "contradict_vertex"
     ],
     "train_val_task_list": [
-      "semgraph2"
+      "contradict_vertex"
     ],
     "val_task_list": [
-      "semgraph2"
+      "contradict_vertex"
     ],
     "test_task_list": []
   },
