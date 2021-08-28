@@ -1153,7 +1153,7 @@ def get_label_id_from_data_row(data_row):
 def get_label_ids_from_cache(cache):
     return np.array(
         [get_label_id_from_data_row(data_row=datum["data_row"])
-         for datum in cache.iter_all()]
+            for datum in cache.iter_all()]
     )
 
 
@@ -1165,6 +1165,7 @@ def get_label_vals_from_cache(cache):
 
 
 def get_label_val_from_data_row(data_row):
+    # return np.random.randint(2, size=data_row.label_ids.shape)
     return data_row.label
 
 
