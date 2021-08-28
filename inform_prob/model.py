@@ -95,6 +95,7 @@ class Classifier(BaseModel):
             self.build_embeddings(n_words, embedding_size)
 
         self.classifier = self.build_classifier()
+        self.linear = nn.Linear(self.embedding_size, n_classes)
         self.out = nn.Linear(self.final_hidden_size, n_classes)
         self.dropout = nn.Dropout(dropout)
 
@@ -116,7 +117,7 @@ class Classifier(BaseModel):
         mlp = []
         for layer in range(self.nlayers):
             mlp += [nn.Linear(int(src_size), tgt_size)]
-            #mlp += [nn.ReLU()]
+            mlp += [nn.ReLU()]
             mlp += [nn.Dropout(self.dropout_p)]
             src_size, tgt_size = tgt_size, int(tgt_size / 2)
         self.final_hidden_size = src_size
@@ -127,7 +128,8 @@ class Classifier(BaseModel):
             x = self.get_embeddings(x)
 
         x_emb = self.dropout(x)
-        # print(x_emb.shape)
+        #logits = self.linear(x_emb)
+
         x = self.classifier(x_emb)
         logits = self.out(x)
         return logits
@@ -150,10 +152,9 @@ class Classifier(BaseModel):
 
     def eval_batch(self, data, target):
         mlp_out = self(data)
+        #preds = (mlp_out.detach().cpu().numpy() > 0.5).astype(int)
         loss = self.criterion(mlp_out, target) / math.log(2)
         accuracy = (mlp_out.argmax(dim=-1) == target).float().detach().sum()
-        loss = loss.item() * data.shape[0]
-
         return loss, accuracy
 
     def get_args(self):

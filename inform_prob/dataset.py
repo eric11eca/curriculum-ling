@@ -99,7 +99,7 @@ class BaseDataset(Dataset):
         return (self.x[index], self.y[index])
 
 
-class ContradictionDataset(BaseDataset):
+class MultiWordSpanDataset(BaseDataset):
     # pylint: disable=too-many-instance-attributes
 
     def load_data_index(self):
@@ -107,7 +107,9 @@ class ContradictionDataset(BaseDataset):
 
         x_raw, y_raw = [], []
         self.sentences = []
-        for example in data_ud:
+        for i, example in enumerate(data_ud):
+            if i > 10:
+                continue
             tokens = self.tokenize(example['text'])
             self.sentences.append(tokens)
             for (target_num, target) in enumerate(example["targets"]):
@@ -160,6 +162,8 @@ class ContradictionDataset(BaseDataset):
         self.sentences = []
         for example, (sentence_emb, _) in zip(data_ud, data_embeddings):
             for (i, target) in enumerate(example["targets"]):
+                if i > 50:
+                    continue
                 span1 = int(target["span1"][0])
                 span2 = int(target["span2"][0])
 
@@ -178,19 +182,14 @@ class ContradictionDataset(BaseDataset):
                         [x_raw_head, sentence_emb[idx2]])
                     span2_len += 1
 
-                pad_dist = abs(span2_len - span1_len)
-                if span2_len > span1_len:
-                    origin_tail = np.zeros(sentence_emb[span1].shape)
-                    for i in range(pad_dist):
-                        x_raw_tail += np.concatenate([x_raw_tail, origin_tail])
-                elif span1_len > span2_len:
-                    origin_head = np.zeros(sentence_emb[span2].shape)
-                    for i in range(pad_dist):
-                        x_raw_head += np.concatenate([x_raw_head, origin_head])
+                if len(x_raw_tail) > len(x_raw_head):
+                    x_head_pad = np.pad(x_raw_head, x_raw_tail.shape, 'mean')
+                    x_raw += [np.concatenate([x_raw_tail, x_head_pad])]
+                else:
+                    x_tail_pad = np.pad(x_raw_tail, x_raw_head.shape, 'mean')
+                    x_raw += [np.concatenate([x_tail_pad, x_raw_head])]
 
-                x_raw += [np.concatenate([x_raw_tail, x_raw_head])]
                 y_raw += [target["label"]]
-
         x_raw = np.array(x_raw)
         y_raw = np.array(y_raw)
         return x_raw, y_raw
