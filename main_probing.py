@@ -78,9 +78,9 @@ def train_configuration(task_name, model_name, classifier_type, do_control=False
         task_cache_base_path=task_cache_base_path,
         train_task_name_list=[task_name],
         val_task_name_list=[task_name],
-        train_batch_size=8,
+        train_batch_size=4,
         eval_batch_size=16,
-        epochs=5,
+        epochs=3,
         num_gpus=1,
         classifier_type=classifier_type
     ).create_config()
@@ -176,9 +176,14 @@ if __name__ == "__main__":
         setup_model(model_name)
 
     if args.main_loop:
+        meta_configs = py_io.read_json(
+            f"./run_meta_configs/{task_name}_run_meta_configs.json")
+        for exp_nmae in args.exp_list:
+            if not exp_name in meta_configs:
+                raise KeyError(
+                    "Experiment name not found in the meta running configuration!")
         for exp_name in args.exp_list:
-            meta_config = py_io.read_json(
-                f"./run_meta_configs/{task_name}_run_meta_configs.json")[exp_name]
+            meta_config = meta_configs[exp_name]
 
             model_path = meta_config["model_pth"]
             model_name = meta_config["model_name"]
@@ -200,3 +205,5 @@ if __name__ == "__main__":
                   do_train=do_train,
                   freeze_encoder=freeze_encoder,
                   model_dir_name=model_val_name)
+
+# python main_probing.py --main_loop --task_name monotonicity --exp_list bert2-mlp --exp_list roberta2 --exp_list roberta2-mlp --exp_list bert2
