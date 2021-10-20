@@ -68,19 +68,19 @@ def tokenization(task_name, model_name, control=False, phase=["val"]):
     ))
 
 
-def train_configuration(task_name, model_name, classifier_type, do_control=False):
+def train_configuration(task_name, model_name, cache_pth, classifier_type, do_control=False):
     if do_control:
         task_cache_base_path = f"./cache/control/{model_name}/"
     else:
-        task_cache_base_path = f"./cache/{model_name}/"
+        task_cache_base_path = cache_pth
     jiant_run_config = configurator.SimpleAPIMultiTaskConfigurator(
         task_config_base_path="/content/tasks/configs/",
         task_cache_base_path=task_cache_base_path,
         train_task_name_list=[task_name],
         val_task_name_list=[task_name],
-        train_batch_size=4,
+        train_batch_size=8,
         eval_batch_size=16,
-        epochs=3,
+        epochs=1,
         num_gpus=1,
         classifier_type=classifier_type
     ).create_config()
@@ -101,10 +101,11 @@ def train(task_name, model_name, model_path, do_train, freeze_encoder, model_dir
         hf_pretrained_model_name_or_path=model_name,
         model_path=model_path,
         model_config_path=f"./models/{model_name}/model/config.json",
-        learning_rate=1e-4,
+        learning_rate=1e-3,
         eval_every_steps=500,
         do_train=do_train,
         do_val=True,
+        # model_load_mode="all",
         do_save=True,
         write_val_preds=True,
         freeze_encoder=freeze_encoder,
@@ -153,6 +154,8 @@ if __name__ == "__main__":
                         help="probing experiments name")
     parser.add_argument("--model_name", type=str, default="bert1",
                         help="pre-trained transformer model name")
+    parser.add_argument("--do_prompt", type=str,
+                        default="<S> [sep] <S2>: <MASK>")
 
     args = parser.parse_args()
     task_name = args.task_name
@@ -183,9 +186,12 @@ if __name__ == "__main__":
                 raise KeyError(
                     "Experiment name not found in the meta running configuration!")
         for exp_name in args.exp_list:
+            global_metrics = []
             meta_config = meta_configs[exp_name]
 
             model_path = meta_config["model_pth"]
+            cache_pth = meta_config[
+                "cache_pth"] if "cache_pth" in meta_config else f"./cache/{model_name}/"
             model_name = meta_config["model_name"]
             model_val_name = meta_config["model_val_name"]
 
@@ -194,8 +200,10 @@ if __name__ == "__main__":
             freeze_encoder = meta_config["freeze_encoder"]
             classifier_type = meta_config["classifier_type"]
 
+            # for i in range(0):
             train_configuration(task_name,
                                 model_name,
+                                cache_pth=cache_pth,
                                 classifier_type=classifier_type,
                                 do_control=do_control)
 
@@ -205,5 +213,14 @@ if __name__ == "__main__":
                   do_train=do_train,
                   freeze_encoder=freeze_encoder,
                   model_dir_name=model_val_name)
+
+            metric = py_io.read_json(
+                f"./runs/{task_name}/{model_val_name}/main/val_metrics.json")
+
+            # global_metrics.append(metric)
+
+            # py_io.write_json(
+            #    global_metrics, f"./runs/{task_name}/{model_val_name}/overall_metrics.json")
+
 
 # python main_probing.py --main_loop --task_name monotonicity --exp_list bert2-mlp --exp_list roberta2 --exp_list roberta2-mlp --exp_list bert2

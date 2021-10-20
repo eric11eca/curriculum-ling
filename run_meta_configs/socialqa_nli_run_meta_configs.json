@@ -1,0 +1,57 @@
+{
+  "bert1": {
+    "task_name": "socialqa_nli",
+    "model_name": "sentence-transformers/bert-base-nli-mean-tokens",
+    "model_val_name": "bert-base",
+    "model_pth": "./models/sentence-transformers/bert-base-nli-mean-tokens/model/model.p",
+    "cache_pth": "./cache/bert-base-uncased/",
+    "do_train": false,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "bert2": {
+    "task_name": "socialqa_nli",
+    "model_name": "sentence-transformers/bert-large-nli-mean-tokens",
+    "model_val_name": "bert-large",
+    "model_pth": "./models/sentence-transformers/bert-large-nli-mean-tokens/model/model.p",
+    "cache_pth": "./cache/bert-large-uncased/",
+    "do_train": false,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "roberta1": {
+    "task_name": "socialqa_nli",
+    "model_name": "textattack/roberta-base-MNLI",
+    "model_val_name": "roberta-base",
+    "model_pth": "./models/textattack/roberta-base-MNLI/model/model.p",
+    "cache_pth": "./cache/roberta-base/",
+    "do_train": false,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "roberta2": {
+    "task_name": "socialqa_nli",
+    "model_name": "roberta-large-mnli",
+    "model_val_name": "roberta-large",
+    "model_pth": "./models/roberta-large-mnli/model/model.p",
+    "cache_pth": "./cache/roberta-large/",
+    "do_train": false,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "deberta": {
+    "task_name": "socialqa_nli",
+    "model_name": "microsoft/deberta-base-mnli",
+    "model_val_name": "deberta",
+    "model_pth": "./models/microsoft/deberta-base-mnli/model/model.p",
+    "cache_pth": "./cache/microsoft/deberta-base-mnli/",
+    "do_train": false,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": false
+  }
+}

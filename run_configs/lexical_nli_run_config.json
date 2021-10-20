@@ -1,0 +1,52 @@
+{
+  "task_config_path_dict": {
+    "lexical_nli": "/content/tasks/configs/lexical_nli_config.json"
+  },
+  "task_cache_config_dict": {
+    "lexical_nli": {
+      "train": "./cache/microsoft/deberta-base-mnli/lexical_nli\\train",
+      "val": "./cache/microsoft/deberta-base-mnli/lexical_nli\\val",
+      "val_labels": "./cache/microsoft/deberta-base-mnli/lexical_nli\\val_labels"
+    }
+  },
+  "sampler_config": {
+    "sampler_type": "ProportionalMultiTaskSampler"
+  },
+  "global_train_config": {
+    "max_steps": 1,
+    "warmup_steps": 0
+  },
+  "task_specific_configs_dict": {
+    "lexical_nli": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    }
+  },
+  "taskmodels_config": {
+    "task_to_taskmodel_map": {
+      "lexical_nli": "lexical_nli"
+    },
+    "taskmodel_config_map": {
+      "lexical_nli": {
+        "classifier_type": "linear"
+      }
+    }
+  },
+  "task_run_config": {
+    "train_task_list": [
+      "lexical_nli"
+    ],
+    "train_val_task_list": [
+      "lexical_nli"
+    ],
+    "val_task_list": [
+      "lexical_nli"
+    ],
+    "test_task_list": []
+  },
+  "metric_aggregator_config": {
+    "metric_aggregator_type": "EqualMetricAggregator"
+  }
+}

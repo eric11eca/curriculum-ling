@@ -1,0 +1,362 @@
+{
+  "bert1": {
+    "task_name": "anaphora",
+    "model_name": "bert-base-uncased",
+    "model_val_name": "bert-base",
+    "model_pth": "./models/bert-base-uncased/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "bert2": {
+    "task_name": "anaphora",
+    "model_name": "bert-large-uncased",
+    "model_val_name": "bert-large",
+    "model_pth": "./models/bert-large-uncased/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "roberta1": {
+    "task_name": "anaphora",
+    "model_name": "roberta-base",
+    "model_val_name": "roberta-base",
+    "model_pth": "./models/roberta-base/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "roberta2": {
+    "task_name": "anaphora",
+    "model_name": "roberta-large",
+    "model_val_name": "roberta-large",
+    "model_pth": "./models/roberta-large/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "deberta": {
+    "task_name": "anaphora",
+    "model_name": "microsoft/deberta-base",
+    "model_val_name": "deberta",
+    "model_pth": "./models/microsoft/deberta-base/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "bert1-v2": {
+    "task_name": "anaphora",
+    "model_name": "bert-base-uncased",
+    "model_val_name": "bert-base-v2",
+    "model_pth": "./models/bert-base-uncased/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": false
+  },
+  "bert2-v2": {
+    "task_name": "anaphora",
+    "model_name": "bert-large-uncased",
+    "model_val_name": "bert-large-v2",
+    "model_pth": "./models/bert-large-uncased/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": false
+  },
+  "roberta1-v2": {
+    "task_name": "anaphora",
+    "model_name": "roberta-base",
+    "model_val_name": "roberta-base-v2",
+    "model_pth": "./models/roberta-base/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": false
+  },
+  "roberta2-v2": {
+    "task_name": "anaphora",
+    "model_name": "roberta-large",
+    "model_val_name": "roberta-large-v2",
+    "model_pth": "./models/roberta-large/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": false
+  },
+  "deberta-v2": {
+    "task_name": "anaphora",
+    "model_name": "microsoft/deberta-base",
+    "model_val_name": "deberta-v2",
+    "model_pth": "./models/microsoft/deberta-base/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": false
+  },
+  "bert1-control": {
+    "task_name": "anaphora",
+    "model_name": "bert-base-uncased",
+    "model_val_name": "bert-base-control",
+    "model_pth": "./runs/anaphora/bert-base/main/best_model.p",
+    "do_train": false,
+    "do_control": true,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "bert2-control": {
+    "task_name": "anaphora",
+    "model_name": "bert-large-uncased",
+    "model_val_name": "bert-large-control",
+    "model_pth": "./runs/anaphora/bert-large/main/best_model.p",
+    "do_train": false,
+    "do_control": true,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "roberta1-control": {
+    "task_name": "anaphora",
+    "model_name": "roberta-base",
+    "model_val_name": "roberta-base-control",
+    "model_pth": "./runs/anaphora/roberta-base/main/best_model.p",
+    "do_train": false,
+    "do_control": true,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "roberta2-control": {
+    "task_name": "anaphora",
+    "model_name": "roberta-large",
+    "model_val_name": "roberta-large-control",
+    "model_pth": "./runs/anaphora/roberta-large/main/best_model.p",
+    "do_train": false,
+    "do_control": true,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "deberta-control": {
+    "task_name": "anaphora",
+    "model_name": "microsoft/deberta-base",
+    "model_val_name": "deberta-control",
+    "model_pth": "./runs/anaphora/deberta/main/best_model.p",
+    "do_train": false,
+    "do_control": true,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "bert1-mlp": {
+    "task_name": "anaphora",
+    "model_name": "bert-base-uncased",
+    "model_val_name": "bert-base-mlp",
+    "model_pth": "./models/bert-base-uncased/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "bert2-mlp": {
+    "task_name": "anaphora",
+    "model_name": "bert-large-uncased",
+    "model_val_name": "bert-large-mlp",
+    "model_pth": "./models/bert-large-uncased/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "roberta1-mlp": {
+    "task_name": "anaphora",
+    "model_name": "roberta-base",
+    "model_val_name": "roberta-base-mlp",
+    "model_pth": "./models/roberta-base/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "roberta2-mlp": {
+    "task_name": "anaphora",
+    "model_name": "roberta-large",
+    "model_val_name": "roberta-large-mlp",
+    "model_pth": "./models/roberta-large/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "deberta-mlp": {
+    "task_name": "anaphora",
+    "model_name": "microsoft/deberta-base",
+    "model_val_name": "deberta-mlp",
+    "model_pth": "./models/microsoft/deberta-base/model/model.p",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "bert1-mlp-control": {
+    "task_name": "anaphora",
+    "model_name": "bert-base-uncased",
+    "model_val_name": "bert-base-mlp-control",
+    "model_pth": "./runs/anaphora/bert-base-mlp/main/best_model.p",
+    "do_train": false,
+    "do_control": true,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "bert2-mlp-control": {
+    "task_name": "anaphora",
+    "model_name": "bert-large-uncased",
+    "model_val_name": "bert-large-mlp-control",
+    "model_pth": "./runs/anaphora/bert-large-mlp/main/best_model.p",
+    "do_train": false,
+    "do_control": true,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "roberta1-mlp-control": {
+    "task_name": "anaphora",
+    "model_name": "roberta-base",
+    "model_val_name": "roberta-base-mlp-control",
+    "model_pth": "./runs/anaphora/roberta-base-mlp/main/best_model.p",
+    "do_train": false,
+    "do_control": true,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "roberta2-mlp-control": {
+    "task_name": "anaphora",
+    "model_name": "roberta-large",
+    "model_val_name": "roberta-large-mlp-control",
+    "model_pth": "./runs/anaphora/roberta-large-mlp/main/best_model.p",
+    "do_train": false,
+    "do_control": true,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "deberta-mlp-control": {
+    "task_name": "anaphora",
+    "model_name": "microsoft/deberta-base",
+    "model_val_name": "deberta-mlp-control",
+    "model_pth": "./runs/anaphora/deberta-mlp/main/best_model.p",
+    "do_train": false,
+    "do_control": true,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "bert1-v3-mlp": {
+    "task_name": "anaphora",
+    "model_name": "sentence-transformers/bert-base-nli-mean-tokens",
+    "model_val_name": "bert-base-v3-mlp",
+    "model_pth": "./models/sentence-transformers/bert-base-nli-mean-tokens/model/model.p",
+    "cache_pth": "./cache/bert-base-uncased/",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "bert2-v3-mlp": {
+    "task_name": "anaphora",
+    "model_name": "sentence-transformers/bert-large-nli-mean-tokens",
+    "model_val_name": "bert-large-v3-mlp",
+    "model_pth": "./models/sentence-transformers/bert-large-nli-mean-tokens/model/model.p",
+    "cache_pth": "./cache/bert-large-uncased/",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "roberta1-v3-mlp": {
+    "task_name": "anaphora",
+    "model_name": "textattack/roberta-base-MNLI",
+    "model_val_name": "roberta-base-v3-mlp",
+    "model_pth": "./models/textattack/roberta-base-MNLI/model/model.p",
+    "cache_pth": "./cache/roberta-base/",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "roberta2-v3-mlp": {
+    "task_name": "anaphora",
+    "model_name": "roberta-large-mnli",
+    "model_val_name": "roberta-large-v3-mlp",
+    "model_pth": "./models/roberta-large-mnli/model/model.p",
+    "cache_pth": "./cache/roberta-large/",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "deberta-v3-mlp": {
+    "task_name": "anaphora",
+    "model_name": "microsoft/deberta-base-mnli",
+    "model_val_name": "deberta-v3-mlp",
+    "model_pth": "./models/microsoft/deberta-base-mnli/model/model.p",
+    "cache_pth": "./cache/microsoft/deberta-base/",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "mlp",
+    "freeze_encoder": true
+  },
+  "bert1-v3": {
+    "task_name": "anaphora",
+    "model_name": "sentence-transformers/bert-base-nli-mean-tokens",
+    "model_val_name": "bert-base-v3",
+    "model_pth": "./models/sentence-transformers/bert-base-nli-mean-tokens/model/model.p",
+    "cache_pth": "./cache/bert-base-uncased/",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "bert2-v3": {
+    "task_name": "anaphora",
+    "model_name": "sentence-transformers/bert-large-nli-mean-tokens",
+    "model_val_name": "bert-large-v3",
+    "model_pth": "./models/sentence-transformers/bert-large-nli-mean-tokens/model/model.p",
+    "cache_pth": "./cache/bert-large-uncased/",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "roberta1-v3": {
+    "task_name": "anaphora",
+    "model_name": "textattack/roberta-base-MNLI",
+    "model_val_name": "roberta-base-v3",
+    "model_pth": "./models/textattack/roberta-base-MNLI/model/model.p",
+    "cache_pth": "./cache/roberta-base/",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "roberta2-v3": {
+    "task_name": "anaphora",
+    "model_name": "roberta-large-mnli",
+    "model_val_name": "roberta-large-v3",
+    "model_pth": "./models/roberta-large-mnli/model/model.p",
+    "cache_pth": "./cache/roberta-large/",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  },
+  "deberta-v3": {
+    "task_name": "anaphora",
+    "model_name": "microsoft/deberta-base-mnli",
+    "model_val_name": "deberta-v3",
+    "model_pth": "./models/microsoft/deberta-base-mnli/model/model.p",
+    "cache_pth": "./cache/microsoft/deberta-base/",
+    "do_train": true,
+    "do_control": false,
+    "classifier_type": "linear",
+    "freeze_encoder": true
+  }
+}

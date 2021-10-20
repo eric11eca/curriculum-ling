@@ -1,0 +1,52 @@
+{
+  "task_config_path_dict": {
+    "socialqa_nli": "/content/tasks/configs/socialqa_nli_config.json"
+  },
+  "task_cache_config_dict": {
+    "socialqa_nli": {
+      "train": "./cache/roberta-large/socialqa_nli\\train",
+      "val": "./cache/roberta-large/socialqa_nli\\val",
+      "val_labels": "./cache/roberta-large/socialqa_nli\\val_labels"
+    }
+  },
+  "sampler_config": {
+    "sampler_type": "ProportionalMultiTaskSampler"
+  },
+  "global_train_config": {
+    "max_steps": 751,
+    "warmup_steps": 75
+  },
+  "task_specific_configs_dict": {
+    "socialqa_nli": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    }
+  },
+  "taskmodels_config": {
+    "task_to_taskmodel_map": {
+      "socialqa_nli": "socialqa_nli"
+    },
+    "taskmodel_config_map": {
+      "socialqa_nli": {
+        "classifier_type": "linear"
+      }
+    }
+  },
+  "task_run_config": {
+    "train_task_list": [
+      "socialqa_nli"
+    ],
+    "train_val_task_list": [
+      "socialqa_nli"
+    ],
+    "val_task_list": [
+      "socialqa_nli"
+    ],
+    "test_task_list": []
+  },
+  "metric_aggregator_config": {
+    "metric_aggregator_type": "EqualMetricAggregator"
+  }
+}

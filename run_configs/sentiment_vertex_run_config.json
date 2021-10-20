@@ -1,0 +1,52 @@
+{
+  "task_config_path_dict": {
+    "sentiment_vertex": "/content/tasks/configs/sentiment_vertex_config.json"
+  },
+  "task_cache_config_dict": {
+    "sentiment_vertex": {
+      "train": "./cache/bert-large-uncased/sentiment_vertex\\train",
+      "val": "./cache/bert-large-uncased/sentiment_vertex\\val",
+      "val_labels": "./cache/bert-large-uncased/sentiment_vertex\\val_labels"
+    }
+  },
+  "sampler_config": {
+    "sampler_type": "ProportionalMultiTaskSampler"
+  },
+  "global_train_config": {
+    "max_steps": 47775,
+    "warmup_steps": 4777
+  },
+  "task_specific_configs_dict": {
+    "sentiment_vertex": {
+      "train_batch_size": 4,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    }
+  },
+  "taskmodels_config": {
+    "task_to_taskmodel_map": {
+      "sentiment_vertex": "sentiment_vertex"
+    },
+    "taskmodel_config_map": {
+      "sentiment_vertex": {
+        "classifier_type": "mlp"
+      }
+    }
+  },
+  "task_run_config": {
+    "train_task_list": [
+      "sentiment_vertex"
+    ],
+    "train_val_task_list": [
+      "sentiment_vertex"
+    ],
+    "val_task_list": [
+      "sentiment_vertex"
+    ],
+    "test_task_list": []
+  },
+  "metric_aggregator_config": {
+    "metric_aggregator_type": "EqualMetricAggregator"
+  }
+}

@@ -1034,6 +1034,7 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
             tasks_retrieval.MCScriptTask,
             tasks_retrieval.ArctTask,
             tasks_retrieval.PiqaTask,
+            tasks_retrieval.LexicalNLITask,
         ),
     ):
         return SimpleAccuracyEvaluationScheme()
@@ -1117,7 +1118,14 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
         return PearsonAndSpearmanEvaluationScheme()
     elif isinstance(task, tasks_retrieval.MLMSimpleTask):
         return MLMEvaluationScheme()
-    elif isinstance(task, (tasks_retrieval.MLMPremaskedTask, tasks_retrieval.MLMPretokenizedTask)):
+    elif isinstance(
+        task,
+        (
+            tasks_retrieval.MLMPremaskedTask,
+            tasks_retrieval.MLMPretokenizedTask,
+            tasks_retrieval.PromptSentiment
+        )
+    ):
         return MLMPremaskedEvaluationScheme()
     elif isinstance(task, (tasks_retrieval.QAMRTask, tasks_retrieval.QASRLTask)):
         return SpanPredictionF1andEMScheme()

@@ -100,6 +100,9 @@ from jiant.tasks.lib.edge_probing.align_lexical import AlignLexicalTask
 from jiant.tasks.lib.edge_probing.align_relational_vertex import AlignRelationalVertexTask
 from jiant.tasks.lib.edge_probing.align_sentiment_vertex import AlignSentimentVertexTask
 from jiant.tasks.lib.edge_probing.contradict_vertex import ContradictVertexTask
+from jiant.tasks.lib.prompt_alignment.prompt_sentiment import PromptSentiment
+
+from jiant.tasks.lib.curriculum.lexical_nli import LexicalNLITask
 
 from jiant.tasks.core import Task
 from jiant.utils.python.io import read_json
@@ -205,6 +208,9 @@ TASK_DICT = {
     "relational_vertex": AlignRelationalVertexTask,
     "sentiment_vertex": AlignSentimentVertexTask,
     "contradict_vertex": ContradictVertexTask,
+    "prompt_sentiment": PromptSentiment,
+    "lexical_nli": LexicalNLITask,
+    "socialqa_nli": LexicalNLITask,
 }
 
 
