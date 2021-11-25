@@ -1,0 +1,564 @@
+{
+  "task_config_path_dict": {
+    "adversarial_nli_r1": "/content/tasks/configs/adversarial_nli_r1_config.json",
+    "transitive": "/content/tasks/configs/transitive_config.json",
+    "hypernymy": "/content/tasks/configs/hypernymy_config.json",
+    "hyponymy": "/content/tasks/configs/hyponymy_config.json",
+    "ner": "/content/tasks/configs/ner_config.json",
+    "verbnet": "/content/tasks/configs/verbnet_config.json",
+    "verbcorner": "/content/tasks/configs/verbcorner_config.json",
+    "syntactic_alternation": "/content/tasks/configs/syntactic_alternation_config.json",
+    "mrpc": "/content/tasks/configs/mrpc_config.json",
+    "boolean": "/content/tasks/configs/boolean_config.json",
+    "comparative": "/content/tasks/configs/comparative_config.json",
+    "conditional": "/content/tasks/configs/conditional_config.json",
+    "counting": "/content/tasks/configs/counting_config.json",
+    "negation": "/content/tasks/configs/negation_config.json",
+    "quantifier": "/content/tasks/configs/quantifier_config.json",
+    "monotonicity_infer": "/content/tasks/configs/monotonicity_infer_config.json",
+    "syllogism": "/content/tasks/configs/syllogism_config.json",
+    "sentiment": "/content/tasks/configs/sentiment_config.json",
+    "kg_relations": "/content/tasks/configs/kg_relations_config.json",
+    "puns": "/content/tasks/configs/puns_config.json",
+    "coreference": "/content/tasks/configs/coreference_config.json",
+    "context_align": "/content/tasks/configs/context_align_config.json",
+    "sprl": "/content/tasks/configs/sprl_config.json",
+    "entailment_tree": "/content/tasks/configs/entailment_tree_config.json",
+    "socialqa": "/content/tasks/configs/socialqa_config.json",
+    "physicalqa": "/content/tasks/configs/physicalqa_config.json",
+    "atomic": "/content/tasks/configs/atomic_config.json",
+    "social_chem": "/content/tasks/configs/social_chem_config.json",
+    "logiqa": "/content/tasks/configs/logiqa_config.json",
+    "cosmoqa": "/content/tasks/configs/cosmoqa_config.json",
+    "ester": "/content/tasks/configs/ester_config.json",
+    "adversarial_nli_r2": "/content/tasks/configs/adversarial_nli_r2_config.json",
+    "adversarial_nli_r3": "/content/tasks/configs/adversarial_nli_r3_config.json"
+  },
+  "task_cache_config_dict": {
+    "adversarial_nli_r1": {
+      "train": "./cache/roberta-large/adversarial_nli_r1\\train",
+      "val": "./cache/roberta-large/adversarial_nli_r1\\val",
+      "val_labels": "./cache/roberta-large/adversarial_nli_r1\\val_labels"
+    },
+    "transitive": {
+      "val": "./cache/roberta-large/transitive\\val",
+      "val_labels": "./cache/roberta-large/transitive\\val_labels"
+    },
+    "hypernymy": {
+      "val": "./cache/roberta-large/hypernymy\\val",
+      "val_labels": "./cache/roberta-large/hypernymy\\val_labels"
+    },
+    "hyponymy": {
+      "val": "./cache/roberta-large/hyponymy\\val",
+      "val_labels": "./cache/roberta-large/hyponymy\\val_labels"
+    },
+    "ner": {
+      "val": "./cache/roberta-large/ner\\val",
+      "val_labels": "./cache/roberta-large/ner\\val_labels"
+    },
+    "verbnet": {
+      "val": "./cache/roberta-large/verbnet\\val",
+      "val_labels": "./cache/roberta-large/verbnet\\val_labels"
+    },
+    "verbcorner": {
+      "val": "./cache/roberta-large/verbcorner\\val",
+      "val_labels": "./cache/roberta-large/verbcorner\\val_labels"
+    },
+    "syntactic_alternation": {
+      "val": "./cache/roberta-large/syntactic_alternation\\val",
+      "val_labels": "./cache/roberta-large/syntactic_alternation\\val_labels"
+    },
+    "mrpc": {
+      "val": "./cache/roberta-large/mrpc\\val",
+      "val_labels": "./cache/roberta-large/mrpc\\val_labels"
+    },
+    "boolean": {
+      "val": "./cache/roberta-large/boolean\\val",
+      "val_labels": "./cache/roberta-large/boolean\\val_labels"
+    },
+    "comparative": {
+      "val": "./cache/roberta-large/comparative\\val",
+      "val_labels": "./cache/roberta-large/comparative\\val_labels"
+    },
+    "conditional": {
+      "val": "./cache/roberta-large/conditional\\val",
+      "val_labels": "./cache/roberta-large/conditional\\val_labels"
+    },
+    "counting": {
+      "val": "./cache/roberta-large/counting\\val",
+      "val_labels": "./cache/roberta-large/counting\\val_labels"
+    },
+    "negation": {
+      "val": "./cache/roberta-large/negation\\val",
+      "val_labels": "./cache/roberta-large/negation\\val_labels"
+    },
+    "quantifier": {
+      "val": "./cache/roberta-large/quantifier\\val",
+      "val_labels": "./cache/roberta-large/quantifier\\val_labels"
+    },
+    "monotonicity_infer": {
+      "val": "./cache/roberta-large/monotonicity_infer\\val",
+      "val_labels": "./cache/roberta-large/monotonicity_infer\\val_labels"
+    },
+    "syllogism": {
+      "val": "./cache/roberta-large/syllogism\\val",
+      "val_labels": "./cache/roberta-large/syllogism\\val_labels"
+    },
+    "sentiment": {
+      "val": "./cache/roberta-large/sentiment\\val",
+      "val_labels": "./cache/roberta-large/sentiment\\val_labels"
+    },
+    "kg_relations": {
+      "val": "./cache/roberta-large/kg_relations\\val",
+      "val_labels": "./cache/roberta-large/kg_relations\\val_labels"
+    },
+    "puns": {
+      "val": "./cache/roberta-large/puns\\val",
+      "val_labels": "./cache/roberta-large/puns\\val_labels"
+    },
+    "coreference": {
+      "val": "./cache/roberta-large/coreference\\val",
+      "val_labels": "./cache/roberta-large/coreference\\val_labels"
+    },
+    "context_align": {
+      "val": "./cache/roberta-large/context_align\\val",
+      "val_labels": "./cache/roberta-large/context_align\\val_labels"
+    },
+    "sprl": {
+      "val": "./cache/roberta-large/sprl\\val",
+      "val_labels": "./cache/roberta-large/sprl\\val_labels"
+    },
+    "entailment_tree": {
+      "val": "./cache/roberta-large/entailment_tree\\val",
+      "val_labels": "./cache/roberta-large/entailment_tree\\val_labels"
+    },
+    "socialqa": {
+      "val": "./cache/roberta-large/socialqa\\val",
+      "val_labels": "./cache/roberta-large/socialqa\\val_labels"
+    },
+    "physicalqa": {
+      "val": "./cache/roberta-large/physicalqa\\val",
+      "val_labels": "./cache/roberta-large/physicalqa\\val_labels"
+    },
+    "atomic": {
+      "val": "./cache/roberta-large/atomic\\val",
+      "val_labels": "./cache/roberta-large/atomic\\val_labels"
+    },
+    "social_chem": {
+      "val": "./cache/roberta-large/social_chem\\val",
+      "val_labels": "./cache/roberta-large/social_chem\\val_labels"
+    },
+    "logiqa": {
+      "val": "./cache/roberta-large/logiqa\\val",
+      "val_labels": "./cache/roberta-large/logiqa\\val_labels"
+    },
+    "cosmoqa": {
+      "val": "./cache/roberta-large/cosmoqa\\val",
+      "val_labels": "./cache/roberta-large/cosmoqa\\val_labels"
+    },
+    "ester": {
+      "val": "./cache/roberta-large/ester\\val",
+      "val_labels": "./cache/roberta-large/ester\\val_labels"
+    },
+    "adversarial_nli_r2": {
+      "val": "./cache/roberta-large/adversarial_nli_r2\\val",
+      "val_labels": "./cache/roberta-large/adversarial_nli_r2\\val_labels"
+    },
+    "adversarial_nli_r3": {
+      "val": "./cache/roberta-large/adversarial_nli_r3\\val",
+      "val_labels": "./cache/roberta-large/adversarial_nli_r3\\val_labels"
+    }
+  },
+  "sampler_config": {
+    "sampler_type": "ProportionalMultiTaskSampler"
+  },
+  "global_train_config": {
+    "max_steps": 10595,
+    "warmup_steps": 1059
+  },
+  "task_specific_configs_dict": {
+    "adversarial_nli_r1": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "transitive": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "hypernymy": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "hyponymy": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "ner": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "verbnet": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "verbcorner": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "syntactic_alternation": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "mrpc": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "boolean": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "comparative": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "conditional": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "counting": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "negation": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "quantifier": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "monotonicity_infer": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "syllogism": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "sentiment": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "kg_relations": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "puns": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "coreference": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "context_align": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "sprl": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "entailment_tree": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "socialqa": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "physicalqa": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "atomic": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "social_chem": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "logiqa": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "cosmoqa": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "ester": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "adversarial_nli_r2": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "adversarial_nli_r3": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    }
+  },
+  "taskmodels_config": {
+    "task_to_taskmodel_map": {
+      "adversarial_nli_r1": "adversarial_nli_r1",
+      "transitive": "transitive",
+      "hypernymy": "hypernymy",
+      "hyponymy": "hyponymy",
+      "ner": "ner",
+      "verbnet": "verbnet",
+      "verbcorner": "verbcorner",
+      "syntactic_alternation": "syntactic_alternation",
+      "mrpc": "mrpc",
+      "boolean": "boolean",
+      "comparative": "comparative",
+      "conditional": "conditional",
+      "counting": "counting",
+      "negation": "negation",
+      "quantifier": "quantifier",
+      "monotonicity_infer": "monotonicity_infer",
+      "syllogism": "syllogism",
+      "sentiment": "sentiment",
+      "kg_relations": "kg_relations",
+      "puns": "puns",
+      "coreference": "coreference",
+      "context_align": "context_align",
+      "sprl": "sprl",
+      "entailment_tree": "entailment_tree",
+      "socialqa": "socialqa",
+      "physicalqa": "physicalqa",
+      "atomic": "atomic",
+      "social_chem": "social_chem",
+      "logiqa": "logiqa",
+      "cosmoqa": "cosmoqa",
+      "ester": "ester",
+      "adversarial_nli_r2": "adversarial_nli_r2",
+      "adversarial_nli_r3": "adversarial_nli_r3"
+    },
+    "taskmodel_config_map": {
+      "adversarial_nli_r1": {
+        "classifier_type": "linear"
+      },
+      "transitive": {
+        "classifier_type": "linear"
+      },
+      "hypernymy": {
+        "classifier_type": "linear"
+      },
+      "hyponymy": {
+        "classifier_type": "linear"
+      },
+      "ner": {
+        "classifier_type": "linear"
+      },
+      "verbnet": {
+        "classifier_type": "linear"
+      },
+      "verbcorner": {
+        "classifier_type": "linear"
+      },
+      "syntactic_alternation": {
+        "classifier_type": "linear"
+      },
+      "mrpc": {
+        "classifier_type": "linear"
+      },
+      "boolean": {
+        "classifier_type": "linear"
+      },
+      "comparative": {
+        "classifier_type": "linear"
+      },
+      "conditional": {
+        "classifier_type": "linear"
+      },
+      "counting": {
+        "classifier_type": "linear"
+      },
+      "negation": {
+        "classifier_type": "linear"
+      },
+      "quantifier": {
+        "classifier_type": "linear"
+      },
+      "monotonicity_infer": {
+        "classifier_type": "linear"
+      },
+      "syllogism": {
+        "classifier_type": "linear"
+      },
+      "sentiment": {
+        "classifier_type": "linear"
+      },
+      "kg_relations": {
+        "classifier_type": "linear"
+      },
+      "puns": {
+        "classifier_type": "linear"
+      },
+      "coreference": {
+        "classifier_type": "linear"
+      },
+      "context_align": {
+        "classifier_type": "linear"
+      },
+      "sprl": {
+        "classifier_type": "linear"
+      },
+      "entailment_tree": {
+        "classifier_type": "linear"
+      },
+      "socialqa": {
+        "classifier_type": "linear"
+      },
+      "physicalqa": {
+        "classifier_type": "linear"
+      },
+      "atomic": {
+        "classifier_type": "linear"
+      },
+      "social_chem": {
+        "classifier_type": "linear"
+      },
+      "logiqa": {
+        "classifier_type": "linear"
+      },
+      "cosmoqa": {
+        "classifier_type": "linear"
+      },
+      "ester": {
+        "classifier_type": "linear"
+      },
+      "adversarial_nli_r2": {
+        "classifier_type": "linear"
+      },
+      "adversarial_nli_r3": {
+        "classifier_type": "linear"
+      }
+    }
+  },
+  "task_run_config": {
+    "train_task_list": [
+      "adversarial_nli_r1"
+    ],
+    "train_val_task_list": [
+      "adversarial_nli_r1"
+    ],
+    "val_task_list": [
+      "transitive",
+      "hypernymy",
+      "hyponymy",
+      "ner",
+      "verbnet",
+      "verbcorner",
+      "syntactic_alternation",
+      "mrpc",
+      "boolean",
+      "comparative",
+      "conditional",
+      "counting",
+      "negation",
+      "quantifier",
+      "monotonicity_infer",
+      "syllogism",
+      "sentiment",
+      "kg_relations",
+      "puns",
+      "coreference",
+      "context_align",
+      "sprl",
+      "entailment_tree",
+      "socialqa",
+      "physicalqa",
+      "atomic",
+      "social_chem",
+      "logiqa",
+      "cosmoqa",
+      "ester",
+      "adversarial_nli_r1",
+      "adversarial_nli_r2",
+      "adversarial_nli_r3"
+    ],
+    "test_task_list": []
+  },
+  "metric_aggregator_config": {
+    "metric_aggregator_type": "EqualMetricAggregator"
+  }
+}

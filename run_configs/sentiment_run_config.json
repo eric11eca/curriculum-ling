@@ -4,21 +4,21 @@
   },
   "task_cache_config_dict": {
     "sentiment": {
-      "train": "./cache/control/bert-large-uncased/sentiment\\train",
-      "val": "./cache/control/bert-large-uncased/sentiment\\val",
-      "val_labels": "./cache/control/bert-large-uncased/sentiment\\val_labels"
+      "train": "./cache/microsoft/deberta-v3-base/sentiment\\train",
+      "val": "./cache/microsoft/deberta-v3-base/sentiment\\val",
+      "val_labels": "./cache/microsoft/deberta-v3-base/sentiment\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 1500,
-    "warmup_steps": 150
+    "max_steps": 1200,
+    "warmup_steps": 120
   },
   "task_specific_configs_dict": {
     "sentiment": {
-      "train_batch_size": 4,
+      "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
       "eval_subset_num": 500
@@ -30,7 +30,7 @@
     },
     "taskmodel_config_map": {
       "sentiment": {
-        "classifier_type": "mlp"
+        "classifier_type": "linear"
       }
     }
   },

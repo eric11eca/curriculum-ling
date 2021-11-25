@@ -1,23 +1,23 @@
 {
   "task_config_path_dict": {
-    "factuality": "/content/tasks/configs/factuality_config.json"
+    "logiqa": "/content/tasks/configs/logiqa_config.json"
   },
   "task_cache_config_dict": {
-    "factuality": {
-      "train": "./cache/microsoft/deberta-base/factuality\\train",
-      "val": "./cache/microsoft/deberta-base/factuality\\val",
-      "val_labels": "./cache/microsoft/deberta-base/factuality\\val_labels"
+    "logiqa": {
+      "train": "./cache/roberta-base/logiqa\\train",
+      "val": "./cache/roberta-base/logiqa\\val",
+      "val_labels": "./cache/roberta-base/logiqa\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 9514,
-    "warmup_steps": 951
+    "max_steps": 9220,
+    "warmup_steps": 922
   },
   "task_specific_configs_dict": {
-    "factuality": {
+    "logiqa": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "factuality": "factuality"
+      "logiqa": "logiqa"
     },
     "taskmodel_config_map": {
-      "factuality": {
+      "logiqa": {
         "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "factuality"
+      "logiqa"
     ],
     "train_val_task_list": [
-      "factuality"
+      "logiqa"
     ],
     "val_task_list": [
-      "factuality"
+      "logiqa"
     ],
     "test_task_list": []
   },

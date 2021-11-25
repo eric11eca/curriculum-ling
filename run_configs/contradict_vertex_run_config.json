@@ -4,17 +4,17 @@
   },
   "task_cache_config_dict": {
     "contradict_vertex": {
-      "train": "./cache/control/bert-large-uncased/contradict_vertex\\train",
-      "val": "./cache/control/bert-large-uncased/contradict_vertex\\val",
-      "val_labels": "./cache/control/bert-large-uncased/contradict_vertex\\val_labels"
+      "train": "./cache/roberta-base/contradict_vertex\\train",
+      "val": "./cache/roberta-base/contradict_vertex\\val",
+      "val_labels": "./cache/roberta-base/contradict_vertex\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 9850,
-    "warmup_steps": 985
+    "max_steps": 6555,
+    "warmup_steps": 655
   },
   "task_specific_configs_dict": {
     "contradict_vertex": {
@@ -30,7 +30,7 @@
     },
     "taskmodel_config_map": {
       "contradict_vertex": {
-        "classifier_type": "mlp"
+        "classifier_type": "linear"
       }
     }
   },

@@ -1,23 +1,23 @@
 {
   "task_config_path_dict": {
-    "factuality": "/content/tasks/configs/factuality_config.json"
+    "kg_relations": "/content/tasks/configs/kg_relations_config.json"
   },
   "task_cache_config_dict": {
-    "factuality": {
-      "train": "./cache/microsoft/deberta-base/factuality\\train",
-      "val": "./cache/microsoft/deberta-base/factuality\\val",
-      "val_labels": "./cache/microsoft/deberta-base/factuality\\val_labels"
+    "kg_relations": {
+      "train": "./cache/microsoft/deberta-v3-base/kg_relations\\train",
+      "val": "./cache/microsoft/deberta-v3-base/kg_relations\\val",
+      "val_labels": "./cache/microsoft/deberta-v3-base/kg_relations\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 9514,
-    "warmup_steps": 951
+    "max_steps": 12505,
+    "warmup_steps": 1250
   },
   "task_specific_configs_dict": {
-    "factuality": {
+    "kg_relations": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "factuality": "factuality"
+      "kg_relations": "kg_relations"
     },
     "taskmodel_config_map": {
-      "factuality": {
+      "kg_relations": {
         "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "factuality"
+      "kg_relations"
     ],
     "train_val_task_list": [
-      "factuality"
+      "kg_relations"
     ],
     "val_task_list": [
-      "factuality"
+      "kg_relations"
     ],
     "test_task_list": []
   },

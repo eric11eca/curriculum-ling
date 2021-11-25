@@ -1,23 +1,23 @@
 {
   "task_config_path_dict": {
-    "factuality": "/content/tasks/configs/factuality_config.json"
+    "counting": "/content/tasks/configs/counting_config.json"
   },
   "task_cache_config_dict": {
-    "factuality": {
-      "train": "./cache/microsoft/deberta-base/factuality\\train",
-      "val": "./cache/microsoft/deberta-base/factuality\\val",
-      "val_labels": "./cache/microsoft/deberta-base/factuality\\val_labels"
+    "counting": {
+      "train": "./cache/bert-base-uncased/counting\\train",
+      "val": "./cache/bert-base-uncased/counting\\val",
+      "val_labels": "./cache/bert-base-uncased/counting\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 9514,
-    "warmup_steps": 951
+    "max_steps": 1125,
+    "warmup_steps": 112
   },
   "task_specific_configs_dict": {
-    "factuality": {
+    "counting": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "factuality": "factuality"
+      "counting": "counting"
     },
     "taskmodel_config_map": {
-      "factuality": {
+      "counting": {
         "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "factuality"
+      "counting"
     ],
     "train_val_task_list": [
-      "factuality"
+      "counting"
     ],
     "val_task_list": [
-      "factuality"
+      "counting"
     ],
     "test_task_list": []
   },

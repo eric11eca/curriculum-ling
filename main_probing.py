@@ -1,6 +1,8 @@
 import os
 import sys
 import argparse
+
+from transformers.file_utils import cached_path
 import jiant.proj.main.tokenize_and_cache as tokenize_and_cache
 import jiant.proj.main.runscript as main_runscript
 import jiant.proj.main.scripts.configurator as configurator
@@ -8,6 +10,55 @@ import jiant.proj.main.export_model as export_model
 import jiant.utils.display as display
 import jiant.utils.python.io as py_io
 sys.path.insert(0, "/content/jiant")
+
+lexical_syntactic_tasks = [
+    "transitive",
+    "hypernymy",
+    "hyponymy",
+    "ner",
+    "verbnet",
+    "verbcorner",
+    "syntactic_alternation",
+    "mrpc",
+]
+
+logical_tasks = [
+    "boolean",
+    "comparative",
+    "conditional",
+    "counting",
+    "negation",
+    "quantifier",
+    "monotonicity_infer",
+    "syllogism"
+]
+
+semantic_tasks = [
+    "sentiment",
+    "kg_relations",
+    "puns",
+    "coreference",
+    "context_align",
+    "sprl",
+    "entailment_tree"
+]
+
+complex_tasks = [
+    "socialqa",
+    "physicalqa",
+    "atomic",
+    "social_chem",
+    "logiqa",
+    "cosmoqa",
+    "ester"
+]
+
+ANLI = ['adversarial_nli_r1',
+        'adversarial_nli_r2',
+        'adversarial_nli_r3']
+
+CURRICULUM = lexical_syntactic_tasks + logical_tasks \
+    + semantic_tasks + complex_tasks + ANLI
 
 
 def load_data_from_json(train_pth, val_pth):
@@ -77,10 +128,10 @@ def train_configuration(task_name, model_name, cache_pth, classifier_type, do_co
         task_config_base_path="/content/tasks/configs/",
         task_cache_base_path=task_cache_base_path,
         train_task_name_list=[task_name],
-        val_task_name_list=[task_name],
+        val_task_name_list=CURRICULUM,
         train_batch_size=8,
         eval_batch_size=16,
-        epochs=1,
+        epochs=5,
         num_gpus=1,
         classifier_type=classifier_type
     ).create_config()
@@ -101,14 +152,13 @@ def train(task_name, model_name, model_path, do_train, freeze_encoder, model_dir
         hf_pretrained_model_name_or_path=model_name,
         model_path=model_path,
         model_config_path=f"./models/{model_name}/model/config.json",
-        learning_rate=1e-3,
-        eval_every_steps=500,
+        learning_rate=1e-5,
+        eval_every_steps=200,
         do_train=do_train,
         do_val=True,
-        # model_load_mode="all",
         do_save=True,
         write_val_preds=True,
-        freeze_encoder=freeze_encoder,
+        freeze_encoder=False,
         force_overwrite=True,
         no_cuda=False
     )
@@ -126,8 +176,19 @@ MODEL_NAMES = {
     "bert1": "bert-base-uncased",
     "bert2": "bert-large-uncased",
     "roberta1": "roberta-base",
+    "roberta1-glue": "roberta-base",
     "roberta2": "roberta-large",
     "deberta": "microsoft/deberta-base",
+    "debertav3": "microsoft/deberta-v3-base",
+}
+
+MODEL_VAL_NAMES = {
+    "bert1": "bert-base",
+    "roberta1": "roberta-base",
+    "roberta2": "roberta-large",
+    "roberta1-glue": "roberta-base",
+    "deberta": "deberta-base",
+    "debertav3": "deberta-v3-base"
 }
 
 if __name__ == "__main__":
@@ -154,20 +215,25 @@ if __name__ == "__main__":
                         help="probing experiments name")
     parser.add_argument("--model_name", type=str, default="bert1",
                         help="pre-trained transformer model name")
-    parser.add_argument("--do_prompt", type=str,
-                        default="<S> [sep] <S2>: <MASK>")
 
     args = parser.parse_args()
     task_name = args.task_name
     exp_name = args.model_name
     model_name = MODEL_NAMES[args.model_name] if args.model_name in MODEL_NAMES else ""
+    print("Task Name: ", task_name)
+    print("Model Name: ", model_name)
 
     if len(args.train_pth) > 0 or len(args.val_pth) > 0:
         prepare_train_and_val_data(args.train_pth, args.val_pth)
 
     if args.tokenize:
-        tokenization(task_name, model_name, phase="train")
-        tokenization(task_name, model_name, phase="val")
+        if task_name == "curriculum":
+            for task in CURRICULUM:
+                tokenization(task, model_name, phase="train")
+                tokenization(task, model_name, phase="val")
+        else:
+            tokenization(task_name, model_name, phase="train")
+            tokenization(task_name, model_name, phase="val")
     elif args.tokenize_train:
         tokenization(task_name, model_name, phase="train")
     elif args.tokenize_val:
@@ -179,48 +245,56 @@ if __name__ == "__main__":
         setup_model(model_name)
 
     if args.main_loop:
-        meta_configs = py_io.read_json(
-            f"./run_meta_configs/{task_name}_run_meta_configs.json")
-        for exp_nmae in args.exp_list:
-            if not exp_name in meta_configs:
-                raise KeyError(
-                    "Experiment name not found in the meta running configuration!")
-        for exp_name in args.exp_list:
-            global_metrics = []
-            meta_config = meta_configs[exp_name]
+        # meta_configs = py_io.read_json(
+        #    f"./run_meta_configs/{task_name}_run_meta_configs.json")
+        # for exp_nmae in args.exp_list:
+        #    if not exp_name in meta_configs:
+        #        raise KeyError(
+        #            "Experiment name not found in the meta running configuration!")
+        # for exp_name in args.exp_list:
+        # global_metrics=[]
+        # meta_config=meta_configs[exp_name]
 
-            model_path = meta_config["model_pth"]
-            cache_pth = meta_config[
-                "cache_pth"] if "cache_pth" in meta_config else f"./cache/{model_name}/"
-            model_name = meta_config["model_name"]
-            model_val_name = meta_config["model_val_name"]
+        # model_path=meta_config["model_pth"]
+        # model_name=meta_config["model_name"]
+        # cache_pth=meta_config[
+        #    "cache_pth"] if "cache_pth" in meta_config else f"./cache/{model_name}/"
+        # model_val_name = meta_config["model_val_name"]
 
-            do_train = meta_config["do_train"]
-            do_control = meta_config["do_control"]
-            freeze_encoder = meta_config["freeze_encoder"]
-            classifier_type = meta_config["classifier_type"]
+        # do_train = meta_config["do_train"]
+        # do_control = meta_config["do_control"]
+        # freeze_encoder = meta_config["freeze_encoder"]
+        # classifier_type = meta_config["classifier_type"]
 
-            # for i in range(0):
-            train_configuration(task_name,
-                                model_name,
-                                cache_pth=cache_pth,
-                                classifier_type=classifier_type,
-                                do_control=do_control)
+        model_path = f"./models/{model_name}/model/model.p"
+        cache_path = f"./cache/{model_name}/"
+        model_val_name = MODEL_VAL_NAMES[args.model_name]
 
-            train(task_name=task_name,
-                  model_name=model_name,
-                  model_path=model_path,
-                  do_train=do_train,
-                  freeze_encoder=freeze_encoder,
-                  model_dir_name=model_val_name)
+        # for i in range(10):
+        train_configuration(
+            task_name,
+            model_name,
+            cache_pth=cache_path,
+            classifier_type="linear",
+            do_control=False
+        )
 
-            metric = py_io.read_json(
-                f"./runs/{task_name}/{model_val_name}/main/val_metrics.json")
+        train(
+            task_name=task_name,
+            model_name=model_name,
+            model_path=model_path,
+            do_train=True,
+            freeze_encoder=False,
+            model_dir_name=model_val_name
+        )
 
-            # global_metrics.append(metric)
+        # metric = py_io.read_json(
+        #    f"./runs/{task_name}/{model_val_name}/main/val_metrics.json")
 
-            # py_io.write_json(
-            #    global_metrics, f"./runs/{task_name}/{model_val_name}/overall_metrics.json")
+        # global_metrics.append(metric)
+
+        # py_io.write_json(
+        #    global_metrics, f"./runs/{task_name}/{model_val_name}/overall_metrics.json")
 
 
 # python main_probing.py --main_loop --task_name monotonicity --exp_list bert2-mlp --exp_list roberta2 --exp_list roberta2-mlp --exp_list bert2

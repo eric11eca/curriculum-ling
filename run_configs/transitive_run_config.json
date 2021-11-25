@@ -1,20 +1,20 @@
 {
   "task_config_path_dict": {
-    "transitive": "./tasks/configs\\transitive_config.json"
+    "transitive": "/content/tasks/configs/transitive_config.json"
   },
   "task_cache_config_dict": {
     "transitive": {
-      "train": "./cache\\transitive\\train",
-      "val": "./cache\\transitive\\val",
-      "val_labels": "./cache\\transitive\\val_labels"
+      "train": "./cache/microsoft/deberta-v3-base/transitive\\train",
+      "val": "./cache/microsoft/deberta-v3-base/transitive\\val",
+      "val_labels": "./cache/microsoft/deberta-v3-base/transitive\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 3516,
-    "warmup_steps": 351
+    "max_steps": 12500,
+    "warmup_steps": 1250
   },
   "task_specific_configs_dict": {
     "transitive": {
@@ -29,7 +29,9 @@
       "transitive": "transitive"
     },
     "taskmodel_config_map": {
-      "transitive": null
+      "transitive": {
+        "classifier_type": "linear"
+      }
     }
   },
   "task_run_config": {

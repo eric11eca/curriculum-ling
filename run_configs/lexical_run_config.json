@@ -1,23 +1,23 @@
 {
   "task_config_path_dict": {
-    "factuality": "/content/tasks/configs/factuality_config.json"
+    "lexical": "/content/tasks/configs/lexical_config.json"
   },
   "task_cache_config_dict": {
-    "factuality": {
-      "train": "./cache/microsoft/deberta-base/factuality\\train",
-      "val": "./cache/microsoft/deberta-base/factuality\\val",
-      "val_labels": "./cache/microsoft/deberta-base/factuality\\val_labels"
+    "lexical": {
+      "train": "./cache/bert-base-uncased/lexical\\train",
+      "val": "./cache/bert-base-uncased/lexical\\val",
+      "val_labels": "./cache/bert-base-uncased/lexical\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 9514,
-    "warmup_steps": 951
+    "max_steps": 250,
+    "warmup_steps": 25
   },
   "task_specific_configs_dict": {
-    "factuality": {
+    "lexical": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "factuality": "factuality"
+      "lexical": "lexical"
     },
     "taskmodel_config_map": {
-      "factuality": {
-        "classifier_type": "linear"
+      "lexical": {
+        "classifier_type": "mlp"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "factuality"
+      "lexical"
     ],
     "train_val_task_list": [
-      "factuality"
+      "lexical"
     ],
     "val_task_list": [
-      "factuality"
+      "lexical"
     ],
     "test_task_list": []
   },
