@@ -1,0 +1,273 @@
+{
+  "aggregated": 0.4676370694527744,
+  "lexical": {
+    "loss": 1.115134494645255,
+    "metrics": {
+      "major": 0.0040683482506102524,
+      "minor": {
+        "acc": 0.0040683482506102524
+      }
+    }
+  },
+  "transitive": {
+    "loss": 0.6931015025485646,
+    "metrics": {
+      "major": 0.4998862084660901,
+      "minor": {
+        "acc": 0.4998862084660901
+      }
+    }
+  },
+  "hypernymy": {
+    "loss": 0.6934042887804204,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "hyponymy": {
+    "loss": 0.694387263261286,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "verbcorner": {
+    "loss": 0.6938245290305178,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "verbnet": {
+    "loss": 0.691740745306015,
+    "metrics": {
+      "major": 0.525,
+      "minor": {
+        "acc": 0.525
+      }
+    }
+  },
+  "ner": {
+    "loss": 0.6945110757772187,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "syntactic_alternation": {
+    "loss": 0.683551639526874,
+    "metrics": {
+      "major": 0.7102272727272727,
+      "minor": {
+        "acc": 0.7102272727272727
+      }
+    }
+  },
+  "monotonicity_infer": {
+    "loss": 0.6936536632942517,
+    "metrics": {
+      "major": 0.4973987365291713,
+      "minor": {
+        "acc": 0.4973987365291713
+      }
+    }
+  },
+  "boolean": {
+    "loss": 1.0906300317673456,
+    "metrics": {
+      "major": 0.409,
+      "minor": {
+        "acc": 0.409
+      }
+    }
+  },
+  "comparative": {
+    "loss": 1.0982289806244865,
+    "metrics": {
+      "major": 0.352,
+      "minor": {
+        "acc": 0.352
+      }
+    }
+  },
+  "conditional": {
+    "loss": 1.0989180330246213,
+    "metrics": {
+      "major": 0.337,
+      "minor": {
+        "acc": 0.337
+      }
+    }
+  },
+  "counting": {
+    "loss": 1.105416630941724,
+    "metrics": {
+      "major": 0.326,
+      "minor": {
+        "acc": 0.326
+      }
+    }
+  },
+  "negation": {
+    "loss": 1.102075249429733,
+    "metrics": {
+      "major": 0.331,
+      "minor": {
+        "acc": 0.331
+      }
+    }
+  },
+  "quantifier": {
+    "loss": 1.1000617326252045,
+    "metrics": {
+      "major": 0.336,
+      "minor": {
+        "acc": 0.336
+      }
+    }
+  },
+  "puns": {
+    "loss": 0.6943847667087208,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "sentiment": {
+    "loss": 0.6942186277163657,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "coreference": {
+    "loss": 0.6910620528804369,
+    "metrics": {
+      "major": 0.535092257285739,
+      "minor": {
+        "acc": 0.535092257285739
+      }
+    }
+  },
+  "syllogism": {
+    "loss": 0.6939118732559642,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "kg_relations": {
+    "loss": 0.6849601616462072,
+    "metrics": {
+      "major": 0.59526938239159,
+      "minor": {
+        "acc": 0.59526938239159
+      }
+    }
+  },
+  "context_align": {
+    "loss": 0.691558802422182,
+    "metrics": {
+      "major": 0.7702994751466502,
+      "minor": {
+        "acc": 0.7702994751466502
+      }
+    }
+  },
+  "sprl": {
+    "loss": 0.6970057076305375,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "atomic": {
+    "loss": 0.6968774992166106,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "social_chem": {
+    "loss": 0.6961495519843635,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "socialqa": {
+    "loss": 0.7079252727488254,
+    "metrics": {
+      "major": 0.3333333333333333,
+      "minor": {
+        "acc": 0.3333333333333333
+      }
+    }
+  },
+  "logiqa": {
+    "loss": 0.6937006371884258,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "entailment_tree": {
+    "loss": 0.6966900798407468,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "cosmoqa": {
+    "loss": 0.6944644561261376,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  },
+  "ester": {
+    "loss": 0.6839029663487485,
+    "metrics": {
+      "major": 0.6488294314381271,
+      "minor": {
+        "acc": 0.6488294314381271
+      }
+    }
+  },
+  "physicalqa": {
+    "loss": 0.6932349723318348,
+    "metrics": {
+      "major": 0.5,
+      "minor": {
+        "acc": 0.5
+      }
+    }
+  }
+}
