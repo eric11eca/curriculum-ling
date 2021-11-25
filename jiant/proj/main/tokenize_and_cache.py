@@ -122,7 +122,8 @@ def iter_chunk_and_save(task, phase, examples, feat_spec, tokenizer, args: RunCo
         phase=phase,
         verbose=True,
     )
-    max_valid_length_recorder = preprocessing.MaxValidLengthRecorder(args.max_seq_length)
+    max_valid_length_recorder = preprocessing.MaxValidLengthRecorder(
+        args.max_seq_length)
     shared_caching.iter_chunk_and_save(
         data=dataset_generator,
         chunk_size=args.chunk_size,
@@ -132,13 +133,15 @@ def iter_chunk_and_save(task, phase, examples, feat_spec, tokenizer, args: RunCo
     )
     if args.smart_truncate:
         preprocessing.smart_truncate_cache(
-            cache=shared_caching.ChunkedFilesDataCache(os.path.join(args.output_dir, phase)),
+            cache=shared_caching.ChunkedFilesDataCache(
+                os.path.join(args.output_dir, phase)),
             max_seq_length=args.max_seq_length,
             max_valid_length=max_valid_length_recorder.max_valid_length,
             verbose=True,
         )
         py_io.write_json(
-            data={"truncated_to": int(max_valid_length_recorder.max_valid_length)},
+            data={"truncated_to": int(
+                max_valid_length_recorder.max_valid_length)},
             path=os.path.join(args.output_dir, phase, "smart_truncate.json"),
         )
 
@@ -147,11 +150,18 @@ def main(args: RunConfiguration):
     config = AutoConfig.from_pretrained(args.hf_pretrained_model_name_or_path)
     model_type = config.model_type
 
-    task = create_task_from_config_path(config_path=args.task_config_path, verbose=True)
+    print("========================================================")
+    print("Tokenizer Name: ", args.hf_pretrained_model_name_or_path)
+    print("Tokenizer Model Type: ", model_type)
+    print("========================================================")
+
+    task = create_task_from_config_path(
+        config_path=args.task_config_path, verbose=True)
     feat_spec = JiantTransformersModelFactory.build_featurization_spec(
         model_type=model_type, max_seq_length=args.max_seq_length,
     )
-    tokenizer = AutoTokenizer.from_pretrained(args.hf_pretrained_model_name_or_path, use_fast=False)
+    tokenizer = AutoTokenizer.from_pretrained(
+        args.hf_pretrained_model_name_or_path, use_fast=False)
     if isinstance(args.phases, str):
         phases = args.phases.split(",")
     else:
@@ -210,7 +220,8 @@ def main(args: RunConfiguration):
         paths_dict[PHASE.TEST] = os.path.join(args.output_dir, PHASE.TEST)
 
     if not args.skip_write_output_paths:
-        py_io.write_json(data=paths_dict, path=os.path.join(args.output_dir, "paths.json"))
+        py_io.write_json(data=paths_dict, path=os.path.join(
+            args.output_dir, "paths.json"))
 
 
 if __name__ == "__main__":

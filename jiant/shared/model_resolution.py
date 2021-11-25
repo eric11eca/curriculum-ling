@@ -15,6 +15,7 @@ class ModelArchitectures(Enum):
     MBART = "mbart"
     ELECTRA = "electra"
     DEBERTAV2 = "deberta-v2"
+    DEBERTAV3 = "deberta-v3"
     DEBERTA = "deberta"
     VISUALBERT = "uclanlp/visualbert-vqa-coco-pre"
 
@@ -34,6 +35,7 @@ TOKENIZER_CLASS_DICT = BiDict(
         ModelArchitectures.MBART: transformers.MBartTokenizer,
         ModelArchitectures.ELECTRA: transformers.ElectraTokenizer,
         ModelArchitectures.DEBERTAV2: transformers.DebertaV2Tokenizer,
+        ModelArchitectures.DEBERTAV3: transformers.DebertaV2Tokenizer,
         ModelArchitectures.DEBERTA: transformers.DebertaTokenizer,
     }
 )

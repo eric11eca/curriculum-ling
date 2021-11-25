@@ -93,8 +93,10 @@ class Example(BaseExample):
             end_position = self.end_position
 
             # If the answer cannot be found in the text, then skip this example.
-            actual_text = " ".join(self.doc_tokens[start_position : (end_position + 1)])
-            cleaned_answer_text = " ".join(whitespace_tokenize(self.answer_text))
+            actual_text = " ".join(
+                self.doc_tokens[start_position: (end_position + 1)])
+            cleaned_answer_text = " ".join(
+                whitespace_tokenize(self.answer_text))
             if actual_text.find(cleaned_answer_text) == -1:
                 logger.warning(
                     "Could not find answer: '%s' vs. '%s'", actual_text, cleaned_answer_text
@@ -144,13 +146,15 @@ class Example(BaseExample):
         # Tokenizers who insert 2 SEP tokens in-between <context> & <question>
         #   need to have special handling
         # in the way they compute mask of added tokens.
-        tokenizer_type = type(tokenizer).__name__.replace("Tokenizer", "").lower()
+        tokenizer_type = type(tokenizer).__name__.replace(
+            "Tokenizer", "").lower()
         sequence_added_tokens = (
             tokenizer.model_max_length - tokenizer.max_len_single_sentence + 1
             if tokenizer_type in MULTI_SEP_TOKENS_TOKENIZERS_SET
             else tokenizer.model_max_length - tokenizer.max_len_single_sentence
         )
-        sequence_pair_added_tokens = tokenizer.model_max_length - tokenizer.max_len_sentences_pair
+        sequence_pair_added_tokens = tokenizer.model_max_length - \
+            tokenizer.max_len_sentences_pair
 
         span_doc_tokens = all_doc_tokens
         while len(spans) * doc_stride < len(all_doc_tokens):
@@ -181,7 +185,8 @@ class Example(BaseExample):
 
             paragraph_len = min(
                 len(all_doc_tokens) - len(spans) * doc_stride,
-                max_seq_length - len(truncated_query) - sequence_pair_added_tokens,
+                max_seq_length - len(truncated_query) -
+                sequence_pair_added_tokens,
             )
 
             if tokenizer.pad_token_id in encoded_dict["input_ids"]:
@@ -193,9 +198,10 @@ class Example(BaseExample):
                     last_padding_id_position = (
                         len(encoded_dict["input_ids"])
                         - 1
-                        - encoded_dict["input_ids"][::-1].index(tokenizer.pad_token_id)
+                        - encoded_dict["input_ids"][::-
+                                                    1].index(tokenizer.pad_token_id)
                     )
-                    non_padded_ids = encoded_dict["input_ids"][last_padding_id_position + 1 :]
+                    non_padded_ids = encoded_dict["input_ids"][last_padding_id_position + 1:]
 
             else:
                 non_padded_ids = encoded_dict["input_ids"]
@@ -209,7 +215,8 @@ class Example(BaseExample):
                     if tokenizer.padding_side == "right"
                     else i
                 )
-                token_to_orig_map[index] = tok_to_orig_index[len(spans) * doc_stride + i]
+                token_to_orig_map[index] = tok_to_orig_index[len(
+                    spans) * doc_stride + i]
 
             encoded_dict["paragraph_len"] = paragraph_len
             encoded_dict["tokens"] = tokens
@@ -251,11 +258,13 @@ class Example(BaseExample):
             # Original TF implementation also keep the classification token (set to 0)
             p_mask = np.ones_like(span["token_type_ids"])
             if tokenizer.padding_side == "right":
-                p_mask[len(truncated_query) + sequence_added_tokens :] = 0
+                p_mask[len(truncated_query) + sequence_added_tokens:] = 0
             else:
-                p_mask[-len(span["tokens"]) : -(len(truncated_query) + sequence_added_tokens)] = 0
+                p_mask[-len(span["tokens"]): -
+                       (len(truncated_query) + sequence_added_tokens)] = 0
 
-            pad_token_indices = np.where(span["input_ids"] == tokenizer.pad_token_id)
+            pad_token_indices = np.where(
+                span["input_ids"] == tokenizer.pad_token_id)
             special_token_indices = np.asarray(
                 tokenizer.get_special_tokens_mask(
                     span["input_ids"], already_has_special_tokens=True
@@ -293,7 +302,8 @@ class Example(BaseExample):
                     if tokenizer.padding_side == "left":
                         doc_offset = 0
                     else:
-                        doc_offset = len(truncated_query) + sequence_added_tokens
+                        doc_offset = len(truncated_query) + \
+                            sequence_added_tokens
 
                     start_position = tok_start_position - doc_start + doc_offset
                     end_position = tok_end_position - doc_start + doc_offset
@@ -530,7 +540,8 @@ def _new_check_is_max_context(doc_spans, cur_span_index, position):
             continue
         num_left_context = position - doc_span["start"]
         num_right_context = end - position
-        score = min(num_left_context, num_right_context) + 0.01 * doc_span["length"]
+        score = min(num_left_context, num_right_context) + \
+            0.01 * doc_span["length"]
         if best_score is None or score > best_score:
             best_score = score
             best_span_index = span_index
@@ -544,7 +555,7 @@ def _improve_answer_span(doc_tokens, input_start, input_end, tokenizer, orig_ans
 
     for new_start in range(input_start, input_end + 1):
         for new_end in range(input_end, new_start - 1, -1):
-            text_span = " ".join(doc_tokens[new_start : (new_end + 1)])
+            text_span = " ".join(doc_tokens[new_start: (new_end + 1)])
             if text_span == tok_answer_text:
                 return new_start, new_end
 

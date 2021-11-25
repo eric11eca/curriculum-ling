@@ -102,7 +102,8 @@ from jiant.tasks.lib.edge_probing.align_sentiment_vertex import AlignSentimentVe
 from jiant.tasks.lib.edge_probing.contradict_vertex import ContradictVertexTask
 from jiant.tasks.lib.prompt_alignment.prompt_sentiment import PromptSentiment
 
-from jiant.tasks.lib.curriculum.lexical_nli import LexicalNLITask
+from jiant.tasks.lib.curriculum.commonnli import CommonNLITask
+from jiant.tasks.lib.curriculum.binarynli import BinaryNLITask
 
 from jiant.tasks.core import Task
 from jiant.utils.python.io import read_json
@@ -195,22 +196,44 @@ TASK_DICT = {
     "arct": ArctTask,
     "winogrande": WinograndeTask,
     "piqa": PiqaTask,
-    "semgraph1": Semgraph1Task,
-    "semgraph2": Semgraph2Task,
-    "factuality": FactualityTask,
-    "transitive": TransitiveAssociationTask,
-    "monotonicity": MonotonicityTask,
-    "contradiction": ContradictionTask,
-    "sentiment": AlignSentimentTask,
-    "relational": AlignRelationalTask,
-    "anaphora": AlignAnaphoraTask,
-    "lexical": AlignLexicalTask,
-    "relational_vertex": AlignRelationalVertexTask,
-    "sentiment_vertex": AlignSentimentVertexTask,
-    "contradict_vertex": ContradictVertexTask,
-    "prompt_sentiment": PromptSentiment,
-    "lexical_nli": LexicalNLITask,
-    "socialqa_nli": LexicalNLITask,
+    "lexical": CommonNLITask,
+    "socialqa": BinaryNLITask,
+    "physicalqa": BinaryNLITask,
+    "syntactic_alternation": BinaryNLITask,
+    "monotonicity_infer": BinaryNLITask,
+    "atomic": BinaryNLITask,
+    "social_chem": BinaryNLITask,
+    "boolean": CommonNLITask,
+    "comparative": CommonNLITask,
+    "conditional": CommonNLITask,
+    "counting": CommonNLITask,
+    "negation": CommonNLITask,
+    "quantifier": CommonNLITask,
+    "monotonicity_simple": CommonNLITask,
+    "monotonicity_hard": CommonNLITask,
+    "factuality": BinaryNLITask,
+    "kg_relations": BinaryNLITask,
+    "megaveridicality": BinaryNLITask,
+    "ner": BinaryNLITask,
+    "puns": BinaryNLITask,
+    "sentiment": BinaryNLITask,
+    "verbcorner": BinaryNLITask,
+    "verbnet": BinaryNLITask,
+    "winogender": BinaryNLITask,
+    "transitive": BinaryNLITask,
+    "coreference": BinaryNLITask,
+    "context_align": BinaryNLITask,
+    "logiqa": BinaryNLITask,
+    "cosmoqa": BinaryNLITask,
+    "entailment_tree": BinaryNLITask,
+    "drop": BinaryNLITask,
+    "ester": BinaryNLITask,
+    "sprl": BinaryNLITask,
+    "proofwriter": BinaryNLITask,
+    "syllogism": BinaryNLITask,
+    "cosmoqa": BinaryNLITask,
+    "hypernymy": BinaryNLITask,
+    "hyponymy": BinaryNLITask,
 }
 
 

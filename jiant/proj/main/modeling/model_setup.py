@@ -296,8 +296,11 @@ def create_taskmodel(task, encoder, **taskmodel_kwargs) -> Taskmodel:
     if hasattr(encoder, "layer_norm_eps"):
         head_kwargs["layer_norm_eps"] = encoder.config.layer_norm_eps
 
+    print("==============================")
     print(task)
     print(head_kwargs)
+    print(task.TASK_TYPE)
+    print("==============================")
 
     head = JiantHeadFactory()(task, **head_kwargs)
     taskmodel = JiantTaskModelFactory()(task, encoder, head, **taskmodel_kwargs)

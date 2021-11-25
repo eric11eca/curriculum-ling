@@ -1034,7 +1034,8 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
             tasks_retrieval.MCScriptTask,
             tasks_retrieval.ArctTask,
             tasks_retrieval.PiqaTask,
-            tasks_retrieval.LexicalNLITask,
+            tasks_retrieval.CommonNLITask,
+            tasks_retrieval.BinaryNLITask,
         ),
     ):
         return SimpleAccuracyEvaluationScheme()

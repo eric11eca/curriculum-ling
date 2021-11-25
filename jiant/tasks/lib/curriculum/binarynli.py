@@ -27,7 +27,7 @@ class Example(BaseExample):
             guid=self.guid,
             input_premise=tokenizer.tokenize(self.input_premise),
             input_hypothesis=tokenizer.tokenize(self.input_hypothesis),
-            label_id=LexicalNLITask.LABEL_TO_ID[self.label],
+            label_id=BinaryNLITask.LABEL_TO_ID[self.label],
         )
 
 
@@ -69,14 +69,14 @@ class Batch(BatchMixin):
     tokens: list
 
 
-class LexicalNLITask(Task):
+class BinaryNLITask(Task):
     Example = Example
     TokenizedExample = Example
     DataRow = DataRow
     Batch = Batch
 
     TASK_TYPE = TaskTypes.CLASSIFICATION
-    LABELS = ["contradiction", "entailment", "neutral"]
+    LABELS = ["entailed", "not-entailed"]
     LABEL_TO_ID, ID_TO_LABEL = labels_to_bimap(LABELS)
 
     def get_train_examples(self):
@@ -92,16 +92,23 @@ class LexicalNLITask(Task):
     def _create_examples(cls, lines, set_type):
         examples = []
         for (i, line) in enumerate(lines):
+            if i > 50000:
+                break
             if "gold_label" in line:
                 # Loading from original data
                 if line["gold_label"] == "-":
                     continue
+                label = line["gold_label"] if set_type != "test" else cls.LABELS[-1]
+                if label == "entailment":
+                    label = "entailed"
+                if label == "neutral":
+                    label = "not-entailed"
                 examples.append(
                     Example(
                         guid="%s-%s" % (set_type, i),
-                        input_premise=line["sentence1"],
-                        input_hypothesis=line["sentence2"],
-                        label=line["gold_label"] if set_type != "test" else cls.LABELS[-1],
+                        input_premise=line["premise"],
+                        input_hypothesis=line["hypothesis"],
+                        label=label,
                     )
                 )
             else:

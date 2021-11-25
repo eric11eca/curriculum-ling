@@ -88,7 +88,8 @@ class SemevalTask(edge_probing_two_span.AbstractProbingTask):
                         text=line["text"],
                         span1=span1,
                         span2=span2,
-                        labels=[target["label"]] if set_type != "test" else [cls.LABELS[-1]],
+                        labels=[target["label"]] if set_type != "test" else [
+                            cls.LABELS[-1]],
                     )
                 )
         return examples
