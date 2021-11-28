@@ -200,6 +200,7 @@ TASK_DICT = {
     "socialqa": BinaryNLITask,
     "physicalqa": BinaryNLITask,
     "syntactic_alternation": BinaryNLITask,
+    "syntactic_variation": BinaryNLITask,
     "monotonicity_infer": BinaryNLITask,
     "atomic": BinaryNLITask,
     "social_chem": BinaryNLITask,
@@ -234,6 +235,14 @@ TASK_DICT = {
     "cosmoqa": BinaryNLITask,
     "hypernymy": BinaryNLITask,
     "hyponymy": BinaryNLITask,
+    "lexical_inference": BinaryNLITask,
+    "syntactic_inference": BinaryNLITask,
+    "logical_inference": BinaryNLITask,
+    "semantic_inference": BinaryNLITask,
+    "knowledge_inference": BinaryNLITask,
+    "commonsense_inference": BinaryNLITask,
+    "comprehension_inference": BinaryNLITask,
+    "complex_inference": BinaryNLITask
 }
 
 

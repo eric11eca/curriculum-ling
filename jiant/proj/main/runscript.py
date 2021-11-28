@@ -91,6 +91,9 @@ def setup_runner(
             taskmodels_config=jiant_task_container.taskmodels_config,
             freeze_encoder=args.freeze_encoder
         )
+        print("=========================================")
+        print("Current model path: ", args.model_path)
+        print("=========================================")
         jiant_model_setup.delegate_load_from_path(
             jiant_model=jiant_model, weights_path=args.model_path, load_mode=args.model_load_mode
         )
@@ -184,6 +187,11 @@ def run_loop(args: RunConfiguration, checkpoint=None):
                 verbose=True,
             )
             if args.write_val_preds:
+                for _, task_results_dict in val_results_dict.items():
+                    py_io.write_json(
+                        task_results_dict["acc_report"],
+                        path=os.path.join(args.output_dir, "acc_report.json")
+                    )
                 jiant_evaluate.write_preds(
                     eval_results_dict=val_results_dict,
                     path=os.path.join(args.output_dir, "val_preds.p"),

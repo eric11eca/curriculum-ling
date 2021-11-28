@@ -5,6 +5,7 @@ import torch
 
 import jiant.tasks.evaluate as evaluate
 import jiant.utils.torch_utils as torch_utils
+import jiant.utils.python.io as py_io
 from jiant.proj.main.components.container_setup import JiantTaskContainer
 from jiant.proj.main.modeling.primary import JiantModel, wrap_jiant_forward
 from jiant.shared.constants import PHASE
@@ -81,8 +82,9 @@ class JiantRunner:
         train_dataloader_dict = self.get_train_dataloader_dict()
         start_position = train_state.global_steps
         for _ in maybe_tqdm(
-            range(start_position,
-                  self.jiant_task_container.global_train_config.max_steps),
+            range(
+                start_position,
+                self.jiant_task_container.global_train_config.max_steps),
             desc="Training",
             initial=start_position,
             total=self.jiant_task_container.global_train_config.max_steps,
@@ -311,9 +313,34 @@ def run_val(
         ),
     }
     if return_preds:
-        output["preds"] = evaluation_scheme.get_preds_from_accumulator(
-            task=task, accumulator=eval_accumulator,
+        preds = evaluation_scheme.get_preds_from_accumulator(
+            task=task, accumulator=eval_accumulator
         )
+
+        task_name = task.name
+        classes = ["entailed", "not-entailed"]
+        acc_report = {}
+
+        print(task_name)
+
+        if "inference" in task_name:
+            print("calculate accuracy per task")
+            val_labels = py_io.read_jsonl(
+                f"/content/tasks/curriculum/{task_name}/val.jsonl")
+
+            for i, data in enumerate(val_labels):
+                if not data['task'] in acc_report:
+                    acc_report[data['task']] = {'total': 0, "correct": 0}
+                acc_report[data['task']]['total'] += 1
+                label = classes.index(data['gold_label'])
+                pred = int(preds[i])
+                if pred == label:
+                    acc_report[data['task']]['correct'] += 1
+            for key in acc_report:
+                acc_report[key]['acc'] = acc_report[key]['correct'] / \
+                    acc_report[key]['total']
+        output["acc_report"] = acc_report
+        output["preds"] = preds
     return output
 
 
