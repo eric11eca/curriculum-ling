@@ -4,9 +4,9 @@
   },
   "task_cache_config_dict": {
     "comparative": {
-      "train": "./cache/microsoft/deberta-v3-base/comparative\\train",
-      "val": "./cache/microsoft/deberta-v3-base/comparative\\val",
-      "val_labels": "./cache/microsoft/deberta-v3-base/comparative\\val_labels"
+      "train": "./cache/roberta-large/comparative\\train",
+      "val": "./cache/roberta-large/comparative\\val",
+      "val_labels": "./cache/roberta-large/comparative\\val_labels"
     }
   },
   "sampler_config": {

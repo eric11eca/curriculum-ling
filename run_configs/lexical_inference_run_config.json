@@ -1,23 +1,23 @@
 {
   "task_config_path_dict": {
-    "relational_vertex": "/content/tasks/configs/relational_vertex_config.json"
+    "lexical_inference": "/content/tasks/configs/lexical_inference_config.json"
   },
   "task_cache_config_dict": {
-    "relational_vertex": {
-      "train": "./cache/microsoft/deberta-base/relational_vertex\\train",
-      "val": "./cache/microsoft/deberta-base/relational_vertex\\val",
-      "val_labels": "./cache/microsoft/deberta-base/relational_vertex\\val_labels"
+    "lexical_inference": {
+      "train": "./cache/roberta-large/lexical_inference\\train",
+      "val": "./cache/roberta-large/lexical_inference\\val",
+      "val_labels": "./cache/roberta-large/lexical_inference\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 41190,
-    "warmup_steps": 4119
+    "max_steps": 31255,
+    "warmup_steps": 3125
   },
   "task_specific_configs_dict": {
-    "relational_vertex": {
+    "lexical_inference": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "relational_vertex": "relational_vertex"
+      "lexical_inference": "lexical_inference"
     },
     "taskmodel_config_map": {
-      "relational_vertex": {
-        "classifier_type": "mlp"
+      "lexical_inference": {
+        "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "relational_vertex"
+      "lexical_inference"
     ],
     "train_val_task_list": [
-      "relational_vertex"
+      "lexical_inference"
     ],
     "val_task_list": [
-      "relational_vertex"
+      "lexical_inference"
     ],
     "test_task_list": []
   },

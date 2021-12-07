@@ -87,21 +87,6 @@ from jiant.tasks.lib.mcscript import MCScriptTask
 from jiant.tasks.lib.arct import ArctTask
 from jiant.tasks.lib.winogrande import WinograndeTask
 from jiant.tasks.lib.piqa import PiqaTask
-from jiant.tasks.lib.edge_probing.semgraph1 import Semgraph1Task
-from jiant.tasks.lib.edge_probing.semgraph2 import Semgraph2Task
-from jiant.tasks.lib.edge_probing.factuality import FactualityTask
-from jiant.tasks.lib.edge_probing.transitive import TransitiveAssociationTask
-from jiant.tasks.lib.edge_probing.monotonicity import MonotonicityTask
-from jiant.tasks.lib.edge_probing.contradiction import ContradictionTask
-from jiant.tasks.lib.edge_probing.align_sentiment import AlignSentimentTask
-from jiant.tasks.lib.edge_probing.align_relational import AlignRelationalTask
-from jiant.tasks.lib.edge_probing.align_anaphora import AlignAnaphoraTask
-from jiant.tasks.lib.edge_probing.align_lexical import AlignLexicalTask
-from jiant.tasks.lib.edge_probing.align_relational_vertex import AlignRelationalVertexTask
-from jiant.tasks.lib.edge_probing.align_sentiment_vertex import AlignSentimentVertexTask
-from jiant.tasks.lib.edge_probing.contradict_vertex import ContradictVertexTask
-from jiant.tasks.lib.prompt_alignment.prompt_sentiment import PromptSentiment
-
 from jiant.tasks.lib.curriculum.commonnli import CommonNLITask
 from jiant.tasks.lib.curriculum.binarynli import BinaryNLITask
 
@@ -196,6 +181,7 @@ TASK_DICT = {
     "arct": ArctTask,
     "winogrande": WinograndeTask,
     "piqa": PiqaTask,
+    << << << < HEAD
     "lexical": CommonNLITask,
     "socialqa": BinaryNLITask,
     "physicalqa": BinaryNLITask,
@@ -242,7 +228,8 @@ TASK_DICT = {
     "knowledge_inference": BinaryNLITask,
     "commonsense_inference": BinaryNLITask,
     "comprehension_inference": BinaryNLITask,
-    "complex_inference": BinaryNLITask
+    "complex_inference": BinaryNLITask,
+    "fundamental": BinaryNLITask,
 }
 
 

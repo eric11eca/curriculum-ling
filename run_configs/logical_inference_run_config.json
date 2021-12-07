@@ -1,48 +1,48 @@
 {
   "task_config_path_dict": {
-    "sentiment_vertex": "/content/tasks/configs/sentiment_vertex_config.json"
+    "logical_inference": "/content/tasks/configs/logical_inference_config.json"
   },
   "task_cache_config_dict": {
-    "sentiment_vertex": {
-      "train": "./cache/bert-large-uncased/sentiment_vertex\\train",
-      "val": "./cache/bert-large-uncased/sentiment_vertex\\val",
-      "val_labels": "./cache/bert-large-uncased/sentiment_vertex\\val_labels"
+    "logical_inference": {
+      "train": "./cache/roberta-large/logical_inference\\train",
+      "val": "./cache/roberta-large/logical_inference\\val",
+      "val_labels": "./cache/roberta-large/logical_inference\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 47775,
-    "warmup_steps": 4777
+    "max_steps": 5000,
+    "warmup_steps": 500
   },
   "task_specific_configs_dict": {
-    "sentiment_vertex": {
-      "train_batch_size": 4,
-      "eval_batch_size": 16,
+    "logical_inference": {
+      "train_batch_size": 8,
+      "eval_batch_size": 32,
       "gradient_accumulation_steps": 1,
       "eval_subset_num": 500
     }
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "sentiment_vertex": "sentiment_vertex"
+      "logical_inference": "logical_inference"
     },
     "taskmodel_config_map": {
-      "sentiment_vertex": {
-        "classifier_type": "mlp"
+      "logical_inference": {
+        "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "sentiment_vertex"
+      "logical_inference"
     ],
     "train_val_task_list": [
-      "sentiment_vertex"
+      "logical_inference"
     ],
     "val_task_list": [
-      "sentiment_vertex"
+      "logical_inference"
     ],
     "test_task_list": []
   },

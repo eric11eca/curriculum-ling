@@ -1,4 +1,5 @@
 import os
+import numpy as np
 
 from transformers import AutoConfig
 from transformers import AutoTokenizer
@@ -22,6 +23,7 @@ class RunConfiguration(zconf.RunConfig):
     output_dir = zconf.attr(type=str, required=True)
 
     # === Optional parameters === #
+    k_shot = zconf.attr(default=0, type=int)
     phases = zconf.attr(default="train,val", type=str)
     max_seq_length = zconf.attr(default=128, type=int)
     chunk_size = zconf.attr(default=10000, type=int)
@@ -146,6 +148,39 @@ def iter_chunk_and_save(task, phase, examples, feat_spec, tokenizer, args: RunCo
         )
 
 
+def get_k_shot_data_multi(train_lines, seed=42, k=10):
+    np.random.seed(seed)
+    np.random.shuffle(train_lines)
+    label_list = {}
+    for line in train_lines:
+        label = line.label
+        if label not in label_list:
+            label_list[label] = [line]
+        else:
+            label_list[label].append(line)
+    new_train = []
+    for label in label_list:
+        for line in label_list[label][:k]:
+            new_train.append(line)
+    return new_train
+
+
+def get_k_shot_task_data(train_lines, k_shot=10):
+    task_list = {}
+    for line in train_lines:
+        task = line.task
+        if task not in task_list:
+            task_list[task] = [line]
+        else:
+            task_list[task].append(line)
+    print(len(task_list))
+    new_train = []
+    for task in task_list:
+        new_train_task = get_k_shot_data_multi(task_list[task], k=k_shot)
+        new_train += new_train_task
+    return new_train
+
+
 def main(args: RunConfiguration):
     config = AutoConfig.from_pretrained(args.hf_pretrained_model_name_or_path)
     model_type = config.model_type
@@ -172,10 +207,14 @@ def main(args: RunConfiguration):
     os.makedirs(args.output_dir, exist_ok=True)
 
     if PHASE.TRAIN in phases:
+        examples = task.get_train_examples()
+        if args.k_shot > 0:
+            examples = get_k_shot_task_data(examples, k_shot=args.k_shot)
+            print(f"get {args.k_shot} data, length {len(examples)}")
         chunk_and_save(
             task=task,
             phase=PHASE.TRAIN,
-            examples=task.get_train_examples(),
+            examples=examples,
             feat_spec=feat_spec,
             tokenizer=tokenizer,
             args=args,

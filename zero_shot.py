@@ -1,10 +1,11 @@
-import os
-import glob
 import json
 import argparse
 import torch
-from tqdm import tqdm
 
+from tqdm import tqdm
+from sklearn.dummy import DummyClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import matthews_corrcoef
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
@@ -45,55 +46,100 @@ def write_jsonl(data, path):
     write_file("\n".join(lines), path)
 
 
-def model_test(model, tokenizer, test_data, classes):
+def count_binary_labels(datalist):
+    num_ent = 0
+    num_nent = 0
+
+    for data in datalist:
+        if data['gold_label'] == "entailed":
+            num_ent += 1
+        if data['gold_label'] == "not-entailed":
+            num_nent += 1
+
+    return max(num_ent, num_nent) / len(datalist)
+
+
+def count_triple_labels(datalist):
+    num_ent = 0
+    num_con = 0
+    num_neu = 0
+
+    for data in datalist:
+        if data['gold_label'] == "entailment":
+            num_ent += 1
+        if data['gold_label'] == "contradiction":
+            num_con += 1
+        if data['gold_label'] == "neutral":
+            num_neu += 1
+
+    return max(num_ent, num_con, num_neu) / len(datalist)
+
+
+def model_test(model, tokenizer, test_data, classes, majority=False):
     premises = []
     hypothesis = []
     labels = []
     for data in test_data:
         premises.append(data["premise"])
         hypothesis.append(data["hypothesis"])
-        labels.append(data["gold_label"])
+        labels.append(classes.index(data["gold_label"]))
 
-    num_correct = 0
-    for i in tqdm(range(len(premises))):  # premises[i],
-        test_sentence = tokenizer(
-            premises[i], hypothesis[i], return_tensors="pt")
-        test_sentence.to('cuda')
-        logits = model(**test_sentence).logits
-        out = torch.softmax(logits, dim=1)
-        pred = torch.argmax(out).cpu().numpy()
-        if len(classes) == 2:
-            pred = min(1, pred)
-        if not labels[i] in classes:
-            print(labels[i])
+    if majority:
+        dummy_clf = DummyClassifier(strategy="most_frequent")
+        dummy_clf.fit(premises, labels)
+        preds = dummy_clf.predict(premises)
+        acc = dummy_clf.score(preds, labels)
+        mcc = matthews_corrcoef(preds, labels)
+    else:
+        preds = []
+        for i in tqdm(range(len(premises))):  # premises[i],
+            test_sentence = tokenizer(
+                premises[i], hypothesis[i], max_length=512,
+                truncation=True, return_tensors="pt")
+            test_sentence.to('cuda')
+            logits = model(**test_sentence).logits
+            out = torch.softmax(logits, dim=1)
+            pred = torch.argmax(out).cpu().numpy()
+            if len(classes) == 2:
+                pred = min(1, pred)
+            preds.append(pred)
 
-        if pred == classes.index(labels[i]):
-            num_correct += 1
-
-    acc = num_correct * 100 / len(premises)
-    return acc
+        acc = accuracy_score(labels, preds)
+        mcc = matthews_corrcoef(labels, preds)
+    return acc, mcc
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--category", type=str, default="logical",
                         help="zero-shot category name")
+    parser.add_argument("--model", type=str, default="logical",
+                        help="zero-shot model name")
+    parser.add_argument("--majority", action="store_true",
+                        help="calculate majority baseline")
     args = parser.parse_args()
 
-    bert_base = "textattack/bert-base-uncased-MNLI"
-    #bert_large = "sentence-transformers/bert-large-nli-mean-tokens"
-    roberta_base = "textattack/roberta-base-MNLI"
-    roberta_large = "roberta-large-mnli"
-    deberta_base = "microsoft/deberta-base-mnli"
-    #bart_large = "textattack/facebook-bart-large-MNLI"
-    #multi_t5 = "bigscience/T0pp"
-    anli_roberta = "ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli"
+    model_dict = {
+        "bert_base": "textattack/bert-base-uncased-MNLI",
+        "bert_large": "sentence-transformers/bert-large-nli-mean-tokens",
+        "roberta_base": "textattack/roberta-base-MNLI",
+        "mnli_roberta": "roberta-large-mnli",
+        "deberta_base": "microsoft/deberta-base-mnli",
+        "mnli_bart": "textattack/facebook-bart-large-MNLI",
+        "anli_roberta": "ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli",
+        "anli_xlnet": "ynie/xlnet-large-cased-snli_mnli_fever_anli_R1_R2_R3-nli",
+        "anli_roberta_small": "MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
+    }
 
-    model_name = roberta_large
-
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForSequenceClassification.from_pretrained(model_name)
-    model.cuda()
+    if args.majority:
+        model_name = "majority"
+        model = None
+        tokenizer = None
+    else:
+        model_name = model_dict[args.model]
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForSequenceClassification.from_pretrained(model_name)
+        model.cuda()
 
     category = args.category
 
@@ -116,40 +162,29 @@ if __name__ == "__main__":
         },
         "binarynli": {
             "task_names": [
-                "transitive", "hypernymy", "hyponymy",
-                "verbcorner", "verbnet", "ner",
+                "transitive", "hypernymy", "hyponymy", "ner",
+                "verbcorner", "verbnet",
+                "syntactic_alternation", "syntactic_variation",
+                "monotonicity_infer", "syllogism",
                 "coreference", "puns", "sentiment",
-                "monotonicity_infer", "syntactic_alternation",
                 "kg_relations", "context_align",  "sprl",
-                "atomic", "social_chem", "socialqa",
-                "logiqa", "ester", "entailment_tree", "cosmoqa",
-                "syllogism"
+                "atomic", "social_chem", "socialqa", "physicalqa",
+                "logiqa", "ester", "entailment_tree", "cosmoqa"
             ],
             "classes": ["entailed", "not-entailed"]
         },
         "binarynli2": {
             "task_names": [
-                "ester", "physicalqa"
+                "monotonicity_infer", "socialqa"
             ],
             "classes": ["entailed", "not-entailed"]
         },
-        "semantics": {
+        "high_level": {
             "task_names": [
-                "coreference", "puns", "sentiment",
-                "monotonicity_infer", "syntactic_alternation",
-                "kg_relations", "context_align",  "sprl"],
+                "lexical_inference", "syntactic_inference", "logical_inference",
+                "semantic_inference", "commonsense_inference"],
             "classes": ["entailed", "not-entailed"]
-        },
-        "commonsense": {
-            "task_names": [
-                "atomic", "social_chem", "socialqa"],
-            "classes": ["entailed", "not-entailed"]
-        },
-        "comprehension": {
-            "task_names": [
-                "logiqa", "ester", "entailment_tree", "cosmoqa"],
-            "classes": ["entailed", "not-entailed"]
-        },
+        }
     }
 
     task_names = category_map[category]['task_names']
@@ -159,10 +194,23 @@ if __name__ == "__main__":
     for task in task_names:
         print(f"Evaluating on {task} ...")
         test_data = read_jsonl(f"/content/tasks/curriculum/{task}/val.jsonl")
-        acc = model_test(model, tokenizer, test_data, classes)
-        nli_eval[task] = acc
-        print(f"Evaluation Result for {task}: acc. {acc}")
-        write_json(nli_eval, f"./runs/zero-shot/{category}_eval.json")
+
+        acc, mcc = model_test(
+            model, tokenizer,
+            test_data=test_data,
+            classes=classes,
+            majority=args.majority
+        )
+
+        nli_eval[task] = {
+            "acc": acc,
+            "mcc": mcc
+        }
+
+        print(f"Evaluation Result for {task}:")
+        print(nli_eval[task])
+        write_json(
+            nli_eval, f"./runs/zero-shot/{args.model}/{category}_eval.json")
 
     print(nli_eval)
-    write_json(nli_eval, f"./runs/zero-shot/{category}_eval.json")
+    write_json(nli_eval, f"./runs/zero-shot/{args.model}/{category}_eval.json")

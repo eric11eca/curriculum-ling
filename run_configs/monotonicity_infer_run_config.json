@@ -4,22 +4,22 @@
   },
   "task_cache_config_dict": {
     "monotonicity_infer": {
-      "train": "./cache/roberta-base/monotonicity_infer\\train",
-      "val": "./cache/roberta-base/monotonicity_infer\\val",
-      "val_labels": "./cache/roberta-base/monotonicity_infer\\val_labels"
+      "train": "./cache/roberta-large/monotonicity_infer\\train",
+      "val": "./cache/roberta-large/monotonicity_infer\\val",
+      "val_labels": "./cache/roberta-large/monotonicity_infer\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 12505,
-    "warmup_steps": 1250
+    "max_steps": 22435,
+    "warmup_steps": 2243
   },
   "task_specific_configs_dict": {
     "monotonicity_infer": {
       "train_batch_size": 8,
-      "eval_batch_size": 16,
+      "eval_batch_size": 32,
       "gradient_accumulation_steps": 1,
       "eval_subset_num": 500
     }

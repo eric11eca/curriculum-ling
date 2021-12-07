@@ -21,6 +21,7 @@ class Example(BaseExample):
     input_premise: str
     input_hypothesis: str
     label: str
+    task: str
 
     def tokenize(self, tokenizer):
         return TokenizedExample(
@@ -109,6 +110,7 @@ class BinaryNLITask(Task):
                         input_premise=line["premise"],
                         input_hypothesis=line["hypothesis"],
                         label=label,
+                        task=line["task"]
                     )
                 )
             else:
@@ -121,6 +123,7 @@ class BinaryNLITask(Task):
                         input_premise=line["premise"],
                         input_hypothesis=line["hypothesis"],
                         label=line["label"] if set_type != "test" else cls.LABELS[-1],
+                        task=line["task"]
                     )
                 )
         return examples

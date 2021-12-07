@@ -1,10 +1,15 @@
 {
   "task_config_path_dict": {
+    "adversarial_nli_r2": "/content/tasks/configs/adversarial_nli_r2_config.json",
     "boolean": "/content/tasks/configs/boolean_config.json"
   },
   "task_cache_config_dict": {
+    "adversarial_nli_r2": {
+      "train": "./cache/roberta-large/adversarial_nli_r2\\train",
+      "val": "./cache/roberta-large/adversarial_nli_r2\\val",
+      "val_labels": "./cache/roberta-large/adversarial_nli_r2\\val_labels"
+    },
     "boolean": {
-      "train": "./cache/roberta-large/boolean\\train",
       "val": "./cache/roberta-large/boolean\\val",
       "val_labels": "./cache/roberta-large/boolean\\val_labels"
     }
@@ -13,10 +18,16 @@
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 1875,
-    "warmup_steps": 187
+    "max_steps": 28415,
+    "warmup_steps": 2841
   },
   "task_specific_configs_dict": {
+    "adversarial_nli_r2": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
     "boolean": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
@@ -26,9 +37,13 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "boolean": "boolean"
+      "adversarial_nli_r2": "adversarial_nli_r2",
+      "boolean": "adversarial_nli_r2"
     },
     "taskmodel_config_map": {
+      "adversarial_nli_r2": {
+        "classifier_type": "linear"
+      },
       "boolean": {
         "classifier_type": "linear"
       }
@@ -36,10 +51,10 @@
   },
   "task_run_config": {
     "train_task_list": [
-      "boolean"
+      "adversarial_nli_r2"
     ],
     "train_val_task_list": [
-      "boolean"
+      "adversarial_nli_r2"
     ],
     "val_task_list": [
       "boolean"

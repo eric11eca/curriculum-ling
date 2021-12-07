@@ -40,8 +40,8 @@ class AlignSentimentVertexTask(edge_probing_single_span.AbstractProbingTask):
     LABELS = [
         "aligned1",
         "aligned2",
-        "contradict1",
-        "contradict2",
+        "contradicted1",
+        "contradicted2",
         "unalign_word",
     ]
     LABEL_TO_ID, ID_TO_LABEL = labels_to_bimap(LABELS)

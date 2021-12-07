@@ -1,24 +1,24 @@
 {
   "task_config_path_dict": {
-    "semgraph2": "/content/tasks/configs/semgraph2_config.json"
+    "syntactic_inference": "/content/tasks/configs/syntactic_inference_config.json"
   },
   "task_cache_config_dict": {
-    "semgraph2": {
-      "train": "./cache/control/roberta-large/semgraph2\\train",
-      "val": "./cache/control/roberta-large/semgraph2\\val",
-      "val_labels": "./cache/control/roberta-large/semgraph2\\val_labels"
+    "syntactic_inference": {
+      "train": "./cache/roberta-large/syntactic_inference\\train",
+      "val": "./cache/roberta-large/syntactic_inference\\val",
+      "val_labels": "./cache/roberta-large/syntactic_inference\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 9996,
-    "warmup_steps": 999
+    "max_steps": 31255,
+    "warmup_steps": 3125
   },
   "task_specific_configs_dict": {
-    "semgraph2": {
-      "train_batch_size": 4,
+    "syntactic_inference": {
+      "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
       "eval_subset_num": 500
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "semgraph2": "semgraph2"
+      "syntactic_inference": "syntactic_inference"
     },
     "taskmodel_config_map": {
-      "semgraph2": {
-        "classifier_type": "mlp"
+      "syntactic_inference": {
+        "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "semgraph2"
+      "syntactic_inference"
     ],
     "train_val_task_list": [
-      "semgraph2"
+      "syntactic_inference"
     ],
     "val_task_list": [
-      "semgraph2"
+      "syntactic_inference"
     ],
     "test_task_list": []
   },

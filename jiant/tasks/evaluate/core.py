@@ -1,13 +1,4 @@
 import itertools
-
-from jiant.tasks.lib.edge_probing.contradict_vertex import ContradictVertexTask
-from jiant.tasks.lib.edge_probing.align_relational_vertex import AlignRelationalVertexTask
-from jiant.tasks.lib.edge_probing.align_sentiment_vertex import AlignSentimentVertexTask
-from jiant.tasks.lib.edge_probing.align_anaphora import AlignAnaphoraTask
-from jiant.tasks.lib.edge_probing.align_lexical import AlignLexicalTask
-from jiant.tasks.lib.edge_probing.align_sentiment import AlignSentimentTask
-from jiant.tasks.lib.edge_probing.contradiction import ContradictionTask
-from jiant.tasks.lib.edge_probing.monotonicity import MonotonicityTask
 import json
 
 from dataclasses import dataclass
@@ -20,6 +11,7 @@ import torch
 from scipy.stats import pearsonr
 from scipy.stats import spearmanr
 from sklearn.metrics import f1_score
+from sklearn.metrics import accuracy_score
 from sklearn.metrics import matthews_corrcoef
 from typing import Dict
 from typing import List
@@ -281,7 +273,8 @@ class SimpleAccuracyEvaluationScheme(BaseLogitsEvaluationScheme):
     def compute_metrics_from_preds_and_labels(cls, preds, labels):
         # noinspection PyUnresolvedReferences
         acc = float((preds == labels).mean())
-        return Metrics(major=acc, minor={"acc": acc})
+        mcc = matthews_corrcoef(labels, preds)
+        return Metrics(major=acc, minor={"acc": acc, "mcc": mcc})
 
 
 class MCTACOEvaluationScheme(BaseLogitsEvaluationScheme):
@@ -348,6 +341,27 @@ class MultiLabelAccAndF1EvaluationScheme(BaseLogitsEvaluationScheme):
         return Metrics(major=minor["acc_and_f1_micro"], minor=minor)
 
 
+class MultiLabelAccFullAndF1EvaluationScheme(BaseLogitsEvaluationScheme):
+    def get_labels_from_cache_and_examples(self, task, cache, examples):
+        return get_multi_label_ids_from_cache(cache=cache)
+
+    def get_preds_from_accumulator(self, task, accumulator):
+        logits = accumulator.get_accumulated()
+        return (logits > 0.5).astype(int)
+
+    @classmethod
+    def compute_metrics_from_preds_and_labels(cls, preds, labels):
+        # noinspection PyUnresolvedReferences
+        acc = float(accuracy_score(preds, labels))
+        labels = np.array(labels)
+        minor = {
+            "acc": acc,
+            "f1_micro": f1_score(y_true=labels, y_pred=preds, average="micro"),
+            "acc_and_f1_micro": (acc + f1_score(y_true=labels, y_pred=preds, average="micro")) / 2,
+        }
+        return Metrics(major=minor["acc_and_f1_micro"], minor=minor)
+
+
 class AccAndF1EvaluationScheme(BaseLogitsEvaluationScheme):
     def get_preds_from_accumulator(self, task, accumulator):
         logits = accumulator.get_accumulated()
@@ -357,6 +371,25 @@ class AccAndF1EvaluationScheme(BaseLogitsEvaluationScheme):
     def compute_metrics_from_preds_and_labels(cls, preds, labels):
         # noinspection PyUnresolvedReferences
         acc = float((preds == labels).mean())
+        labels = np.array(labels)
+        f1 = f1_score(y_true=labels, y_pred=preds)
+        minor = {
+            "acc": acc,
+            "f1": f1,
+            "acc_and_f1": (acc + f1) / 2,
+        }
+        return Metrics(major=minor["acc_and_f1"], minor=minor)
+
+
+class AccFullAndF1EvaluationScheme(BaseLogitsEvaluationScheme):
+    def get_preds_from_accumulator(self, task, accumulator):
+        logits = accumulator.get_accumulated()
+        return np.argmax(logits, axis=1)
+
+    @classmethod
+    def compute_metrics_from_preds_and_labels(cls, preds, labels):
+        # noinspection PyUnresolvedReferences
+        acc = float(accuracy_score(preds, labels))
         labels = np.array(labels)
         f1 = f1_score(y_true=labels, y_pred=preds)
         minor = {
@@ -1036,6 +1069,7 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
             tasks_retrieval.PiqaTask,
             tasks_retrieval.CommonNLITask,
             tasks_retrieval.BinaryNLITask,
+
         ),
     ):
         return SimpleAccuracyEvaluationScheme()
@@ -1070,19 +1104,6 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
     elif isinstance(
         task,
         (
-            tasks_retrieval.AlignRelationalVertexTask,
-            tasks_retrieval.AlignSentimentVertexTask,
-            tasks_retrieval.AlignAnaphoraTask,
-            tasks_retrieval.AlignLexicalTask,
-            tasks_retrieval.AlignRelationalTask,
-            tasks_retrieval.AlignSentimentTask,
-            tasks_retrieval.ContradictionTask,
-            tasks_retrieval.ContradictVertexTask,
-            tasks_retrieval.MonotonicityTask,
-            tasks_retrieval.TransitiveAssociationTask,
-            tasks_retrieval.FactualityTask,
-            tasks_retrieval.Semgraph1Task,
-            tasks_retrieval.Semgraph2Task,
             tasks_retrieval.Spr1Task,
             tasks_retrieval.Spr2Task,
             tasks_retrieval.SemevalTask,
@@ -1096,6 +1117,19 @@ def get_evaluation_scheme_for_task(task) -> BaseEvaluationScheme:
         ),
     ):
         return MultiLabelAccAndF1EvaluationScheme()
+    elif isinstance(
+        task,
+        (
+            tasks_retrieval.AlignRelationalVertexTask,
+            tasks_retrieval.AlignSentimentVertexTask,
+            tasks_retrieval.AlignAnaphoraTask,
+            tasks_retrieval.AlignLexicalTask,
+            tasks_retrieval.ContradictVertexTask,
+            tasks_retrieval.MonotonicityTask,
+            tasks_retrieval.Semgraph2Task,
+        ),
+    ):
+        return MultiLabelAccFullAndF1EvaluationScheme()
     elif isinstance(task, tasks_retrieval.ReCoRDTask):
         return ReCordEvaluationScheme()
     elif isinstance(

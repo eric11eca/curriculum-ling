@@ -1,23 +1,23 @@
 {
   "task_config_path_dict": {
-    "socialqa_nli": "/content/tasks/configs/socialqa_nli_config.json"
+    "commonsense_inference": "/content/tasks/configs/commonsense_inference_config.json"
   },
   "task_cache_config_dict": {
-    "socialqa_nli": {
-      "train": "./cache/roberta-large/socialqa_nli\\train",
-      "val": "./cache/roberta-large/socialqa_nli\\val",
-      "val_labels": "./cache/roberta-large/socialqa_nli\\val_labels"
+    "commonsense_inference": {
+      "train": "./cache/roberta-large/commonsense_inference\\train",
+      "val": "./cache/roberta-large/commonsense_inference\\val",
+      "val_labels": "./cache/roberta-large/commonsense_inference\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 751,
-    "warmup_steps": 75
+    "max_steps": 31255,
+    "warmup_steps": 3125
   },
   "task_specific_configs_dict": {
-    "socialqa_nli": {
+    "commonsense_inference": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "socialqa_nli": "socialqa_nli"
+      "commonsense_inference": "commonsense_inference"
     },
     "taskmodel_config_map": {
-      "socialqa_nli": {
+      "commonsense_inference": {
         "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "socialqa_nli"
+      "commonsense_inference"
     ],
     "train_val_task_list": [
-      "socialqa_nli"
+      "commonsense_inference"
     ],
     "val_task_list": [
-      "socialqa_nli"
+      "commonsense_inference"
     ],
     "test_task_list": []
   },

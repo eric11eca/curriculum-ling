@@ -72,6 +72,15 @@
       }
     }
   },
+  "syntactic_variation": {
+    "loss": 0.683551639526874,
+    "metrics": {
+      "major": 0.87,
+      "minor": {
+        "acc": 0.87
+      }
+    }
+  },
   "monotonicity_infer": {
     "loss": 0.6936536632942517,
     "metrics": {

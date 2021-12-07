@@ -1,0 +1,98 @@
+{
+  "transitive": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "hypernymy": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "hyponymy": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "ner": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "verbcorner": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "verbnet": {
+    "acc": 0.525,
+    "mcc": 0.0
+  },
+  "syntactic_alternation": {
+    "acc": 0.7102272727272727,
+    "mcc": 0.0
+  },
+  "syntactic_variation": {
+    "acc": 1.0,
+    "mcc": 0.0
+  },
+  "monotonicity_infer": {
+    "acc": 0.5444324031427797,
+    "mcc": 0.0
+  },
+  "syllogism": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "coreference": {
+    "acc": 0.535092257285739,
+    "mcc": 0.0
+  },
+  "puns": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "sentiment": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "kg_relations": {
+    "acc": 0.59526938239159,
+    "mcc": 0.0
+  },
+  "context_align": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "sprl": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "atomic": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "social_chem": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "socialqa": {
+    "acc": 0.6666666666666666,
+    "mcc": 0.0
+  },
+  "physicalqa": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "logiqa": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "ester": {
+    "acc": 0.6488294314381271,
+    "mcc": 0.0
+  },
+  "entailment_tree": {
+    "acc": 0.5,
+    "mcc": 0.0
+  },
+  "cosmoqa": {
+    "acc": 0.5,
+    "mcc": 0.0
+  }
+}
