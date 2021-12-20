@@ -75,6 +75,7 @@ class BinaryNLITask(Task):
     TokenizedExample = Example
     DataRow = DataRow
     Batch = Batch
+    TASK_NAME = ""
 
     TASK_TYPE = TaskTypes.CLASSIFICATION
     LABELS = ["entailed", "not-entailed"]
@@ -83,8 +84,20 @@ class BinaryNLITask(Task):
     def get_train_examples(self):
         return self._create_examples(lines=read_jsonl(self.train_path), set_type="train")
 
+    def get_null_train_examples(self):
+        return self._create_null_examples(lines=read_jsonl(self.train_path), set_type="train")
+
+    def get_hp_train_examples(self):
+        return self._create_hp_examples(lines=read_jsonl(self.train_path), set_type="train")
+
     def get_val_examples(self):
         return self._create_examples(lines=read_jsonl(self.val_path), set_type="val")
+
+    def get_hp_val_examples(self):
+        return self._create_hp_examples(lines=read_jsonl(self.val_path), set_type="val")
+
+    def get_null_val_examples(self):
+        return self._create_null_examples(lines=read_jsonl(self.val_path), set_type="val")
 
     def get_test_examples(self):
         return self._create_examples(lines=read_jsonl(self.test_path), set_type="test")
@@ -93,37 +106,82 @@ class BinaryNLITask(Task):
     def _create_examples(cls, lines, set_type):
         examples = []
         for (i, line) in enumerate(lines):
-            if i > 50000:
+            if set_type == "train" and i > 50000:
                 break
-            if "gold_label" in line:
-                # Loading from original data
-                if line["gold_label"] == "-":
-                    continue
-                label = line["gold_label"] if set_type != "test" else cls.LABELS[-1]
-                if label == "entailment":
-                    label = "entailed"
-                if label == "neutral":
-                    label = "not-entailed"
-                examples.append(
-                    Example(
-                        guid="%s-%s" % (set_type, i),
-                        input_premise=line["premise"],
-                        input_hypothesis=line["hypothesis"],
-                        label=label,
-                        task=line["task"]
-                    )
-                )
-            else:
-                # Loading from HF Datasets data
-                if line["label"] == -1:
-                    continue
-                examples.append(
-                    Example(
-                        guid="%s-%s" % (set_type, i),
-                        input_premise=line["premise"],
-                        input_hypothesis=line["hypothesis"],
-                        label=line["label"] if set_type != "test" else cls.LABELS[-1],
-                        task=line["task"]
-                    )
-                )
+            if line["gold_label"] == "-":
+                continue
+            label = line["gold_label"] if set_type != "test" else cls.LABELS[-1]
+            if label == "entailment":
+                label = "entailed"
+            if label == "neutral":
+                label = "not-entailed"
+
+            task = cls.TASK_NAME
+            if "inference" in cls.TASK_NAME:
+                task = line["task"]
+
+            examples.append(
+                Example(
+                    guid="%s-%s" % (set_type, i),
+                    input_premise=line["premise"],
+                    input_hypothesis=line["hypothesis"],
+                    label=label,
+                    task=task)
+            )
+        return examples
+
+    @classmethod
+    def _create_hp_examples(cls, lines, set_type):
+        examples = []
+        for (i, line) in enumerate(lines):
+            if set_type == "train" and i > 50000:
+                break
+            if line["gold_label"] == "-":
+                continue
+            label = line["gold_label"] if set_type != "test" else cls.LABELS[-1]
+            if label == "entailment":
+                label = "entailed"
+            if label == "neutral":
+                label = "not-entailed"
+
+            task = cls.TASK_NAME
+            if "inference" in cls.TASK_NAME:
+                task = line["task"]
+
+            examples.append(
+                Example(
+                    guid="%s-%s" % (set_type, i),
+                    input_premise="",
+                    input_hypothesis=line["hypothesis"],
+                    label=label,
+                    task=task)
+            )
+        return examples
+
+    @classmethod
+    def _create_null_examples(cls, lines, set_type):
+        examples = []
+        for (i, line) in enumerate(lines):
+            if set_type == "train" and i > 50000:
+                break
+            if line["gold_label"] == "-":
+                continue
+            label = line["gold_label"] if set_type != "test" else cls.LABELS[-1]
+            if label == "entailment":
+                label = "entailed"
+            if label == "neutral":
+                label = "not-entailed"
+
+            task = cls.TASK_NAME
+            if "inference" in cls.TASK_NAME:
+                task = line["task"]
+
+            examples.append(
+                Example(
+                    guid="%s-%s" % (set_type, i),
+                    input_premise="",
+                    input_hypothesis="",
+                    label=label,
+                    task=task)
+            )
         return examples

@@ -101,7 +101,8 @@ class JiantMetarunner(AbstractMetarunner):
     def yield_train_step(self):
         if self.train_state is None:
             # Fresh run
-            train_iterator = self.runner.run_train_context(verbose=self.verbose)
+            train_iterator = self.runner.run_train_context(
+                verbose=self.verbose)
         else:
             train_iterator = self.runner.resume_train_context(
                 train_state=self.train_state, verbose=self.verbose,
@@ -151,7 +152,8 @@ class JiantMetarunner(AbstractMetarunner):
         runner_state = self.runner.get_runner_state()
         metarunner_state = self.get_state()
         print("Saving State")
-        self.checkpoint_saver.save(runner_state=runner_state, metarunner_state=metarunner_state)
+        self.checkpoint_saver.save(
+            runner_state=runner_state, metarunner_state=metarunner_state)
 
     def should_eval_model(self) -> bool:
         if self.eval_every_steps == 0:
@@ -171,7 +173,8 @@ class JiantMetarunner(AbstractMetarunner):
             if self.num_evals_since_improvement >= self.no_improvements_for_n_evals:
                 self.log_writer.write_entry(
                     "early_stopping",
-                    {"message": "early_stopped", "train_state": self.train_state.to_dict()},
+                    {"message": "early_stopped",
+                        "train_state": self.train_state.to_dict()},
                 )
                 self.log_writer.flush()
                 return True
@@ -239,13 +242,15 @@ class JiantMetarunner(AbstractMetarunner):
         self.log_writer.write_entry("train_val", val_state.to_dict())
         if self.best_val_state is None or val_state.score > self.best_val_state.score:
             self.best_val_state = val_state.new()
-            self.log_writer.write_entry("train_val_best", self.best_val_state.to_dict())
+            self.log_writer.write_entry(
+                "train_val_best", self.best_val_state.to_dict())
             del self.best_state_dict
             self.best_state_dict = copy_state_dict(
                 state_dict=get_model_for_saving(self.model).state_dict(), target_device=CPU_DEVICE,
             )
             if self.save_best_model:
-                self.save_best_model_with_metadata(val_metrics_dict=val_metrics_dict)
+                self.save_best_model_with_metadata(
+                    val_metrics_dict=val_metrics_dict)
             self.num_evals_since_improvement = 0
         self.log_writer.write_entry(
             "early_stopping",

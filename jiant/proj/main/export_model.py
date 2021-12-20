@@ -40,7 +40,8 @@ def export_model(
                               ``./my_model_directory/configuration.json``.
         output_base_path: Base path to save output to
     """
-    model = AutoModelForPreTraining.from_pretrained(hf_pretrained_model_name_or_path)
+    model = AutoModelForPreTraining.from_pretrained(
+        hf_pretrained_model_name_or_path)
 
     model_fol_path = os.path.join(output_base_path, "model")
     model_path = os.path.join(model_fol_path, "model.p")
@@ -52,7 +53,8 @@ def export_model(
 
     torch.save(model.state_dict(), model_path)
     py_io.write_json(model.config.to_dict(), model_config_path)
-    tokenizer = AutoTokenizer.from_pretrained(hf_pretrained_model_name_or_path, use_fast=False)
+    tokenizer = AutoTokenizer.from_pretrained(
+        hf_pretrained_model_name_or_path, use_fast=False)
     tokenizer.save_pretrained(tokenizer_fol_path)
     config = {
         "hf_pretrained_model_name_or_path": hf_pretrained_model_name_or_path,

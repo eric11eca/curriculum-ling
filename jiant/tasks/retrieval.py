@@ -181,7 +181,6 @@ TASK_DICT = {
     "arct": ArctTask,
     "winogrande": WinograndeTask,
     "piqa": PiqaTask,
-    << << << < HEAD
     "lexical": CommonNLITask,
     "socialqa": BinaryNLITask,
     "physicalqa": BinaryNLITask,
@@ -216,11 +215,14 @@ TASK_DICT = {
     "drop": BinaryNLITask,
     "ester": BinaryNLITask,
     "sprl": BinaryNLITask,
-    "proofwriter": BinaryNLITask,
+    "proof_writer": BinaryNLITask,
     "syllogism": BinaryNLITask,
     "cosmoqa": BinaryNLITask,
     "hypernymy": BinaryNLITask,
     "hyponymy": BinaryNLITask,
+    "spatial": BinaryNLITask,
+    "temporal": BinaryNLITask,
+    "counterfactual": BinaryNLITask,
     "lexical_inference": BinaryNLITask,
     "syntactic_inference": BinaryNLITask,
     "logical_inference": BinaryNLITask,
@@ -230,6 +232,8 @@ TASK_DICT = {
     "comprehension_inference": BinaryNLITask,
     "complex_inference": BinaryNLITask,
     "fundamental": BinaryNLITask,
+    "complex": BinaryNLITask,
+    "curriculum_inference": BinaryNLITask,
 }
 
 

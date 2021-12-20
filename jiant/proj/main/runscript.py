@@ -130,6 +130,7 @@ def setup_runner(
         device=quick_init_out.device,
         rparams=rparams,
         log_writer=quick_init_out.log_writer,
+        output_dir=args.output_dir
     )
     return runner
 

@@ -23,12 +23,15 @@ class RunConfiguration(zconf.RunConfig):
     output_dir = zconf.attr(type=str, required=True)
 
     # === Optional parameters === #
+    task_name = zconf.attr(default="", type=str)
     k_shot = zconf.attr(default=0, type=int)
     phases = zconf.attr(default="train,val", type=str)
     max_seq_length = zconf.attr(default=128, type=int)
     chunk_size = zconf.attr(default=10000, type=int)
     smart_truncate = zconf.attr(action="store_true")
     do_iter = zconf.attr(action="store_true")
+    null = zconf.attr(action="store_false")
+    hp_only = zconf.attr(action="store_false")
     skip_write_output_paths = zconf.attr(action="store_true")
 
 
@@ -192,6 +195,7 @@ def main(args: RunConfiguration):
 
     task = create_task_from_config_path(
         config_path=args.task_config_path, verbose=True)
+    task.TASK_NAME = args.task_name
     feat_spec = JiantTransformersModelFactory.build_featurization_spec(
         model_type=model_type, max_seq_length=args.max_seq_length,
     )
@@ -207,7 +211,13 @@ def main(args: RunConfiguration):
     os.makedirs(args.output_dir, exist_ok=True)
 
     if PHASE.TRAIN in phases:
-        examples = task.get_train_examples()
+        if args.null:
+            examples = task.get_null_train_examples()
+        elif args.hp_only:
+            examples = task.get_hp_train_examples()
+        else:
+            examples = task.get_train_examples()
+
         if args.k_shot > 0:
             examples = get_k_shot_task_data(examples, k_shot=args.k_shot)
             print(f"get {args.k_shot} data, length {len(examples)}")
@@ -222,7 +232,13 @@ def main(args: RunConfiguration):
         paths_dict["train"] = os.path.join(args.output_dir, PHASE.TRAIN)
 
     if PHASE.VAL in phases:
-        val_examples = task.get_val_examples()
+        if args.null:
+            val_examples = task.get_null_val_examples()
+        elif args.hp_only:
+            val_examples = task.get_hp_val_examples()
+        else:
+            val_examples = task.get_val_examples()
+
         chunk_and_save(
             task=task,
             phase=PHASE.VAL,

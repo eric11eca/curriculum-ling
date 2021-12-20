@@ -3,9 +3,13 @@ from dataclasses import dataclass
 
 import torch
 
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import matthews_corrcoef
+
 import jiant.tasks.evaluate as evaluate
 import jiant.utils.torch_utils as torch_utils
 import jiant.utils.python.io as py_io
+
 from jiant.proj.main.components.container_setup import JiantTaskContainer
 from jiant.proj.main.modeling.primary import JiantModel, wrap_jiant_forward
 from jiant.shared.constants import PHASE
@@ -15,6 +19,7 @@ from jiant.shared.runner import (
     get_eval_dataloader_from_cache,
 )
 from jiant.utils.display import maybe_tqdm
+from jiant.utils.zlog import ZLogger
 from jiant.utils.python.datastructures import InfiniteYield, ExtendedDataClassMixin
 
 
@@ -49,6 +54,7 @@ class JiantRunner:
         device,
         rparams: RunnerParameters,
         log_writer,
+        output_dir: str
     ):
         self.jiant_task_container = jiant_task_container
         self.jiant_model = jiant_model
@@ -56,6 +62,7 @@ class JiantRunner:
         self.device = device
         self.rparams = rparams
         self.log_writer = log_writer
+        self.dynamic_log_writer = ZLogger(output_dir, overwrite=True)
 
         self.model = self.jiant_model
 
@@ -68,20 +75,21 @@ class JiantRunner:
         train_state = TrainState.from_task_name_list(
             self.jiant_task_container.task_run_config.train_task_list
         )
-        for _ in maybe_tqdm(
+        for step in maybe_tqdm(
             range(self.jiant_task_container.global_train_config.max_steps),
             desc="Training",
             verbose=verbose,
         ):
             self.run_train_step(
-                train_dataloader_dict=train_dataloader_dict, train_state=train_state
+                train_dataloader_dict=train_dataloader_dict,
+                train_state=train_state, train_step=step
             )
             yield train_state
 
     def resume_train_context(self, train_state, verbose=True):
         train_dataloader_dict = self.get_train_dataloader_dict()
         start_position = train_state.global_steps
-        for _ in maybe_tqdm(
+        for step in maybe_tqdm(
             range(
                 start_position,
                 self.jiant_task_container.global_train_config.max_steps),
@@ -91,11 +99,12 @@ class JiantRunner:
             verbose=verbose,
         ):
             self.run_train_step(
-                train_dataloader_dict=train_dataloader_dict, train_state=train_state
+                train_dataloader_dict=train_dataloader_dict,
+                train_state=train_state, train_step=step
             )
             yield train_state
 
-    def run_train_step(self, train_dataloader_dict: dict, train_state: TrainState):
+    def run_train_step(self, train_dataloader_dict: dict, train_state: TrainState, train_step: int):
         self.jiant_model.train()
         task_name, task = self.jiant_task_container.task_sampler.pop()
         task_specific_config = self.jiant_task_container.task_specific_configs[task_name]
@@ -112,6 +121,9 @@ class JiantRunner:
                 gradient_accumulation_steps=task_specific_config.gradient_accumulation_steps,
             )
             loss_val += loss.item()
+            train_ids = batch_metadata['example_id']
+            train_logits = model_output.logits.detach().cpu().numpy().tolist()
+            golds = batch.label_id.detach().cpu().numpy().tolist()
 
         self.optimizer_scheduler.step()
         self.optimizer_scheduler.optimizer.zero_grad()
@@ -126,6 +138,15 @@ class JiantRunner:
                 "loss_val": loss_val / task_specific_config.gradient_accumulation_steps,
             },
         )
+        for i in range(len(train_logits)):
+            self.dynamic_log_writer.write_entry(
+                f"training_dynamic",
+                {
+                    "guid": train_ids[i],
+                    "logits": train_logits[i],
+                    "gold": golds[i]
+                }
+            )
 
     def run_val(self, task_name_list, use_subset=None, return_preds=False, verbose=True):
         evaluate_dict = {}
@@ -144,7 +165,9 @@ class JiantRunner:
                 task=task,
                 device=self.device,
                 local_rank=self.rparams.local_rank,
+                log_writer=self.dynamic_log_writer,
                 return_preds=return_preds,
+                use_subset=use_subset,
                 verbose=verbose,
             )
         return evaluate_dict
@@ -263,7 +286,9 @@ def run_val(
     task,
     device,
     local_rank,
+    log_writer,
     return_preds=False,
+    use_subset=False,
     verbose=True,
 ):
     # Reminder:
@@ -278,8 +303,9 @@ def run_val(
     eval_accumulator = evaluation_scheme.get_accumulator()
 
     for step, (batch, batch_metadata) in enumerate(
-        maybe_tqdm(val_dataloader,
-                   desc=f"Eval ({task.name}, Val)", verbose=verbose)
+        maybe_tqdm(
+            val_dataloader,
+            desc=f"Eval ({task.name}, Val)", verbose=verbose)
     ):
         batch = batch.to(device)
 
@@ -289,7 +315,7 @@ def run_val(
             )
         batch_logits = model_output.logits.detach().cpu().numpy()
         batch_loss = model_output.loss.mean().item()
-        total_eval_loss += batch_loss
+
         eval_accumulator.update(
             batch_logits=batch_logits,
             batch_loss=batch_loss,
@@ -297,8 +323,24 @@ def run_val(
             batch_metadata=batch_metadata,
         )
 
+        val_ids = batch_metadata['example_id']
+        val_logits = model_output.logits.detach().cpu().numpy().tolist()
+        golds = batch.label_id.detach().cpu().numpy().tolist()
+
         nb_eval_examples += len(batch)
         nb_eval_steps += 1
+
+        if not use_subset:
+            for i in range(len(val_logits)):
+                log_writer.write_entry(
+                    f"val_dynamic",
+                    {
+                        "guid": val_ids[i],
+                        "logits": val_logits[i],
+                        "gold": golds[i]
+                    }
+                )
+
     eval_loss = total_eval_loss / nb_eval_steps
     tokenizer = (
         jiant_model.tokenizer
@@ -325,6 +367,33 @@ def run_val(
 
         if "inference" in task_name:
             print("calculate accuracy per task")
+            labels = {}
+            val_data = py_io.read_jsonl(
+                f"/content/tasks/curriculum/{task_name}/val.jsonl")
+            for data in val_data:
+                if not data['task'] in labels:
+                    labels[data['task']] = [classes.index(data["gold_label"])]
+                else:
+                    labels[data['task']].append(
+                        classes.index(data["gold_label"]))
+
+            predictions = {}
+            for i, pred in enumerate(preds):
+                task_name = val_data[i]['task']
+                if not task_name in predictions:
+                    predictions[task_name] = [int(pred)]
+                else:
+                    predictions[task_name].append(int(pred))
+
+            for task in labels:
+                acc = accuracy_score(labels[task], predictions[task])
+                mcc = matthews_corrcoef(labels[task], predictions[task])
+                acc_report[task] = {
+                    "acc": acc,
+                    "mcc": mcc
+                }
+        """if "inference" in task_name:
+            print("calculate accuracy per task")
             val_labels = py_io.read_jsonl(
                 f"/content/tasks/curriculum/{task_name}/val.jsonl")
 
@@ -338,7 +407,8 @@ def run_val(
                     acc_report[data['task']]['correct'] += 1
             for key in acc_report:
                 acc_report[key]['acc'] = acc_report[key]['correct'] / \
-                    acc_report[key]['total']
+                    acc_report[key]['total']"""
+
         output["acc_report"] = acc_report
         output["preds"] = preds
     return output
@@ -360,8 +430,9 @@ def run_test(
     eval_accumulator = evaluation_scheme.get_accumulator()
 
     for step, (batch, batch_metadata) in enumerate(
-        maybe_tqdm(test_dataloader,
-                   desc=f"Eval ({task.name}, Test)", verbose=verbose)
+        maybe_tqdm(
+            test_dataloader,
+            desc=f"Eval ({task.name}, Test)", verbose=verbose)
     ):
         batch = batch.to(device)
 

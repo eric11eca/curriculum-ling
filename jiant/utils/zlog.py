@@ -30,7 +30,7 @@ class ZLogger(BaseZLogger):
         self.overwrite = overwrite
 
         self.write_mode = "w" if overwrite else "a"
-        os.makedirs(fol_path)
+        os.makedirs(fol_path, exist_ok=True)
         self.handles = {}
 
     @contextmanager
@@ -132,7 +132,8 @@ class ZBufferedLogger(ZLogger):
         if not self.buffer_dict[key]:
             return
         self.handles[key].write(
-            "".join(py_io.to_jsonl(entry) + "\n" for entry in self.buffer_dict[key])
+            "".join(py_io.to_jsonl(entry) +
+                    "\n" for entry in self.buffer_dict[key])
         )
         self.buffer_dict[key] = []
 
@@ -222,6 +223,7 @@ def load_log(fol_path):
     all_paths = filesystem.find_files_with_ext(fol_path, "zlog")
     log_data = {}
     for path in all_paths:
-        key = os.path.abspath(path).replace(os.path.abspath(fol_path), "")[1:].replace(".zlog", "")
+        key = os.path.abspath(path).replace(os.path.abspath(fol_path), "")[
+            1:].replace(".zlog", "")
         log_data[key] = py_io.read_jsonl(path)
     return log_data
