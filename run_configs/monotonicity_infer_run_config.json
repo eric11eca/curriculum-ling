@@ -13,13 +13,13 @@
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 22435,
-    "warmup_steps": 2243
+    "max_steps": 65,
+    "warmup_steps": 6
   },
   "task_specific_configs_dict": {
     "monotonicity_infer": {
       "train_batch_size": 8,
-      "eval_batch_size": 32,
+      "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
       "eval_subset_num": 500
     }

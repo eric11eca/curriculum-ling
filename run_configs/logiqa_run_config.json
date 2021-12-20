@@ -4,17 +4,17 @@
   },
   "task_cache_config_dict": {
     "logiqa": {
-      "train": "./cache/roberta-base/logiqa\\train",
-      "val": "./cache/roberta-base/logiqa\\val",
-      "val_labels": "./cache/roberta-base/logiqa\\val_labels"
+      "train": "./cache/roberta-large/logiqa\\train",
+      "val": "./cache/roberta-large/logiqa\\val",
+      "val_labels": "./cache/roberta-large/logiqa\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 9220,
-    "warmup_steps": 922
+    "max_steps": 65,
+    "warmup_steps": 6
   },
   "task_specific_configs_dict": {
     "logiqa": {

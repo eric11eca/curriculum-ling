@@ -1,23 +1,23 @@
 {
   "task_config_path_dict": {
-    "coreference": "/content/tasks/configs/coreference_config.json"
+    "curriculum_inference": "/content/tasks/configs/curriculum_inference_config.json"
   },
   "task_cache_config_dict": {
-    "coreference": {
-      "train": "./cache/roberta-large/coreference\\train",
-      "val": "./cache/roberta-large/coreference\\val",
-      "val_labels": "./cache/roberta-large/coreference\\val_labels"
+    "curriculum_inference": {
+      "train": "./cache/roberta-large/curriculum_inference\\train",
+      "val": "./cache/roberta-large/curriculum_inference\\val",
+      "val_labels": "./cache/roberta-large/curriculum_inference\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 65,
-    "warmup_steps": 6
+    "max_steps": 360,
+    "warmup_steps": 36
   },
   "task_specific_configs_dict": {
-    "coreference": {
+    "curriculum_inference": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "coreference": "coreference"
+      "curriculum_inference": "curriculum_inference"
     },
     "taskmodel_config_map": {
-      "coreference": {
+      "curriculum_inference": {
         "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "coreference"
+      "curriculum_inference"
     ],
     "train_val_task_list": [
-      "coreference"
+      "curriculum_inference"
     ],
     "val_task_list": [
-      "coreference"
+      "curriculum_inference"
     ],
     "test_task_list": []
   },

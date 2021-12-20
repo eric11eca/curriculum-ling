@@ -1,12 +1,12 @@
 {
   "task_config_path_dict": {
-    "coreference": "/content/tasks/configs/coreference_config.json"
+    "hyponymy": "/content/tasks/configs/hyponymy_config.json"
   },
   "task_cache_config_dict": {
-    "coreference": {
-      "train": "./cache/roberta-large/coreference\\train",
-      "val": "./cache/roberta-large/coreference\\val",
-      "val_labels": "./cache/roberta-large/coreference\\val_labels"
+    "hyponymy": {
+      "train": "./cache/roberta-large/hyponymy\\train",
+      "val": "./cache/roberta-large/hyponymy\\val",
+      "val_labels": "./cache/roberta-large/hyponymy\\val_labels"
     }
   },
   "sampler_config": {
@@ -17,7 +17,7 @@
     "warmup_steps": 6
   },
   "task_specific_configs_dict": {
-    "coreference": {
+    "hyponymy": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "coreference": "coreference"
+      "hyponymy": "hyponymy"
     },
     "taskmodel_config_map": {
-      "coreference": {
+      "hyponymy": {
         "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "coreference"
+      "hyponymy"
     ],
     "train_val_task_list": [
-      "coreference"
+      "hyponymy"
     ],
     "val_task_list": [
-      "coreference"
+      "hyponymy"
     ],
     "test_task_list": []
   },

@@ -1,12 +1,12 @@
 {
   "task_config_path_dict": {
-    "coreference": "/content/tasks/configs/coreference_config.json"
+    "spatial": "/content/tasks/configs/spatial_config.json"
   },
   "task_cache_config_dict": {
-    "coreference": {
-      "train": "./cache/roberta-large/coreference\\train",
-      "val": "./cache/roberta-large/coreference\\val",
-      "val_labels": "./cache/roberta-large/coreference\\val_labels"
+    "spatial": {
+      "train": "./cache/roberta-large/spatial\\train",
+      "val": "./cache/roberta-large/spatial\\val",
+      "val_labels": "./cache/roberta-large/spatial\\val_labels"
     }
   },
   "sampler_config": {
@@ -17,7 +17,7 @@
     "warmup_steps": 6
   },
   "task_specific_configs_dict": {
-    "coreference": {
+    "spatial": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "coreference": "coreference"
+      "spatial": "spatial"
     },
     "taskmodel_config_map": {
-      "coreference": {
+      "spatial": {
         "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "coreference"
+      "spatial"
     ],
     "train_val_task_list": [
-      "coreference"
+      "spatial"
     ],
     "val_task_list": [
-      "coreference"
+      "spatial"
     ],
     "test_task_list": []
   },

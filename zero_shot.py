@@ -162,20 +162,22 @@ if __name__ == "__main__":
         },
         "binarynli": {
             "task_names": [
-                "transitive", "hypernymy", "hyponymy", "ner",
-                "verbcorner", "verbnet",
+                "transitive", "hypernymy", "hyponymy",
+                "ner", "verbcorner", "verbnet",
                 "syntactic_alternation", "syntactic_variation",
                 "monotonicity_infer", "syllogism",
                 "coreference", "puns", "sentiment",
-                "kg_relations", "context_align",  "sprl",
+                "kg_relations", "context_align", "sprl",
                 "atomic", "social_chem", "socialqa", "physicalqa",
-                "logiqa", "ester", "entailment_tree", "cosmoqa"
+                "logiqa", "ester", "cosmoqa", "drop",
+                "entailment_tree", "proof_writer",
+                "temporal", "spatial", "counterfactual"
             ],
             "classes": ["entailed", "not-entailed"]
         },
         "binarynli2": {
             "task_names": [
-                "monotonicity_infer", "socialqa"
+                "monotonicity_infer", "context_align", "drop", "temporal", "spatial", "proof_writer", "counterfactual"
             ],
             "classes": ["entailed", "not-entailed"]
         },

@@ -4,17 +4,17 @@
   },
   "task_cache_config_dict": {
     "verbcorner": {
-      "train": "./cache/roberta-base/verbcorner\\train",
-      "val": "./cache/roberta-base/verbcorner\\val",
-      "val_labels": "./cache/roberta-base/verbcorner\\val_labels"
+      "train": "./cache/roberta-large/verbcorner\\train",
+      "val": "./cache/roberta-large/verbcorner\\val",
+      "val_labels": "./cache/roberta-large/verbcorner\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 27726,
-    "warmup_steps": 2772
+    "max_steps": 65,
+    "warmup_steps": 6
   },
   "task_specific_configs_dict": {
     "verbcorner": {

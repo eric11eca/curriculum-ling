@@ -4,17 +4,17 @@
   },
   "task_cache_config_dict": {
     "negation": {
-      "train": "./cache/bert-base-uncased/negation\\train",
-      "val": "./cache/bert-base-uncased/negation\\val",
-      "val_labels": "./cache/bert-base-uncased/negation\\val_labels"
+      "train": "./cache/roberta-large/negation\\train",
+      "val": "./cache/roberta-large/negation\\val",
+      "val_labels": "./cache/roberta-large/negation\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 1125,
-    "warmup_steps": 112
+    "max_steps": 95,
+    "warmup_steps": 9
   },
   "task_specific_configs_dict": {
     "negation": {

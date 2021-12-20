@@ -4,17 +4,17 @@
   },
   "task_cache_config_dict": {
     "kg_relations": {
-      "train": "./cache/microsoft/deberta-v3-base/kg_relations\\train",
-      "val": "./cache/microsoft/deberta-v3-base/kg_relations\\val",
-      "val_labels": "./cache/microsoft/deberta-v3-base/kg_relations\\val_labels"
+      "train": "./cache/roberta-large/kg_relations\\train",
+      "val": "./cache/roberta-large/kg_relations\\val",
+      "val_labels": "./cache/roberta-large/kg_relations\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 12505,
-    "warmup_steps": 1250
+    "max_steps": 65,
+    "warmup_steps": 6
   },
   "task_specific_configs_dict": {
     "kg_relations": {

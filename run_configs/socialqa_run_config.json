@@ -4,17 +4,17 @@
   },
   "task_cache_config_dict": {
     "socialqa": {
-      "train": "./cache/microsoft/deberta-v3-base/socialqa\\train",
-      "val": "./cache/microsoft/deberta-v3-base/socialqa\\val",
-      "val_labels": "./cache/microsoft/deberta-v3-base/socialqa\\val_labels"
+      "train": "./cache/roberta-large/socialqa\\train",
+      "val": "./cache/roberta-large/socialqa\\val",
+      "val_labels": "./cache/roberta-large/socialqa\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 3755,
-    "warmup_steps": 375
+    "max_steps": 65,
+    "warmup_steps": 6
   },
   "task_specific_configs_dict": {
     "socialqa": {

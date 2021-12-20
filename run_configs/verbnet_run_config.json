@@ -4,17 +4,17 @@
   },
   "task_cache_config_dict": {
     "verbnet": {
-      "train": "./cache/bert-base-uncased/verbnet\\train",
-      "val": "./cache/bert-base-uncased/verbnet\\val",
-      "val_labels": "./cache/bert-base-uncased/verbnet\\val_labels"
+      "train": "./cache/roberta-large/verbnet\\train",
+      "val": "./cache/roberta-large/verbnet\\val",
+      "val_labels": "./cache/roberta-large/verbnet\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 350,
-    "warmup_steps": 35
+    "max_steps": 65,
+    "warmup_steps": 6
   },
   "task_specific_configs_dict": {
     "verbnet": {

@@ -1,35 +1,95 @@
 {
   "task_config_path_dict": {
-    "logical_inference": "/content/tasks/configs/logical_inference_config.json"
+    "logical_inference": "/content/tasks/configs/logical_inference_config.json",
+    "logiqa": "/content/tasks/configs/logiqa_config.json",
+    "drop": "/content/tasks/configs/drop_config.json",
+    "ester": "/content/tasks/configs/ester_config.json",
+    "cosmoqa": "/content/tasks/configs/cosmoqa_config.json"
   },
   "task_cache_config_dict": {
     "logical_inference": {
       "train": "./cache/roberta-large/logical_inference\\train",
       "val": "./cache/roberta-large/logical_inference\\val",
       "val_labels": "./cache/roberta-large/logical_inference\\val_labels"
+    },
+    "logiqa": {
+      "val": "./cache/roberta-large/logiqa\\val",
+      "val_labels": "./cache/roberta-large/logiqa\\val_labels"
+    },
+    "drop": {
+      "val": "./cache/roberta-large/drop\\val",
+      "val_labels": "./cache/roberta-large/drop\\val_labels"
+    },
+    "ester": {
+      "val": "./cache/roberta-large/ester\\val",
+      "val_labels": "./cache/roberta-large/ester\\val_labels"
+    },
+    "cosmoqa": {
+      "val": "./cache/roberta-large/cosmoqa\\val",
+      "val_labels": "./cache/roberta-large/cosmoqa\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 5000,
-    "warmup_steps": 500
+    "max_steps": 31255,
+    "warmup_steps": 3125
   },
   "task_specific_configs_dict": {
     "logical_inference": {
       "train_batch_size": 8,
-      "eval_batch_size": 32,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "logiqa": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "drop": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "ester": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "eval_subset_num": 500
+    },
+    "cosmoqa": {
+      "train_batch_size": 8,
+      "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
       "eval_subset_num": 500
     }
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "logical_inference": "logical_inference"
+      "logical_inference": "logical_inference",
+      "logiqa": "logical_inference",
+      "drop": "logical_inference",
+      "ester": "logical_inference",
+      "cosmoqa": "logical_inference"
     },
     "taskmodel_config_map": {
       "logical_inference": {
+        "classifier_type": "linear"
+      },
+      "logiqa": {
+        "classifier_type": "linear"
+      },
+      "drop": {
+        "classifier_type": "linear"
+      },
+      "ester": {
+        "classifier_type": "linear"
+      },
+      "cosmoqa": {
         "classifier_type": "linear"
       }
     }
@@ -42,7 +102,10 @@
       "logical_inference"
     ],
     "val_task_list": [
-      "logical_inference"
+      "logiqa",
+      "drop",
+      "ester",
+      "cosmoqa"
     ],
     "test_task_list": []
   },

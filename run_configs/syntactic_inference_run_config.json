@@ -13,13 +13,13 @@
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 31255,
-    "warmup_steps": 3125
+    "max_steps": 45,
+    "warmup_steps": 4
   },
   "task_specific_configs_dict": {
     "syntactic_inference": {
       "train_batch_size": 8,
-      "eval_batch_size": 16,
+      "eval_batch_size": 32,
       "gradient_accumulation_steps": 1,
       "eval_subset_num": 500
     }
@@ -30,7 +30,7 @@
     },
     "taskmodel_config_map": {
       "syntactic_inference": {
-        "classifier_type": "linear"
+        "classifier_type": "mlp"
       }
     }
   },
