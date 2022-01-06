@@ -1,0 +1,50 @@
+{
+  "monotonicity_infer": {
+    "gain": -0.218,
+    "gain_percent": -21.9
+  },
+  "entailment_tree": {
+    "gain": 1.084,
+    "gain_percent": 108.4
+  },
+  "context_align": {
+    "gain": -0.65,
+    "gain_percent": -65.0
+  },
+  "drop": {
+    "gain": 0.342,
+    "gain_percent": 49.3
+  },
+  "logiqa": {
+    "gain": -0.82,
+    "gain_percent": -82.0
+  },
+  "ester": {
+    "gain": 1.071,
+    "gain_percent": 114.7
+  },
+  "cosmoqa": {
+    "gain": -0.32,
+    "gain_percent": -32.0
+  },
+  "atomic": {
+    "gain": -0.139,
+    "gain_percent": -13.9
+  },
+  "social_chem": {
+    "gain": 0.123,
+    "gain_percent": 12.3
+  },
+  "socialqa": {
+    "gain": 0.143,
+    "gain_percent": 15.6
+  },
+  "physicalqa": {
+    "gain": 0.135,
+    "gain_percent": 13.5
+  },
+  "temporal": {
+    "gain": 0.78,
+    "gain_percent": 78.0
+  }
+}

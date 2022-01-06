@@ -146,7 +146,6 @@ if __name__ == "__main__":
     category_map = {
         "commonnli": {
             "task_names": [
-                "lexical",
                 "boolean", "comparative", "conditional",
                 "counting", "negation", "quantifier",
             ],
@@ -177,7 +176,7 @@ if __name__ == "__main__":
         },
         "binarynli2": {
             "task_names": [
-                "monotonicity_infer", "context_align", "drop", "temporal", "spatial", "proof_writer", "counterfactual"
+                "proof_writer", "spatial", "temporal", "counterfactual"
             ],
             "classes": ["entailed", "not-entailed"]
         },

@@ -149,6 +149,7 @@ def dataset_split_by_pvi(pvi_record):
                     val_data_buckets["hard"].append(data)
                 else:
                     val_data_buckets["simple"].append(data)
+
         sorted_by_label[label] = val_data_buckets
 
     simple_split_train = []
@@ -156,9 +157,9 @@ def dataset_split_by_pvi(pvi_record):
     simple_split_val = []
     hard_split_val = []
 
-    train_test_split
     for label in sorted_by_label:
         simple_data = sorted_by_label[label]["simple"]
+        print(len(simple_data))
         simple_train, simple_val, _, _ = train_test_split(
             simple_data, [0]*len(simple_data),
             test_size=0.4, random_state=42)

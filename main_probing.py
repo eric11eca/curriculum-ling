@@ -2,12 +2,15 @@ import os
 import argparse
 import numpy as np
 
+import jiant.utils.display as display
+import jiant.utils.python.io as py_io
+
 import jiant.proj.main.tokenize_and_cache as tokenize_and_cache
 import jiant.proj.main.runscript as main_runscript
 import jiant.proj.main.scripts.configurator as configurator
 import jiant.proj.main.export_model as export_model
-import jiant.utils.display as display
-import jiant.utils.python.io as py_io
+
+from ray import tune
 
 lexical_tasks = [
     "transitive",
@@ -186,6 +189,39 @@ def tokenization(
     ))
 
 
+def task_combinator(tasks):
+    train_data_collection = []
+    val_data_collection = []
+
+    for task in tasks:
+        train_data = py_io.read_jsonl(
+            f"/content/tasks/curriculum/{task}/train.jsonl")
+        val_data = py_io.read_jsonl(
+            f"/content/tasks/curriculum/{task}/val.jsonl")
+        train_data_collection += train_data
+        val_data_collection += val_data_collection
+
+    task_name = "curriculum"
+    os.makedirs("/content/tasks/configs/", exist_ok=True)
+    os.makedirs(f"/content/tasks/curriculum/{task_name}", exist_ok=True)
+    py_io.write_jsonl(
+        data=train_data,
+        path=f"/content/tasks/curriculum/{task_name}/train.jsonl",
+    )
+    py_io.write_jsonl(
+        data=val_data,
+        path=f"/content/tasks/curriculum/{task_name}/val.jsonl",
+    )
+    py_io.write_json({
+        "task": f"{task_name}",
+        "paths": {
+            "train": f"/content/tasks/curriculum/{task_name}/train.jsonl",
+            "val": f"/content/tasks/curriculum/{task_name}/val.jsonl",
+        },
+        "name": f"{task_name}"
+    }, f"/content/tasks/configs/{task_name}_config.json")
+
+
 def train_configuration(
         task_name, model_name,
         cache_pth, val_task_key,
@@ -204,7 +240,7 @@ def train_configuration(
         val_task_name_list=val_tasks,
         train_batch_size=8,
         eval_batch_size=16,
-        epochs=5,
+        epochs=2,
         num_gpus=1,
         classifier_type=classifier_type
     ).create_config()
@@ -258,7 +294,7 @@ def train(
         model_path=model_path,
         model_config_path=f"./models/{model_name}/model/config.json",
         learning_rate=1e-5,
-        eval_every_steps=200,
+        eval_every_steps=500,
         do_train=do_train,
         do_val=do_val,
         do_save_best=do_save_best,
@@ -450,6 +486,7 @@ if __name__ == "__main__":
                     model_path = f"./runs/{task_name}/{model_val_name}/{args.k_shot}-shot-null/best_model.p"
                 elif args.hp_only:
                     model_path = f"./runs/{task_name}/{model_val_name}/{args.k_shot}-shot-hp/best_model.p"
+                    do_save_best = False
 
         cache_path = f"./cache/{model_name}/"
 
@@ -458,7 +495,7 @@ if __name__ == "__main__":
         else:
             val_task_key = "NONE"
 
-        if args.k_shot < 1000:
+        if args.k_shot < 1000 and args.k_shot > 0:
             do_save_best = False
 
         train_configuration(
@@ -472,7 +509,7 @@ if __name__ == "__main__":
 
         phase = "main"
         freeze_encoder = False
-        if args.probing_base:
+        """if args.probing_base:
             phase = "probing_base"
             freeze_encoder = True
             load_mode = "partial"
@@ -480,8 +517,8 @@ if __name__ == "__main__":
             phase = "probing_target"
             freeze_encoder = True
             load_mode = "partial"
-            model_path = f"./runs/{task_name}/{model_val_name}/1000-shot/best_model.p"
-        elif args.null_baseline:
+            model_path = f"./runs/{task_name}/{model_val_name}/1000-shot/best_model.p"""
+        if args.null_baseline:
             phase = "null"
             do_save_best = False
             write_val_preds = False
@@ -507,6 +544,7 @@ if __name__ == "__main__":
             mismatched=args.mismatched,
             hp_only=args.hp_only
         )
+
 
 # python main_probing.py --main_loop --task_name monotonicity --exp_list bert2-mlp --exp_list roberta2 --exp_list roberta2-mlp --exp_list bert2
 # python main_probing.py --tokenize --main_loop --task_name counterfactual --model roberta-anli --k_shot 10

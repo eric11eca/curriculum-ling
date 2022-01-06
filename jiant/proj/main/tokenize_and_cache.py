@@ -219,7 +219,10 @@ def main(args: RunConfiguration):
             examples = task.get_train_examples()
 
         if args.k_shot > 0:
-            examples = get_k_shot_task_data(examples, k_shot=args.k_shot)
+            if "adversarial_nli" in args.task_name:
+                examples = get_k_shot_data_multi(examples, k=args.k_shot)
+            else:
+                examples = get_k_shot_task_data(examples, k_shot=args.k_shot)
             print(f"get {args.k_shot} data, length {len(examples)}")
         chunk_and_save(
             task=task,

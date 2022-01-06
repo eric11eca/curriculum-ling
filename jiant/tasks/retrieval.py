@@ -104,6 +104,9 @@ TASK_DICT = {
     "acceptability_eos": AcceptabilityEOSTask,
     "acceptability_whwords": AcceptabilityWHwordsTask,
     "adversarial_nli": AdversarialNliTask,
+    "adversarial_nli_r1": AdversarialNliTask,
+    "adversarial_nli_r2": AdversarialNliTask,
+    "adversarial_nli_r3": AdversarialNliTask,
     "boolq": BoolQTask,
     "bucc2018": Bucc2018Task,
     "cb": CommitmentBankTask,
@@ -181,7 +184,7 @@ TASK_DICT = {
     "arct": ArctTask,
     "winogrande": WinograndeTask,
     "piqa": PiqaTask,
-    "lexical": CommonNLITask,
+    "lexical": BinaryNLITask,
     "socialqa": BinaryNLITask,
     "physicalqa": BinaryNLITask,
     "syntactic_alternation": BinaryNLITask,
@@ -234,6 +237,7 @@ TASK_DICT = {
     "fundamental": BinaryNLITask,
     "complex": BinaryNLITask,
     "curriculum_inference": BinaryNLITask,
+    "curriculum": BinaryNLITask,
 }
 
 

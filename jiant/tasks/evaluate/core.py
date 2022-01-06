@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 import seqeval.metrics as seqeval_metrics
+from seqeval.metrics.sequence_labeling import precision_score
 import torch
 
 from scipy.stats import pearsonr
@@ -13,6 +14,8 @@ from scipy.stats import spearmanr
 from sklearn.metrics import f1_score
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import matthews_corrcoef
+from sklearn.metrics import recall_score
+from sklearn.metrics import precision_score
 from typing import Dict
 from typing import List
 
@@ -274,7 +277,10 @@ class SimpleAccuracyEvaluationScheme(BaseLogitsEvaluationScheme):
         # noinspection PyUnresolvedReferences
         acc = float((preds == labels).mean())
         mcc = matthews_corrcoef(labels, preds)
-        return Metrics(major=acc, minor={"acc": acc, "mcc": mcc})
+        p = precision_score(labels, preds, average='micro')
+        r = recall_score(labels, preds, average='micro')
+        f1 = f1_score(labels, preds, average='micro')
+        return Metrics(major=acc, minor={"acc": acc, "mcc": mcc, "P": p, "R": r, "F1": f1})
 
 
 class MCTACOEvaluationScheme(BaseLogitsEvaluationScheme):
