@@ -1,23 +1,23 @@
 {
   "task_config_path_dict": {
-    "adversarial_nli_r3": "/content/tasks/configs/adversarial_nli_r3_config.json"
+    "hellaswag": "/content/tasks/configs/hellaswag_config.json"
   },
   "task_cache_config_dict": {
-    "adversarial_nli_r3": {
-      "train": "./cache/roberta-large/adversarial_nli_r3\\train",
-      "val": "./cache/roberta-large/adversarial_nli_r3\\val",
-      "val_labels": "./cache/roberta-large/adversarial_nli_r3\\val_labels"
+    "hellaswag": {
+      "train": "./cache/roberta-large/hellaswag\\train",
+      "val": "./cache/roberta-large/hellaswag\\val",
+      "val_labels": "./cache/roberta-large/hellaswag\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 40718,
-    "warmup_steps": 4071
+    "max_steps": 500,
+    "warmup_steps": 50
   },
   "task_specific_configs_dict": {
-    "adversarial_nli_r3": {
+    "hellaswag": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "adversarial_nli_r3": "adversarial_nli_r3"
+      "hellaswag": "hellaswag"
     },
     "taskmodel_config_map": {
-      "adversarial_nli_r3": {
+      "hellaswag": {
         "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "adversarial_nli_r3"
+      "hellaswag"
     ],
     "train_val_task_list": [
-      "adversarial_nli_r3"
+      "hellaswag"
     ],
     "val_task_list": [
-      "adversarial_nli_r3"
+      "hellaswag"
     ],
     "test_task_list": []
   },

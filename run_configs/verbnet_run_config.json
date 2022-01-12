@@ -13,8 +13,8 @@
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 65,
-    "warmup_steps": 6
+    "max_steps": 350,
+    "warmup_steps": 35
   },
   "task_specific_configs_dict": {
     "verbnet": {

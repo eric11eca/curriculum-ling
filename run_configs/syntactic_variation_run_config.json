@@ -1,23 +1,23 @@
 {
   "task_config_path_dict": {
-    "adversarial_nli_r3": "/content/tasks/configs/adversarial_nli_r3_config.json"
+    "syntactic_variation": "/content/tasks/configs/syntactic_variation_config.json"
   },
   "task_cache_config_dict": {
-    "adversarial_nli_r3": {
-      "train": "./cache/roberta-large/adversarial_nli_r3\\train",
-      "val": "./cache/roberta-large/adversarial_nli_r3\\val",
-      "val_labels": "./cache/roberta-large/adversarial_nli_r3\\val_labels"
+    "syntactic_variation": {
+      "train": "./cache/roberta-large/syntactic_variation\\train",
+      "val": "./cache/roberta-large/syntactic_variation\\val",
+      "val_labels": "./cache/roberta-large/syntactic_variation\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 40718,
-    "warmup_steps": 4071
+    "max_steps": 500,
+    "warmup_steps": 50
   },
   "task_specific_configs_dict": {
-    "adversarial_nli_r3": {
+    "syntactic_variation": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -26,23 +26,23 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "adversarial_nli_r3": "adversarial_nli_r3"
+      "syntactic_variation": "syntactic_variation"
     },
     "taskmodel_config_map": {
-      "adversarial_nli_r3": {
+      "syntactic_variation": {
         "classifier_type": "linear"
       }
     }
   },
   "task_run_config": {
     "train_task_list": [
-      "adversarial_nli_r3"
+      "syntactic_variation"
     ],
     "train_val_task_list": [
-      "adversarial_nli_r3"
+      "syntactic_variation"
     ],
     "val_task_list": [
-      "adversarial_nli_r3"
+      "syntactic_variation"
     ],
     "test_task_list": []
   },

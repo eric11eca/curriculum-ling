@@ -4,17 +4,17 @@
   },
   "task_cache_config_dict": {
     "lexical": {
-      "train": "./cache/bert-base-uncased/lexical\\train",
-      "val": "./cache/bert-base-uncased/lexical\\val",
-      "val_labels": "./cache/bert-base-uncased/lexical\\val_labels"
+      "train": "./cache/roberta-large/lexical\\train",
+      "val": "./cache/roberta-large/lexical\\val",
+      "val_labels": "./cache/roberta-large/lexical\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 250,
-    "warmup_steps": 25
+    "max_steps": 500,
+    "warmup_steps": 50
   },
   "task_specific_configs_dict": {
     "lexical": {
@@ -30,7 +30,7 @@
     },
     "taskmodel_config_map": {
       "lexical": {
-        "classifier_type": "mlp"
+        "classifier_type": "linear"
       }
     }
   },

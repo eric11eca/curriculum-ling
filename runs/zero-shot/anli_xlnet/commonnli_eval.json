@@ -1,9 +1,30 @@
 {
-  "lexical": 98.61676159479251,
-  "boolean": 67.1,
-  "comparative": 55.2,
-  "conditional": 66.3,
-  "counting": 67.2,
-  "negation": 65.8,
-  "quantifier": 49.0
+  "boolean": {
+    "acc": 0.671,
+    "mcc": 0.5774998910833035
+  },
+  "comparative": {
+    "acc": 0.552,
+    "mcc": 0.44560223044610575
+  },
+  "conditional": {
+    "acc": 0.663,
+    "mcc": 0.5741261487436086
+  },
+  "counting": {
+    "acc": 0.672,
+    "mcc": 0.519979323412797
+  },
+  "negation": {
+    "acc": 0.658,
+    "mcc": 0.6004423090428896
+  },
+  "quantifier": {
+    "acc": 0.49,
+    "mcc": 0.2663629796663144
+  },
+  "control": {
+    "acc": 0.5293017456359103,
+    "mcc": 0.30244515987250353
+  }
 }

@@ -1,45 +1,23 @@
 {
   "task_config_path_dict": {
-    "adversarial_nli_r1": "/content/tasks/configs/adversarial_nli_r1_config.json",
-    "logiqa": "/content/tasks/configs/logiqa_config.json",
-    "drop": "/content/tasks/configs/drop_config.json"
+    "adversarial_nli_r1": "/content/tasks/configs/adversarial_nli_r1_config.json"
   },
   "task_cache_config_dict": {
     "adversarial_nli_r1": {
-      "train": "./cache/roberta-large/adversarial_nli_r1\\train",
-      "val": "./cache/roberta-large/adversarial_nli_r1\\val",
-      "val_labels": "./cache/roberta-large/adversarial_nli_r1\\val_labels"
-    },
-    "logiqa": {
-      "val": "./cache/roberta-large/logiqa\\val",
-      "val_labels": "./cache/roberta-large/logiqa\\val_labels"
-    },
-    "drop": {
-      "val": "./cache/roberta-large/drop\\val",
-      "val_labels": "./cache/roberta-large/drop\\val_labels"
+      "train": "C:\\Users\\Admin\\Desktop\\research/curriculum-ling//cache/roberta-large/adversarial_nli_r1\\train",
+      "val": "C:\\Users\\Admin\\Desktop\\research/curriculum-ling//cache/roberta-large/adversarial_nli_r1\\val",
+      "val_labels": "C:\\Users\\Admin\\Desktop\\research/curriculum-ling//cache/roberta-large/adversarial_nli_r1\\val_labels"
     }
   },
   "sampler_config": {
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 10595,
-    "warmup_steps": 1059
+    "max_steps": 12,
+    "warmup_steps": 1
   },
   "task_specific_configs_dict": {
     "adversarial_nli_r1": {
-      "train_batch_size": 8,
-      "eval_batch_size": 16,
-      "gradient_accumulation_steps": 1,
-      "eval_subset_num": 500
-    },
-    "logiqa": {
-      "train_batch_size": 8,
-      "eval_batch_size": 16,
-      "gradient_accumulation_steps": 1,
-      "eval_subset_num": 500
-    },
-    "drop": {
       "train_batch_size": 8,
       "eval_batch_size": 16,
       "gradient_accumulation_steps": 1,
@@ -48,18 +26,10 @@
   },
   "taskmodels_config": {
     "task_to_taskmodel_map": {
-      "adversarial_nli_r1": "adversarial_nli_r1",
-      "logiqa": "adversarial_nli_r1",
-      "drop": "adversarial_nli_r1"
+      "adversarial_nli_r1": "adversarial_nli_r1"
     },
     "taskmodel_config_map": {
       "adversarial_nli_r1": {
-        "classifier_type": "linear"
-      },
-      "logiqa": {
-        "classifier_type": "linear"
-      },
-      "drop": {
         "classifier_type": "linear"
       }
     }
@@ -72,8 +42,6 @@
       "adversarial_nli_r1"
     ],
     "val_task_list": [
-      "logiqa",
-      "drop",
       "adversarial_nli_r1"
     ],
     "test_task_list": []

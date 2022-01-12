@@ -13,8 +13,8 @@
     "sampler_type": "ProportionalMultiTaskSampler"
   },
   "global_train_config": {
-    "max_steps": 545,
-    "warmup_steps": 54
+    "max_steps": 704,
+    "warmup_steps": 70
   },
   "task_specific_configs_dict": {
     "boolean": {
