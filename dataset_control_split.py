@@ -83,6 +83,7 @@ def compute_pointwise_v_entropy(
 ):
     N = len(val_labels)
     val_labels = [[label] for label in val_labels]
+    print(N)
 
     prediction_main = [x['logits'][0] for x in main_train_dynamics.values()]
     prediction_null = [x['logits'][0] for x in null_train_dynamics.values()]
@@ -209,6 +210,10 @@ if __name__ == "__main__":
         logger.info(f"Minimum PVI: {min(pvi)}")
         logger.info(f"Maximum PVI: {max(pvi)}")
         logger.info(f"Dataset Difficulty: {V_info}")
+
+        curriculum_v_info = py_io.read_json("./curriculum_v_info.json")
+        curriculum_v_info[task] = V_info.item()
+        py_io.write_json(curriculum_v_info, "./curriculum_v_info.json")
 
         val_data = py_io.read_jsonl(
             f"/content/tasks/curriculum/{task}/{args.task_split}.jsonl")
