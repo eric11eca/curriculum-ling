@@ -39,6 +39,8 @@ curriculum_tasks = [
     "logiqa", "cosmoqa", "ester", "drop", "temporal", "spatial", "counterfactual"
 ]
 
+search_record = py_io.read_json(f"{curriculum_dir}/ray_tune_record.json")
+
 
 def tokenization(
     task_name, model_name,
@@ -58,7 +60,7 @@ def tokenization(
     tokenize_and_cache.main(tokenize_and_cache.RunConfiguration(
         task_name=task_name,
         phases=phase,
-        k_shot=0,
+        k_shot=k_shot,
         output_dir=output_dir,
         task_config_path=f"/content/tasks/configs/{task_name}_config.json",
         hf_pretrained_model_name_or_path=model_name,
@@ -183,12 +185,7 @@ def train(
     main_runscript.run_loop(run_args)
 
 
-def pretrain_function(model_name, task_selection, cache_path, k_shot):
-    curriculum = [
-        task for task in task_selection.keys()
-        if task in curriculum_tasks and task_selection[task] >= 0.5
-    ]
-
+def pretrain_function(model_name, curriculum, cache_path, k_shot):
     logger.info("Current Task Combination")
     logger.info(curriculum)
 
@@ -226,7 +223,17 @@ def pretrain_function(model_name, task_selection, cache_path, k_shot):
 def objective(task_name, model_name, task_selection,
               k_shot_pre=2000, k_shot_tune=16):
     cache_path = f"{curriculum_dir}/cache/{model_name}/"
-    pretrain_function(model_name, task_selection, cache_path, k_shot_pre)
+    curriculum = [
+        task for task in task_selection.keys()
+        if task in curriculum_tasks and task_selection[task] >= 0.5
+    ]
+
+    # if ','.join(curriculum) in search_record:
+    #    logger.info("Found existing experiment, skip to next trial!")
+    #    acc = search_record[','.join(curriculum)]
+    # else:
+
+    pretrain_function(model_name, curriculum, cache_path, k_shot_pre)
 
     tokenization(task_name, model_name, k_shot=k_shot_tune)
     train_configuration(
@@ -268,7 +275,7 @@ def training_function(config):
 
     task_name = "adversarial_nli_r1"
     model_name = "roberta-large"
-    k_shot_pre = 2000
+    k_shot_pre = 16
     k_shot_tune = 16
 
     intermediate_score = objective(
@@ -280,18 +287,13 @@ def training_function(config):
 
 if __name__ == "__main__":
     ray.init(local_mode=True)
-    """df_search = DragonflySearch(
-        optimizer="bandit",
-        domain="euclidean",
-    )"""
-    #df_search = ConcurrencyLimiter(df_search, max_concurrent=1)
-
     optimizer = ng.optimizers.ParametrizedOnePlusOne(
         mutation="doublefastga",
         noise_handling="optimistic"
     )
-    algo = AxSearch()  # NevergradSearch(optimizer=optimizer)
-    algo = ConcurrencyLimiter(algo, max_concurrent=1)
+    doublefastGA = NevergradSearch(optimizer=optimizer)
+    bo_ax = AxSearch()
+    algo = ConcurrencyLimiter(doublefastGA, max_concurrent=1)
     scheduler = AsyncHyperBandScheduler()
 
     def trial_name_id(trial):
@@ -302,38 +304,42 @@ if __name__ == "__main__":
         training_function,
         metric="objective",
         mode="max",
-        name="ax",
+        name="nevergrad",
         search_alg=algo,
         scheduler=scheduler,
-        num_samples=50,
-        resume=True,
+        num_samples=200,
         config={
-            "coreference":      1,
-            "kg_relations":     tune.uniform(0, 1),
-            "sentiment":        tune.uniform(0, 1),
-            "sprl":             tune.uniform(0, 1),
-            "puns":             tune.uniform(0, 1),
-            "context_align":    tune.uniform(0, 1),
-            "entailment_tree":  tune.uniform(0, 1),
-            "logiqa":           tune.uniform(0, 1),
-            "cosmoqa":          tune.uniform(0, 1),
-            "ester":            1,
-            "drop":             tune.uniform(0, 1),
-            "temporal":         tune.uniform(0, 1),
-            "spatial":          tune.uniform(0, 1),
-            "counterfactual":   tune.uniform(0, 1),
-            "lexical":          1,
-            "syntactic_variation": tune.uniform(0, 1),
-            # "transitive":       tune.uniform(0, 1),
-            # "hypernymy":        tune.uniform(0, 1),
-            # "hyponymy":         tune.uniform(0, 1),
-            # "ner":              tune.uniform(0, 1),
-            # "verbnet":          tune.uniform(0, 1),
-            # "verbcorner":       tune.uniform(0, 1),
-            # "syntactic_alternation": tune.uniform(0, 1),
-            # "monotonicity_infer": tune.uniform(0, 1),
-            # "syllogism": tune.uniform(0, 1)
+            "coreference":            tune.choice([0, 1]),
+            "kg_relations":           tune.choice([0, 1]),
+            "sentiment":              tune.choice([0, 1]),
+            "sprl":                   tune.choice([0, 1]),
+            "puns":                   tune.choice([0, 1]),
+            "context_align":          tune.choice([0, 1]),
+            "entailment_tree":        tune.choice([0, 1]),
+            "logiqa":                 tune.choice([0, 1]),
+            "cosmoqa":                tune.choice([0, 1]),
+            "ester":                  tune.choice([0, 1]),
+            "drop":                   tune.choice([0, 1]),
+            "temporal":               tune.choice([0, 1]),
+            "spatial":                tune.choice([0, 1]),
+            "counterfactual":         tune.choice([0, 1]),
+            "lexical":                tune.choice([0, 1]),
+            "syntactic_variation":    tune.choice([0, 1]),
+            "transitive":             tune.choice([0, 1]),
+            "hypernymy":              tune.choice([0, 1]),
+            "hyponymy":               tune.choice([0, 1]),
+            "ner":                    tune.choice([0, 1]),
+            "verbnet":                tune.choice([0, 1]),
+            "verbcorner":             tune.choice([0, 1]),
+            "syntactic_alternation":  tune.choice([0, 1]),
+            "monotonicity_infer":     tune.choice([0, 1]),
+            "syllogism":              tune.choice([0, 1]),
+            "socialqa":               tune.choice([0, 1]),
+            "physicalqa":             tune.choice([0, 1]),
+            "atomic":                 tune.choice([0, 1]),
+            "social_chem":            tune.choice([0, 1])
         },
+        resume='AUTO',
         resources_per_trial={
             'cpu': 2,
             'gpu': 0,
