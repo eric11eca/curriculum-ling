@@ -1,6 +1,7 @@
 import os
 import argparse
 import numpy as np
+import shutil
 
 import jiant.utils.display as display
 import jiant.utils.python.io as py_io
@@ -416,7 +417,10 @@ if __name__ == "__main__":
     print(
         f"Train Distribution: {train_level} => Val Distribution: {val_level}")
 
+    cache_path = f"./cache/{model_name}/"
+
     if args.tokenize:
+        shutil.rmtree(f"{cache_path}/{task_name}", ignore_errors=True)
         if task_name == "curriculum":
             for task in CURRICULUM:
                 tokenization(
@@ -437,6 +441,7 @@ if __name__ == "__main__":
                 split_on_train=args.split_train, mismatched=args.mismatched,
                 hp_only=args.hp_only, train_level=train_level, val_level=val_level)
     elif args.tokenize_train:
+        shutil.rmtree(f"{cache_path}/{task_name}/train", ignore_errors=True)
         if task_name == "curriculum":
             for task in CURRICULUM:
                 tokenization(
@@ -449,6 +454,9 @@ if __name__ == "__main__":
                 split_on_train=args.split_train, mismatched=args.mismatched,
                 hp_only=args.hp_only, train_level=train_level, val_level=val_level)
     elif args.tokenize_val:
+        shutil.rmtree(f"{cache_path}/{task_name}/val", ignore_errors=True)
+        shutil.rmtree(f"{cache_path}/{task_name}/val_labels",
+                      ignore_errors=True)
         if task_name == "curriculum":
             for task in CURRICULUM:
                 tokenization(task, model_name, phase="val", k_shot=args.k_shot)
@@ -487,8 +495,6 @@ if __name__ == "__main__":
                 elif args.hp_only:
                     model_path = f"./runs/{task_name}/{model_val_name}/{args.k_shot}-shot-hp/best_model.p"
                     do_save_best = False
-
-        cache_path = f"./cache/{model_name}/"
 
         if "inference" in task_name:
             val_task_key = task_name.replace("_inference", "")
