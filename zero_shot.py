@@ -153,9 +153,7 @@ if __name__ == "__main__":
         },
         "commonnli2": {
             "task_names": [
-                "lexical",
-                "boolean", "comparative", "conditional",
-                "counting", "negation", "quantifier",
+                "control"
             ],
             "classes": ["entailment", "neutral", "contradiction"]
         },
@@ -176,7 +174,7 @@ if __name__ == "__main__":
         },
         "binarynli2": {
             "task_names": [
-                "proof_writer", "spatial", "temporal", "counterfactual"
+                "temporal", "atomic", "analytic", "hellaswag"
             ],
             "classes": ["entailed", "not-entailed"]
         },
