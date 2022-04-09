@@ -1,1 +1,1 @@
-# Inference Information Probing
+# Curriculum: A Broad-Coverage Benchmark for Linguistic Phenomena in Natural Language Understanding
