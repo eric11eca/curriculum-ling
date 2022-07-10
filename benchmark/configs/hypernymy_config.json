@@ -1,0 +1,8 @@
+{
+  "task": "hypernymy",
+  "paths": {
+    "train": "./curriculum/hypernymy/train.jsonl",
+    "val": "./curriculum/hypernymy/val.jsonl"
+  },
+  "name": "hypernymy"
+}

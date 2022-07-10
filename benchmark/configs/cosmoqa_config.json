@@ -1,0 +1,8 @@
+{
+  "task": "cosmoqa",
+  "paths": {
+    "train": "./curriculum/cosmoqa/train.jsonl",
+    "val": "./curriculum/cosmoqa/val.jsonl"
+  },
+  "name": "cosmoqa"
+}

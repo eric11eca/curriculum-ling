@@ -1,0 +1,8 @@
+{
+  "task": "logiqa",
+  "paths": {
+    "train": "./curriculum/logiqa/train.jsonl",
+    "val": "./curriculum/logiqa/val.jsonl"
+  },
+  "name": "logiqa"
+}

@@ -1,0 +1,8 @@
+{
+  "task": "counterfactual",
+  "paths": {
+    "train": "./curriculum/counterfactual/train.jsonl",
+    "val": "./curriculum/counterfactual/val.jsonl"
+  },
+  "name": "counterfactual"
+}

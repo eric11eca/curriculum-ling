@@ -1,0 +1,8 @@
+{
+  "task": "hellaswag",
+  "paths": {
+    "train": "./curriculum/hellaswag/train.jsonl",
+    "val": "./curriculum/hellaswag/val.jsonl"
+  },
+  "name": "hellaswag"
+}

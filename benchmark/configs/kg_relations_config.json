@@ -1,0 +1,8 @@
+{
+  "task": "kg_relations",
+  "paths": {
+    "train": "./curriculum/kg_relations/train.jsonl",
+    "val": "./curriculum/kg_relations/val.jsonl"
+  },
+  "name": "kg_relations"
+}

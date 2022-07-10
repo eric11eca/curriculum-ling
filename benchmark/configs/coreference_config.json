@@ -1,0 +1,8 @@
+{
+  "task": "coreference",
+  "paths": {
+    "train": "./curriculum/coreference/train.jsonl",
+    "val": "./curriculum/coreference/val.jsonl"
+  },
+  "name": "coreference"
+}

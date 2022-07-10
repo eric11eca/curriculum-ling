@@ -1,0 +1,8 @@
+{
+  "task": "quantifier",
+  "paths": {
+    "train": "./curriculum/quantifier/train.jsonl",
+    "val": "./curriculum/quantifier/val.jsonl"
+  },
+  "name": "quantifier"
+}

@@ -1,0 +1,8 @@
+{
+  "task": "conditional",
+  "paths": {
+    "train": "./curriculum/conditional/train.jsonl",
+    "val": "./curriculum/conditional/val.jsonl"
+  },
+  "name": "conditional"
+}

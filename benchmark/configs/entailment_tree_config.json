@@ -1,0 +1,8 @@
+{
+  "task": "entailment_tree",
+  "paths": {
+    "train": "./curriculum/entailment_tree/train.jsonl",
+    "val": "./curriculum/entailment_tree/val.jsonl"
+  },
+  "name": "entailment_tree"
+}

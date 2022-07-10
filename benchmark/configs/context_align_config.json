@@ -1,0 +1,8 @@
+{
+  "task": "context_align",
+  "paths": {
+    "train": "./curriculum/context_align/train.jsonl",
+    "val": "./curriculum/context_align/val.jsonl"
+  },
+  "name": "context_align"
+}

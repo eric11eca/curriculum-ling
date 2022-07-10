@@ -1,0 +1,8 @@
+{
+  "task": "boolean",
+  "paths": {
+    "train": "./curriculum/boolean/train.jsonl",
+    "val": "./curriculum/boolean/val.jsonl"
+  },
+  "name": "boolean"
+}

@@ -1,0 +1,8 @@
+{
+  "task": "verbcorner",
+  "paths": {
+    "train": "./curriculum/verbcorner/train.jsonl",
+    "val": "./curriculum/verbcorner/val.jsonl"
+  },
+  "name": "verbcorner"
+}

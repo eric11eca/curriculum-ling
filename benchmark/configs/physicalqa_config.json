@@ -1,0 +1,8 @@
+{
+  "task": "physicalqa",
+  "paths": {
+    "train": "./curriculum/physicalqa/train.jsonl",
+    "val": "./curriculum/physicalqa/val.jsonl"
+  },
+  "name": "physicalqa"
+}

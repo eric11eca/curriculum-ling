@@ -1,0 +1,8 @@
+{
+  "task": "verbnet",
+  "paths": {
+    "train": "./curriculum/verbnet/train.jsonl",
+    "val": "./curriculum/verbnet/val.jsonl"
+  },
+  "name": "verbnet"
+}

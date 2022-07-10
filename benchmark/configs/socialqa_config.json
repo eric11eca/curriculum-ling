@@ -1,0 +1,8 @@
+{
+  "task": "socialqa",
+  "paths": {
+    "train": "./curriculum/socialqa/train.jsonl",
+    "val": "./curriculum/socialqa/val.jsonl"
+  },
+  "name": "socialqa"
+}

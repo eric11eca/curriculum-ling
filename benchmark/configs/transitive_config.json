@@ -1,0 +1,8 @@
+{
+  "task": "transitive",
+  "paths": {
+    "train": "./curriculum/transitive/train.jsonl",
+    "val": "./curriculum/transitive/val.jsonl"
+  },
+  "name": "transitive"
+}

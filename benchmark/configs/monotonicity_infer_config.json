@@ -1,0 +1,8 @@
+{
+  "task": "monotonicity_infer",
+  "paths": {
+    "train": "./curriculum/monotonicity_infer/train.jsonl",
+    "val": "./curriculum/monotonicity_infer/val.jsonl"
+  },
+  "name": "monotonicity_infer"
+}

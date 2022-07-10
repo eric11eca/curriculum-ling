@@ -1,0 +1,8 @@
+{
+  "task": "analytic",
+  "paths": {
+    "train": "./curriculum/analytic/train.jsonl",
+    "val": "./curriculum/analytic/val.jsonl"
+  },
+  "name": "analytic"
+}

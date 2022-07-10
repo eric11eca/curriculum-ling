@@ -1,0 +1,160 @@
+{"premise": "The grocery cart hit against the wall .", "hypothesis": "The hitting happened in a forceful manner .", "gold_label": "entailed", "idx": 0}
+{"premise": "Paula spanked the naughty child 's back .", "hypothesis": "Paula caused the spanking .", "gold_label": "entailed", "idx": 1}
+{"premise": "Paula spanked the naughty child 's back .", "hypothesis": "At the end of the spanking, Paula was in contact with the naughty child 's back .", "gold_label": "entailed", "idx": 2}
+{"premise": "Paula spanked the naughty child 's back .", "hypothesis": "The spanking happened in a forceful manner .", "gold_label": "entailed", "idx": 3}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "Paula caused the spanking .", "gold_label": "entailed", "idx": 4}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "The naughty child was in contact with a paddle .", "gold_label": "entailed", "idx": 5}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "The spanking happened in a forceful manner .", "gold_label": "entailed", "idx": 6}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "At the end of the spanking, a paddle was in contact with the naughty child .", "gold_label": "entailed", "idx": 7}
+{"premise": "Paula spanked the naughty child on the back .", "hypothesis": "Paula caused the spanking .", "gold_label": "entailed", "idx": 8}
+{"premise": "Paula spanked the naughty child on the back .", "hypothesis": "At the end of the spanking, Paula was in contact with the naughty child .", "gold_label": "entailed", "idx": 9}
+{"premise": "Paula spanked the naughty child on the back .", "hypothesis": "The spanking happened in a forceful manner .", "gold_label": "entailed", "idx": 10}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "They caused the spanking .", "gold_label": "entailed", "idx": 11}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "He was in contact with a bat .", "gold_label": "entailed", "idx": 12}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "The spanking happened in a forceful manner .", "gold_label": "entailed", "idx": 13}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "At the end of the spanking, a bat was in contact with him .", "gold_label": "entailed", "idx": 14}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "During the spanking, they used a bat .", "gold_label": "entailed", "idx": 15}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "They used something .", "gold_label": "entailed", "idx": 16}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "A bat was used .", "gold_label": "entailed", "idx": 17}
+{"premise": "They spanked him to death .", "hypothesis": "They caused the spanking .", "gold_label": "entailed", "idx": 18}
+{"premise": "They spanked him to death .", "hypothesis": "At the end of the spanking, they was in contact with him .", "gold_label": "entailed", "idx": 19}
+{"premise": "They spanked him to death .", "hypothesis": "The spanking happened in a forceful manner .", "gold_label": "entailed", "idx": 20}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "Paula caused the spanking .", "gold_label": "entailed", "idx": 21}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "The child was in contact with her right hand .", "gold_label": "entailed", "idx": 22}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "The spanking happened in a forceful manner .", "gold_label": "entailed", "idx": 23}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "At the end of the spanking, her right hand was in contact with the child .", "gold_label": "entailed", "idx": 24}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "During the spanking, Paula used her right hand .", "gold_label": "entailed", "idx": 25}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "Paula used something .", "gold_label": "entailed", "idx": 26}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "Her right hand was used .", "gold_label": "entailed", "idx": 27}
+{"premise": "Paula spanked the child .", "hypothesis": "Paula caused the spanking .", "gold_label": "entailed", "idx": 28}
+{"premise": "Paula spanked the child .", "hypothesis": "At the end of the spanking, Paula was in contact with the child .", "gold_label": "entailed", "idx": 29}
+{"premise": "Paula spanked the child .", "hypothesis": "The spanking happened in a forceful manner .", "gold_label": "entailed", "idx": 30}
+{"premise": "Jackie accompanied Rose to the store .", "hypothesis": "Jackie moved .", "gold_label": "entailed", "idx": 31}
+{"premise": "Jackie accompanied Rose to the store .", "hypothesis": "Rose moved .", "gold_label": "entailed", "idx": 32}
+{"premise": "Jackie accompanied Rose .", "hypothesis": "Jackie moved .", "gold_label": "entailed", "idx": 33}
+{"premise": "Jackie accompanied Rose .", "hypothesis": "Rose moved .", "gold_label": "entailed", "idx": 34}
+{"premise": "The stagehand flashed the lights .", "hypothesis": "The lights were emitted .", "gold_label": "entailed", "idx": 35}
+{"premise": "The stagehand flashed the lights .", "hypothesis": "The stagehand caused the flashing .", "gold_label": "entailed", "idx": 36}
+{"premise": "There sparkled a magnificent diamond on his finger .", "hypothesis": "A magnificent diamond was emitted .", "gold_label": "entailed", "idx": 37}
+{"premise": "The crown sparkled with jewels .", "hypothesis": "Jewels were emitted .", "gold_label": "entailed", "idx": 38}
+{"premise": "Jewels sparkled on the crown .", "hypothesis": "Jewels were emitted .", "gold_label": "entailed", "idx": 39}
+{"premise": "The jewel sparkled .", "hypothesis": "The jewel was emitted .", "gold_label": "entailed", "idx": 40}
+{"premise": "TransCanada is shifting its hq to Calgary from Toronto .", "hypothesis": "Its hq moving .", "gold_label": "entailed", "idx": 41}
+{"premise": "TransCanada is shifting its hq to Calgary from Toronto .", "hypothesis": "Toronto being the initial location .", "gold_label": "entailed", "idx": 42}
+{"premise": "They stood the statue on the pedestal .", "hypothesis": "They caused the standing .", "gold_label": "entailed", "idx": 43}
+{"premise": "Maggie hurried her sister .", "hypothesis": "Maggie caused the hurrying .", "gold_label": "entailed", "idx": 44}
+{"premise": "We sleep five people in each room .", "hypothesis": "We cause the sleeping .", "gold_label": "entailed", "idx": 45}
+{"premise": "The secretary transcribed the speech into the record .", "hypothesis": "The secretary caused the transcribing .", "gold_label": "entailed", "idx": 46}
+{"premise": "The secretary transcribed the speech .", "hypothesis": "The secretary caused the transcribing .", "gold_label": "entailed", "idx": 47}
+{"premise": "I promised somebody my time .", "hypothesis": "At the beginning of the promising, I had possession of my time .", "gold_label": "entailed", "idx": 48}
+{"premise": "I promised somebody my time .", "hypothesis": "I caused the promising .", "gold_label": "entailed", "idx": 49}
+{"premise": "I promised my house -lrb- to somebody -rrb- .", "hypothesis": "At the beginning of the promising, I had possession of my house .", "gold_label": "entailed", "idx": 50}
+{"premise": "I promised my house -lrb- to somebody -rrb- .", "hypothesis": "I caused the promising .", "gold_label": "entailed", "idx": 51}
+{"premise": "We offered our paycheck to her .", "hypothesis": "At the beginning of the offering, we had possession of our paycheck .", "gold_label": "entailed", "idx": 52}
+{"premise": "We offered our paycheck to her .", "hypothesis": "We caused the offering .", "gold_label": "entailed", "idx": 53}
+{"premise": "Doug removed the smudges from the tabletop .", "hypothesis": "Doug caused the removing .", "gold_label": "entailed", "idx": 54}
+{"premise": "Doug removed the smudges .", "hypothesis": "Doug caused the removing .", "gold_label": "entailed", "idx": 55}
+{"premise": "The bank lent to fewer customers .", "hypothesis": "The bank caused the lending .", "gold_label": "entailed", "idx": 56}
+{"premise": "They lent a bicycle to me .", "hypothesis": "At the beginning of the lending, they had possession of a bicycle .", "gold_label": "entailed", "idx": 57}
+{"premise": "They lent a bicycle to me .", "hypothesis": "A bicycle was transferred .", "gold_label": "entailed", "idx": 58}
+{"premise": "They lent a bicycle to me .", "hypothesis": "They caused the lending .", "gold_label": "entailed", "idx": 59}
+{"premise": "FMC has bought 565,000 shares from Nortek Inc. at $ 23.50 a share .", "hypothesis": "565,000 shares were transferred .", "gold_label": "entailed", "idx": 60}
+{"premise": "$ 50 wo n't even buy a dress .", "hypothesis": "A dress are transferred .", "gold_label": "entailed", "idx": 61}
+{"premise": "Carmen bought a dress for $ 50 .", "hypothesis": "A dress were transferred .", "gold_label": "entailed", "idx": 62}
+{"premise": "Carmen bought a dress for $ 50 .", "hypothesis": "Carmen caused the buying .", "gold_label": "entailed", "idx": 63}
+{"premise": "Carmen bought Mary a dress .", "hypothesis": "A dress were transferred .", "gold_label": "entailed", "idx": 64}
+{"premise": "Carmen bought Mary a dress .", "hypothesis": "Carmen caused the buying .", "gold_label": "entailed", "idx": 65}
+{"premise": "Carmen bought a dress for Mary .", "hypothesis": "A dress were transferred .", "gold_label": "entailed", "idx": 66}
+{"premise": "Carmen bought a dress for Mary .", "hypothesis": "Carmen caused the buying .", "gold_label": "entailed", "idx": 67}
+{"premise": "Carmen bought a dress from Diana .", "hypothesis": "A dress were transferred .", "gold_label": "entailed", "idx": 68}
+{"premise": "Carmen bought a dress from Diana .", "hypothesis": "Carmen caused the buying .", "gold_label": "entailed", "idx": 69}
+{"premise": "Carmen bought a dress .", "hypothesis": "A dress were transferred .", "gold_label": "entailed", "idx": 70}
+{"premise": "Carmen bought a dress .", "hypothesis": "Carmen caused the buying .", "gold_label": "entailed", "idx": 71}
+{"premise": "Lydia pocketed the change in her left pocket .", "hypothesis": "The change moved .", "gold_label": "entailed", "idx": 72}
+{"premise": "Lydia pocketed the change in her left pocket .", "hypothesis": "Lydia caused the pocketing .", "gold_label": "entailed", "idx": 73}
+{"premise": "Lydia pocketed the change .", "hypothesis": "The change moved .", "gold_label": "entailed", "idx": 74}
+{"premise": "Lydia pocketed the change .", "hypothesis": "Lydia caused the pocketing .", "gold_label": "entailed", "idx": 75}
+{"premise": "Paula spanked the naughty child 's back .", "hypothesis": "The naughty child 's back caused the spanking .", "gold_label": "not-entailed", "idx": 76}
+{"premise": "Paula spanked the naughty child 's back .", "hypothesis": "At the end of the spanking, the naughty child 's back was in contact with Paula .", "gold_label": "not-entailed", "idx": 77}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "The naughty child caused the spanking .", "gold_label": "not-entailed", "idx": 78}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "A paddle caused the spanking .", "gold_label": "not-entailed", "idx": 79}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "Paula was in contact with a paddle .", "gold_label": "not-entailed", "idx": 80}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "The naughty child was in contact with Paula .", "gold_label": "not-entailed", "idx": 81}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "A paddle was in contact with the naughty child .", "gold_label": "not-entailed", "idx": 82}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "At the end of the spanking, a paddle was in contact with Paula .", "gold_label": "not-entailed", "idx": 83}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "At the end of the spanking, Paula was in contact with the naughty child .", "gold_label": "not-entailed", "idx": 84}
+{"premise": "Paula spanked the naughty child on the back with a paddle .", "hypothesis": "At the end of the spanking, the naughty child was in contact with a paddle .", "gold_label": "not-entailed", "idx": 85}
+{"premise": "Paula spanked the naughty child on the back .", "hypothesis": "The naughty child caused the spanking .", "gold_label": "not-entailed", "idx": 86}
+{"premise": "Paula spanked the naughty child on the back .", "hypothesis": "At the end of the spanking, the naughty child was in contact with Paula .", "gold_label": "not-entailed", "idx": 87}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "He caused the spanking .", "gold_label": "not-entailed", "idx": 88}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "A bat caused the spanking .", "gold_label": "not-entailed", "idx": 89}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "They was in contact with a bat .", "gold_label": "not-entailed", "idx": 90}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "He was in contact with them .", "gold_label": "not-entailed", "idx": 91}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "A bat was in contact with him .", "gold_label": "not-entailed", "idx": 92}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "At the end of the spanking, a bat was in contact with them .", "gold_label": "not-entailed", "idx": 93}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "At the end of the spanking, they was in contact with him .", "gold_label": "not-entailed", "idx": 94}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "At the end of the spanking, he was in contact with a bat .", "gold_label": "not-entailed", "idx": 95}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "During the spanking, he used a bat .", "gold_label": "not-entailed", "idx": 96}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "During the spanking, a bat used them .", "gold_label": "not-entailed", "idx": 97}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "During the spanking, they used him .", "gold_label": "not-entailed", "idx": 98}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "He used something .", "gold_label": "not-entailed", "idx": 99}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "A bat used something .", "gold_label": "not-entailed", "idx": 100}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "They was used .", "gold_label": "not-entailed", "idx": 101}
+{"premise": "They spanked him to death with a bat .", "hypothesis": "He was used .", "gold_label": "not-entailed", "idx": 102}
+{"premise": "They spanked him to death .", "hypothesis": "He caused the spanking .", "gold_label": "not-entailed", "idx": 103}
+{"premise": "They spanked him to death .", "hypothesis": "At the end of the spanking, he was in contact with them .", "gold_label": "not-entailed", "idx": 104}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "The child caused the spanking .", "gold_label": "not-entailed", "idx": 105}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "Her right hand caused the spanking .", "gold_label": "not-entailed", "idx": 106}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "Paula was in contact with her right hand .", "gold_label": "not-entailed", "idx": 107}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "The child was in contact with Paula .", "gold_label": "not-entailed", "idx": 108}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "Her right hand was in contact with the child .", "gold_label": "not-entailed", "idx": 109}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "At the end of the spanking, her right hand was in contact with Paula .", "gold_label": "not-entailed", "idx": 110}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "At the end of the spanking, Paula was in contact with the child .", "gold_label": "not-entailed", "idx": 111}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "At the end of the spanking, the child was in contact with her right hand .", "gold_label": "not-entailed", "idx": 112}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "During the spanking, the child used her right hand .", "gold_label": "not-entailed", "idx": 113}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "During the spanking, her right hand used Paula .", "gold_label": "not-entailed", "idx": 114}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "During the spanking, Paula used the child .", "gold_label": "not-entailed", "idx": 115}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "The child used something .", "gold_label": "not-entailed", "idx": 116}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "Her right hand used something .", "gold_label": "not-entailed", "idx": 117}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "Paula was used .", "gold_label": "not-entailed", "idx": 118}
+{"premise": "Paula spanked the child with her right hand .", "hypothesis": "The child was used .", "gold_label": "not-entailed", "idx": 119}
+{"premise": "Paula spanked the child .", "hypothesis": "The child caused the spanking .", "gold_label": "not-entailed", "idx": 120}
+{"premise": "Paula spanked the child .", "hypothesis": "At the end of the spanking, the child was in contact with Paula .", "gold_label": "not-entailed", "idx": 121}
+{"premise": "The stagehand flashed the lights .", "hypothesis": "The stagehand was emitted .", "gold_label": "not-entailed", "idx": 122}
+{"premise": "The stagehand flashed the lights .", "hypothesis": "The lights caused the flashing .", "gold_label": "not-entailed", "idx": 123}
+{"premise": "TransCanada is shifting its hq to Calgary from Toronto .", "hypothesis": "TransCanada moving .", "gold_label": "not-entailed", "idx": 124}
+{"premise": "They stood the statue on the pedestal .", "hypothesis": "The statue caused the standing .", "gold_label": "not-entailed", "idx": 125}
+{"premise": "Maggie hurried her sister .", "hypothesis": "Her sister caused the hurrying .", "gold_label": "not-entailed", "idx": 126}
+{"premise": "The secretary transcribed the speech into the record .", "hypothesis": "The speech caused the transcribing .", "gold_label": "not-entailed", "idx": 127}
+{"premise": "The secretary transcribed the speech .", "hypothesis": "The speech caused the transcribing .", "gold_label": "not-entailed", "idx": 128}
+{"premise": "I promised somebody my time .", "hypothesis": "At the beginning of the promising, my time had possession of me .", "gold_label": "not-entailed", "idx": 129}
+{"premise": "I promised somebody my time .", "hypothesis": "My time caused the promising .", "gold_label": "not-entailed", "idx": 130}
+{"premise": "I promised my house -lrb- to somebody -rrb- .", "hypothesis": "At the beginning of the promising, my house had possession of me .", "gold_label": "not-entailed", "idx": 131}
+{"premise": "I promised my house -lrb- to somebody -rrb- .", "hypothesis": "My house caused the promising .", "gold_label": "not-entailed", "idx": 132}
+{"premise": "We offered our paycheck to her .", "hypothesis": "At the beginning of the offering, our paycheck had possession of us .", "gold_label": "not-entailed", "idx": 133}
+{"premise": "We offered our paycheck to her .", "hypothesis": "Our paycheck caused the offering .", "gold_label": "not-entailed", "idx": 134}
+{"premise": "Doug removed the smudges from the tabletop .", "hypothesis": "The smudges caused the removing .", "gold_label": "not-entailed", "idx": 135}
+{"premise": "Doug removed the smudges .", "hypothesis": "The smudges caused the removing .", "gold_label": "not-entailed", "idx": 136}
+{"premise": "The bank lent to fewer customers .", "hypothesis": "Fewer customers caused the lending .", "gold_label": "not-entailed", "idx": 137}
+{"premise": "They lent a bicycle to me .", "hypothesis": "At the beginning of the lending, I had possession of a bicycle .", "gold_label": "not-entailed", "idx": 138}
+{"premise": "They lent a bicycle to me .", "hypothesis": "At the beginning of the lending, a bicycle had possession of them .", "gold_label": "not-entailed", "idx": 139}
+{"premise": "They lent a bicycle to me .", "hypothesis": "They was transferred .", "gold_label": "not-entailed", "idx": 140}
+{"premise": "They lent a bicycle to me .", "hypothesis": "I caused the lending .", "gold_label": "not-entailed", "idx": 141}
+{"premise": "They lent a bicycle to me .", "hypothesis": "A bicycle caused the lending .", "gold_label": "not-entailed", "idx": 142}
+{"premise": "FMC has bought 565,000 shares from Nortek Inc. at $ 23.50 a share .", "hypothesis": "FMC was transferred .", "gold_label": "not-entailed", "idx": 143}
+{"premise": "Carmen bought a dress for $ 50 .", "hypothesis": "Carmen were transferred .", "gold_label": "not-entailed", "idx": 144}
+{"premise": "Carmen bought a dress for $ 50 .", "hypothesis": "A dress caused the buying .", "gold_label": "not-entailed", "idx": 145}
+{"premise": "Carmen bought Mary a dress .", "hypothesis": "Carmen were transferred .", "gold_label": "not-entailed", "idx": 146}
+{"premise": "Carmen bought Mary a dress .", "hypothesis": "A dress caused the buying .", "gold_label": "not-entailed", "idx": 147}
+{"premise": "Carmen bought Mary a dress .", "hypothesis": "Mary caused the buying .", "gold_label": "not-entailed", "idx": 148}
+{"premise": "Carmen bought a dress for Mary .", "hypothesis": "Carmen were transferred .", "gold_label": "not-entailed", "idx": 149}
+{"premise": "Carmen bought a dress for Mary .", "hypothesis": "A dress caused the buying .", "gold_label": "not-entailed", "idx": 150}
+{"premise": "Carmen bought a dress for Mary .", "hypothesis": "Mary caused the buying .", "gold_label": "not-entailed", "idx": 151}
+{"premise": "Carmen bought a dress from Diana .", "hypothesis": "Carmen were transferred .", "gold_label": "not-entailed", "idx": 152}
+{"premise": "Carmen bought a dress from Diana .", "hypothesis": "A dress caused the buying .", "gold_label": "not-entailed", "idx": 153}
+{"premise": "Carmen bought a dress .", "hypothesis": "Carmen were transferred .", "gold_label": "not-entailed", "idx": 154}
+{"premise": "Carmen bought a dress .", "hypothesis": "A dress caused the buying .", "gold_label": "not-entailed", "idx": 155}
+{"premise": "Lydia pocketed the change in her left pocket .", "hypothesis": "Lydia moved .", "gold_label": "not-entailed", "idx": 156}
+{"premise": "Lydia pocketed the change in her left pocket .", "hypothesis": "The change caused the pocketing .", "gold_label": "not-entailed", "idx": 157}
+{"premise": "Lydia pocketed the change .", "hypothesis": "Lydia moved .", "gold_label": "not-entailed", "idx": 158}
+{"premise": "Lydia pocketed the change .", "hypothesis": "The change caused the pocketing .", "gold_label": "not-entailed", "idx": 159}

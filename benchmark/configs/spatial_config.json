@@ -1,0 +1,8 @@
+{
+  "task": "spatial",
+  "paths": {
+    "train": "./curriculum/spatial/train.jsonl",
+    "val": "./curriculum/spatial/val.jsonl"
+  },
+  "name": "spatial"
+}

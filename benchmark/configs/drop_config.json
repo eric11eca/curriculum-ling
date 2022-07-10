@@ -1,0 +1,8 @@
+{
+  "task": "drop",
+  "paths": {
+    "train": "./curriculum/drop/train.jsonl",
+    "val": "./curriculum/drop/val.jsonl"
+  },
+  "name": "drop"
+}

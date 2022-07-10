@@ -1,0 +1,8 @@
+{
+  "task": "syntactic_variation",
+  "paths": {
+    "train": "./curriculum/syntactic_variation/train.jsonl",
+    "val": "./curriculum/syntactic_variation/val.jsonl"
+  },
+  "name": "syntactic_variation"
+}

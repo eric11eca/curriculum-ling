@@ -1,0 +1,8 @@
+{
+  "task": "comparative",
+  "paths": {
+    "train": "./curriculum/comparative/train.jsonl",
+    "val": "./curriculum/comparative/val.jsonl"
+  },
+  "name": "comparative"
+}
