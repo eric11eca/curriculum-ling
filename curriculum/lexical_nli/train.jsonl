@@ -1,3 +1,0 @@
-{"sentence1": "A man is standing near two other women for a picture.", "sentence2": "A man is standing close to two other women for a picture.", "gold_label": "entailment"}
-{"sentence1": "The little girl is at the mall shopping with her mom", "sentence2": "The large girl is at the mall shopping with her mom", "gold_label": "contradiction"}
-{"sentence1": "A group of people at a bar drinking beer.", "sentence2": "A group of people at a bar drinking cider.", "gold_label": "neutral"}
