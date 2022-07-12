@@ -264,12 +264,12 @@ def create_task_from_config(config: dict, base_path: Optional[str] = None, verbo
 
     """
     task_class = get_task_class(config["task"])
-    for k in config["paths"].keys():
-        path = config["paths"][k]
-        # TODO: Refactor paths  (issue #1180)
-        if isinstance(path, str) and not os.path.isabs(path):
-            assert base_path
-            config["paths"][k] = os.path.join(base_path, path)
+    # for k in config["paths"].keys():
+    #     path = config["paths"][k]
+    # TODO: Refactor paths  (issue #1180)
+    # if isinstance(path, str) and not os.path.isabs(path):
+    #     assert base_path
+    #     config["paths"][k] = os.path.join(base_path, path)
     task_kwargs = config.get("kwargs", {})
     if verbose:
         print(task_class.__name__)
@@ -291,5 +291,5 @@ def create_task_from_config_path(config_path: str, verbose: bool = False):
 
     """
     return create_task_from_config(
-        read_json(config_path), base_path=os.path.split(config_path)[0], verbose=verbose,
+        read_json(config_path), verbose=verbose,
     )

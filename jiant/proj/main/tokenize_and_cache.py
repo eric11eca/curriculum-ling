@@ -176,7 +176,6 @@ def get_k_shot_task_data(train_lines, k_shot=10):
             task_list[task] = [line]
         else:
             task_list[task].append(line)
-    print(len(task_list))
     new_train = []
     for task in task_list:
         new_train_task = get_k_shot_data_multi(task_list[task], k=k_shot)
@@ -223,7 +222,8 @@ def main(args: RunConfiguration):
                 examples = get_k_shot_data_multi(examples, k=args.k_shot)
             else:
                 examples = get_k_shot_task_data(examples, k_shot=args.k_shot)
-            print(f"get {args.k_shot} data, length {len(examples)}")
+            print(
+                f"get {args.k_shot} shots of data, total number: {len(examples)}")
         chunk_and_save(
             task=task,
             phase=PHASE.TRAIN,

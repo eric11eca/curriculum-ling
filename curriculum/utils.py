@@ -4,6 +4,73 @@ import os
 import jiant.utils.python.io as py_io
 import jiant.proj.main.export_model as export_model
 
+lexical_tasks = [
+    "transitive",
+    "hypernymy",
+    "hyponymy",
+    "ner",
+    "lexical"
+]
+
+syntactic_tasks = [
+    "verbnet",
+    "verbcorner",
+    "syntactic_alternation",
+    "syntactic_variation",
+]
+
+logical_tasks = [
+    "boolean",
+    "comparative",
+    "conditional",
+    "counting",
+    "negation",
+    "quantifier",
+    "monotonicity_infer"
+]
+
+semantic_tasks = [
+    "sentiment",
+    "kg_relations",
+    "puns",
+    "coreference",
+    "context_align",
+    "sprl"
+]
+
+commonsense_tasks = [
+    "socialqa",
+    "physicalqa",
+    "cosmoqa",
+    "hellaswag"
+]
+
+comprehension_tasks = [
+    "logiqa",
+    "ester",
+    "drop",
+    "control"
+]
+
+analytic_tasks = [
+    "analytic",
+    "entailment_tree"
+]
+
+special_tasks = [
+    "temporal",
+    "spatial",
+    "counterfactual",
+    "defeasible"
+]
+
+ANLI = ['adversarial_nli_r1',
+        'adversarial_nli_r2',
+        'adversarial_nli_r3']
+
+CURRICULUM = lexical_tasks + syntactic_tasks + logical_tasks + analytic_tasks \
+    + semantic_tasks + commonsense_tasks + comprehension_tasks + special_tasks
+
 
 MODEL_NAMES = {
     "roberta-mnli": "roberta-large",
