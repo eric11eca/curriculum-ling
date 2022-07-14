@@ -88,14 +88,6 @@ HF_MODEL_PATH = {
     "debertav3": "microsoft/deberta-v3-base",
 }
 
-MODEL_VAL_NAMES = {
-    "roberta-mnli": "roberta-mnli",
-    "roberta-anli": "roberta-anli",
-    "roberta-anli-mix": "anli-mix-roberta",
-    "deberta": "deberta-base",
-    "debertav3": "deberta-v3-base",
-}
-
 
 class ModelNotExsitError(Exception):
     """Exception raised for key errors with model names.

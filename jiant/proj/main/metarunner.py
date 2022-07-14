@@ -94,6 +94,8 @@ class JiantMetarunner(AbstractMetarunner):
         self.device = self.runner.device
         self.global_train_config = self.runner.jiant_task_container.global_train_config
 
+        print(f"Output_dir: {self.output_dir}")
+
     def begin_training(self):
         assert not self.single_use_check
         self.single_use_check = True

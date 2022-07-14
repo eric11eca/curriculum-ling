@@ -7,10 +7,12 @@ import jiant.proj.main.scripts.configurator as configurator
 
 
 def train_configuration(
-        task_name, model_name,
-        cache_pth, val_task_key,
-        classifier_type="linear",
-        cross_task_name="None"):
+    task_name,
+    data_dir,
+    cache_pth,
+    classifier_type="linear",
+    cross_task_name="None"
+):
     task_cache_base_path = cache_pth
 
     val_tasks = [task_name]
@@ -18,20 +20,19 @@ def train_configuration(
         val_tasks = cross_task_name.split(',')
 
     jiant_run_config = configurator.SimpleAPIMultiTaskConfigurator(
-        task_config_base_path="/content/tasks/configs/",
+        task_config_base_path=f"{data_dir}/configs/",
         task_cache_base_path=task_cache_base_path,
         train_task_name_list=[task_name],
         val_task_name_list=val_tasks,
         train_batch_size=8,
         eval_batch_size=16,
-        epochs=2,
+        epochs=3,
         num_gpus=1,
         classifier_type=classifier_type
     ).create_config()
 
     for task in jiant_run_config["taskmodels_config"]["task_to_taskmodel_map"]:
         jiant_run_config["taskmodels_config"]["task_to_taskmodel_map"][task] = task_name
-    # jiant_run_config["taskmodels_config"]["task_to_taskmodel_map"] = task_model_dict
 
     os.makedirs("./run_configs/", exist_ok=True)
     py_io.write_json(
@@ -42,8 +43,9 @@ def train_configuration(
 
 def train(
     task_name,
-    model_name,
-    model_path,
+    model_pth,
+    model_config_pth,
+    hf_model_name,
     model_dir_name,
     model_load_mode="from_transformers",
     do_train=True,
@@ -52,33 +54,25 @@ def train(
     write_val_preds=True,
     freeze_encoder=False,
     k_shot=0,
-    phase="main",
-    mismatched=False,
-    hp_only=False,
+    phase="main"
 ):
+    output_dir = f"./runs/{task_name}/{model_dir_name}"
+    output_dir = os.path.join(output_dir, phase)
     if k_shot > 0:
-        output_dir = f"./runs/{task_name}/{model_dir_name}/{k_shot}-shot"
-        if phase == "null":
-            output_dir = f"./runs/{task_name}/{model_dir_name}/{k_shot}-shot-null"
-        elif mismatched or hp_only:
-            output_dir = f"./runs/{task_name}/{model_dir_name}/{k_shot}-shot-{phase}"
-    else:
-        output_dir = f"./runs/{task_name}/{model_dir_name}/{phase}"
+        output_dir = os.path.join(output_dir, f"{k_shot}-shot")
     os.makedirs(output_dir, exist_ok=True)
 
-    if "probing" in phase:
-        do_save_best = False
-        write_val_preds = False
+    run_config_pth = f"./run_configs/{task_name}_run_config.json"
 
     run_args = main_runscript.RunConfiguration(
-        jiant_task_container_config_path=f"./run_configs/{task_name}_run_config.json",
+        jiant_task_container_config_path=run_config_pth,
         output_dir=output_dir,
-        hf_pretrained_model_name_or_path=model_name,
+        hf_pretrained_model_name_or_path=hf_model_name,
         model_load_mode=model_load_mode,
-        model_path=model_path,
-        model_config_path=f"./models/{model_name}/model/config.json",
+        model_path=model_pth,
+        model_config_path=model_config_pth,
         learning_rate=1e-5,
-        eval_every_steps=500,
+        eval_every_steps=1000,
         do_train=do_train,
         do_val=do_val,
         do_save_best=do_save_best,
