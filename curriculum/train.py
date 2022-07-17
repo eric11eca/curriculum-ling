@@ -43,6 +43,7 @@ def train_configuration(
 
 def train(
     task_name,
+    output_dir,
     model_pth,
     model_config_pth,
     hf_model_name,
@@ -56,7 +57,8 @@ def train(
     k_shot=0,
     phase="main"
 ):
-    output_dir = f"./runs/{task_name}/{model_dir_name}"
+    output_dir = os.path.join(
+        output_dir, f"runs/{task_name}/{model_dir_name}")
     output_dir = os.path.join(output_dir, phase)
     if k_shot > 0:
         output_dir = os.path.join(output_dir, f"{k_shot}-shot")

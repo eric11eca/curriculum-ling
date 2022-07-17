@@ -22,6 +22,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_dir", type=str, default="./benchmark",
                         help="path to the benchmark data directory")
+    parser.add_argument("--output_dir", type=str, default="/Users/zemingchen/",
+                        help="path to the training output")
     parser.add_argument("--tokenize_train", action="store_true",
                         help="enable tokenization and caching of train data")
     parser.add_argument("--tokenize_val", action="store_true",
@@ -161,6 +163,7 @@ if __name__ == "__main__":
 
         train(
             task_name=task_name,
+            output_dir=args.output_dir,
             model_pth=local_model_pth,
             model_config_pth=local_model_config_pth,
             hf_model_name=hf_model_name_or_path,
