@@ -22,7 +22,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_dir", type=str, default="./benchmark",
                         help="path to the benchmark data directory")
-    parser.add_argument("--output_dir", type=str, default="/Users/zemingchen/",
+    parser.add_argument("--output_dir", type=str, default="./",
                         help="path to the training output")
     parser.add_argument("--tokenize_train", action="store_true",
                         help="enable tokenization and caching of train data")
