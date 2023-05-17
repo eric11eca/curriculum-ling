@@ -15,10 +15,10 @@ We desire to initiate Curriculum as a new format of NLI benchmark for evaluation
 Curriculum contains a collection of datasets that covers 36 types of major linguistic phenomena and an evaluation procedure for diagnosing how well a language model captures reasoning skills for distinct types of linguistic phenomena. We show that this linguistic-phenomena-driven benchmark can serve as an effective tool for diagnosing model behavior and verifying model learning quality. 
 
 ## Linguistic Phenomena
-![phenomena_schema](linguistic-phenomena.png)
+![phenomena_schema](./img/linguistic-phenomena.png)
 
 ## Dataset Statistics
-![dataset_stats](dataset-stats.png)
+![dataset_stats](./img/dataset-stats.png)
 
 
 ## Download Benchmark
