@@ -1,3 +1,6 @@
+![curriculum](./img/curriculum3.png)
+
+
 # Curriculum: A Broad-Coverage Benchmark for Linguistic Phenomena in Natural Language Understanding
 
 Repository for the paper [Curriculum: A Broad-Coverage Benchmark for Linguistic Phenomena in Natural Language Understanding](https://aclanthology.org/2022.naacl-main.234), in Proceedings of the 2022 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies ([NAACL-HLT 2022](https://aclanthology.org/volumes/2022.naacl-main/)).
